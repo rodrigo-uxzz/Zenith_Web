@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zenith</title>
+    <link rel="icon" type="image/png" sizes="64x64" href="./img/logoZ.png">
+    <link rel="stylesheet" href="./css/homeScreen.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="sidebar">
+        <ul>
+            <li>
+                <a href="#">
+                    <span class="icone"><img src="img/logo.png" class="logo" alt="logo do site"></span>
+                    <span class="titulo">ZENITH</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <span class="icone"><ion-icon name="home-outline"></ion-icon></span>
+                    <span class="titulo">Inicio</span>
+                </a>
+            </li>
+            <li>
+                <a href="./perfilScreen.html">
+                    <span class="icone"><ion-icon name="person-outline"></ion-icon></span>
+                    <span class="titulo">Perfil</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <span class="icone"><ion-icon name="heart-outline"></ion-icon></span>
+                    <span class="titulo">Central</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <span class="icone"><ion-icon name="chatbubbles-outline"></ion-icon></span>
+                    <span class="titulo">Chat</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <span class="icone"><ion-icon name="settings-outline"></ion-icon></span>
+                    <span class="titulo">Configurações</span>
+                </a>
+            </li>
+            <li class="conta">
+                <!--<a href="#">
+                    <span class="icone">
+                        <div class="imgCaixa">
+                             <img src="img/user.svg"> 
+                             A parte q o Roberto já fez
+                        </div>
+                    </span>
+                    <span class="titulo">Moana Dark</span>
+                </a>-->
+            </li>
+            <li>
+                <a href="#" id="sair">
+                    <span class="icone"><ion-icon name="log-out-outline"></ion-icon></span>
+                    <span class="titulo">Logout</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <main>
+        <header class="dashboard-header">
+            <h1> Bem Vindo!</h1>
+            <h4> Confira o que está acontecendo hoje em seu consultório</h4>
+        </header>
+
+        <section class="dashboard-content">
+            <!-- Notificações -->
+            <div class="notificacoes">
+                <div class="notificacoes-header">
+                    <!-- <ion-icon name="notifications-outline" class="iconeNoti"></ion-icon> -->
+                    <h3>NOTIFICAÇÕES</h3>
+                </div>
+
+                <div class="card">
+                    <ion-icon name="checkmark-circle-outline"></ion-icon>
+
+                    <div>
+                        <strong>Agendamento Confirmado</strong>
+                        <p>Sarah Johnson confirmou a consulta para amanhã às 14:00</p>
+                        <span>há 5 minutos</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <ion-icon name="cash-outline"></ion-icon>
+
+                    <div>
+                        <strong>Pagamento Recebido</strong>
+                        <p>Pagamento de R$ 250,00 recebido de Michael Jackson</p>
+                        <span>há 1 hora</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <ion-icon name="person-add-outline"></ion-icon>
+
+                    <div>
+                        <strong>Novo Pedido de Agendamento</strong>
+                        <p>Aline Ferreira solicitou uma sessão para sexta-feira às 14:00</p>
+                        <span>há 2 horas</span>
+                    </div>
+                </div>
+
+                <a href="#" class="ver-mais">Ver Mais</a>
+            </div>
+
+            <!-- Área lateral -->
+            <div class="area-lateral"></div>
+
+        </section>
+
+        <!-- Atalhos -->
+        <section class="atalhos">
+            <h3>Atalhos Rápidos</h3>
+
+            <div class="atalhos-grid">
+                <div class="atalho-card">
+                    <ion-icon name="calendar-clear-outline" class="iconeAtalho"></ion-icon>
+
+                    <div>
+                        <strong>Ver Todas as Sessões</strong>
+                        <p>Gerencie seus compromissos</p>
+                    </div>
+                </div>
+
+                <div class="atalho-card">
+                    <ion-icon name="time-outline" class="iconeAtalho"></ion-icon>
+                    <div>
+                        <strong>Ver Minha Agenda</strong>
+                        <p>Verifique sua disponibilidade</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+    
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    
+
+    <footer>
+        <!-- <p>&copy; 2026 Zenith. Todos os direitos reservados.</p> -->
+    </footer>
+
+    <script>
+        document.getElementById('sair').addEventListener('click', function(event) {
+            event.preventDefault();
+            if (confirm('Tem certeza que deseja sair?')) {
+                window.location.href = 'splashScreen.html';
+            }
+        });
+    </script>    
+</body>
+</html>

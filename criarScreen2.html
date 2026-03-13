@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/criarScreen2.css">
+    <title>Criar conta</title>
+    <link rel="icon" type="image/x-icon" href="./img/logo z.PNG">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <main> <!-- main: 1 -->
+        
+        <section> <!-- section: 2 -->
+            
+            <!-- logo e nome do site -->
+            <article>
+                <figure>
+                    <img src="./img/logo.png" alt="Logo Zenith">
+                </figure>
+                <p>Cadastro de Psicólogo</p>
+            </article>
+
+            <!-- botões e etc abaixo em section-->
+               <form action="#" method="post">
+
+                   <div class="linha1"> 
+                       <div class="input-container">
+                           <img src="./img/user.svg" alt="icone" class="icon-input">
+                           <label for="username" class="label-diferenciado">Username:</label>
+                           <input type="text" class="input-diferenciado" id="username" name="username" required placeholder="username">
+                       </div>
+                   </div>
+                   
+                   <!-- ----separador---- -->
+
+                   <div class="linha2">
+
+                       <div class="input-container">
+                           <p class="pergunta-radio">Possui cadastro no e-psi?</p>
+                           <div class="radio-group">
+                               <label class="radio-label">
+                                   <input type="radio" id="epsi-nao" name="cadastroEpsi" value="nao" required>
+                                   <span>Não</span>
+                               </label>
+                               <label class="radio-label">
+                                   <input type="radio" id="epsi-sim" name="cadastroEpsi" value="sim" required>
+                                   <span>Sim</span>
+                               </label>
+                           </div>
+                       </div>
+                       
+                       <div class="input-container">
+                           <img src="./img/telefone.svg" alt="icone" class="icon-input">
+                           <label for="formacao" class="label-diferenciado">Qual seu grau de formação?</label>
+                           <select class="input-diferenciado" id="formacao" name="formacao" required>
+                               <option value="">Selecione uma opção</option>
+                               <option value="GRADUACAO">Graduação</option>
+                               <option value="ESPECIALIZACAO">Especialização</option>
+                               <option value="MESTRADO">Mestrado</option>
+                               <option value="DOUTORADO">Doutorado</option>
+                           </select>
+                       </div>
+                    </div>
+
+
+                   <!-- ----separador---- -->
+
+                   <div class="input-container">
+                       <img src="./img/email.svg" alt="icone" class="icon-input">
+                       <label for="email" class="label-diferenciado">Email:</label>
+                       <input type="email" class="input-diferenciado" id="email" name="email" required placeholder="seu@email.com">
+                   </div>
+
+                   <!-- ----separador---- -->
+
+                   <div class="linha3">
+                       <div class="input-container">
+                           <img src="./img/lock.svg" alt="icone" class="icon-input">
+                           <label for="senha" class="label-diferenciado">Senha:</label>
+                           <input type="password" class="input-diferenciado" id="senha" name="senha" required placeholder="Digite sua senha">
+                       </div>
+                       
+                       <div class="input-container">
+                           <img src="./img/lock.svg" alt="icone" class="icon-input">
+                           <label for="confirmarSenha" class="label-diferenciado">Confirmar Senha:</label>
+                           <input type="password" class="input-diferenciado" id="confirmarSenha" name="confirmarSenha" required placeholder="Confirme sua senha">
+                       </div>
+                   </div>
+
+                   <!-- ----separador---- -->
+                   <div class="containerT">
+                      <label for="termos" class="termos">
+                          <input type="checkbox" id="termos" name="termos" required>
+                          <span>Concordo com os</span> <a href="#" class="link-termos">Termos de Uso</a> <span>e</span> <a href="#" class="link-termos">Política de Privacidade</a>.
+                        </label>
+                    </div>
+                    
+                    <div class="botoes-footer">
+                        <button type="button" class="botaoC botao-anterior" onclick="voltarTela1()">← Anterior</button>
+                        <button type="button" class="botaoC" onclick="criarConta()">Criar conta</button>
+                    </div>
+                </form>
+                
+            </section>
+        
+        </main>
+        <p class="mds">&copy; 2026 Zenith. Todos os direitos reservados.</p>
+
+        <script>
+            // Quando a página abre, valida se tem dados salvos
+            window.addEventListener("DOMContentLoaded", function() {
+                let nome = localStorage.getItem("nome");
+                
+                // Se não encontrou, volta pra tela 1
+                if (nome === null) {
+                    alert("⚠️ Você precisa preencher a tela anterior!");
+                    window.location.href = "./criarScreen.html";
+                }
+            });
+
+            // Função pra voltar pra tela 1
+            function voltarTela1() {
+                window.location.href = "./criarScreen.html";
+            }
+
+            // Função pra criar conta
+            async function criarConta() {
+                // Pegando os valores dos campos da tela 2
+                let username = document.getElementById("username").value;
+                let email = document.getElementById("email").value;
+                let senha = document.getElementById("senha").value;
+                let confirmarSenha = document.getElementById("confirmarSenha").value;
+                let cadastroEpsi = document.querySelector('input[name="cadastroEpsi"]:checked');
+                let formacao = document.getElementById("formacao").value;
+                let termos = document.getElementById("termos").checked;
+
+                // Validando se estão vazios
+                if (email === "" || senha === "" || confirmarSenha === "" || !cadastroEpsi || formacao === "" || !termos || username === "") {
+                    alert("❌ ERRO: Preencha TODOS os campos e aceite os termos!");
+                    return;
+                }
+
+                // Validando se as senhas são iguais
+                if (senha !== confirmarSenha) {
+                    alert("❌ ERRO: As senhas não conferem!");
+                    return;
+                }
+
+                // Pegando dados da tela 1 (que já foram salvos)
+                let nome = localStorage.getItem("nome");
+                let telefone = localStorage.getItem("telefone");
+                let data = localStorage.getItem("data");
+                let genero = localStorage.getItem("genero");
+                let cpf = localStorage.getItem("cpf");
+                let crp = localStorage.getItem("crp");
+
+                // Salvando dados da tela 2 também
+                localStorage.setItem("username", username);
+                localStorage.setItem("email", email);
+                localStorage.setItem("senha", senha);
+                localStorage.setItem("cadastroEpsi", cadastroEpsi.value);
+                localStorage.setItem("formacao", formacao);
+                localStorage.setItem("termos", termos.checked);
+
+                // salvando no banco de dados
+                const dados = {
+                    nome: localStorage.getItem("nome"),
+                    telefone: localStorage.getItem("telefone"),
+                    data: localStorage.getItem("data"),
+                    genero: localStorage.getItem("genero"),
+                    cpf: localStorage.getItem("cpf"),
+                    crp: localStorage.getItem("crp"),
+                    username: localStorage.getItem("username"),
+                    email: localStorage.getItem("email"),
+                    senha: localStorage.getItem("senha"),
+                    cadastroEpsi: localStorage.getItem("cadastroEpsi") === "sim",
+                    formacao:localStorage.getItem("formacao"),
+                    termos:termos
+                }
+
+                console.log(dados);
+
+                const resposta = await fetch("http://127.0.0.1:8000/api/registerPsicologo", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify(dados)
+
+                });
+
+                const resultado = await resposta.json();
+                console.log(resultado);
+                if(resposta.ok){
+                    
+                    // Mostrando um resumo de todos os dados
+                let resumo = `
+                    ✅ CONTA CRIADA COM SUCESSO!
+
+                    📋 DADOS PESSOAIS:
+                    • Nome: ${nome}
+                    • Telefone: ${telefone}
+                    • Data Nascimento: ${data}
+                    • Gênero: ${genero}
+
+                    📄 DOCUMENTOS:
+                    • CPF: ${cpf}
+                    • CRP: ${crp}
+
+                    💼 DADOS PROFISSIONAIS:
+                    • Email: ${email}
+                    • E-psi: ${cadastroEpsi.value}
+                    • Formação: ${formacao}
+                    `;
+
+                    alert(resumo);
+
+                    // Ir pra home
+                    window.location.href = "./splashScreen.html";
+                }else{
+                    alert("Erro ao Cadastrar tente novamente");
+                }
+            }
+        </script>
+</body>
+</html>

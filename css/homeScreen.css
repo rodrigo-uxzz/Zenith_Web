@@ -1,0 +1,273 @@
+* {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background-color: #A383FB40;
+}
+
+/* organizando sidebar */
+.sidebar {
+    position: fixed;
+    width: 60px;
+    height: 100vh;
+    background-color: #FFF;
+    overflow: hidden;
+    transition: .5s;
+    box-shadow: 0 0 5px #00000060;
+    z-index: 10;
+
+}
+
+.sidebar:hover {
+    width: 300px;
+}
+
+.sidebar ul li:hover{
+    background-color: #f3f3f3;
+}
+
+.sidebar ul li a {
+    display: flex;
+    white-space: nowrap;
+    text-decoration: none;
+}
+
+
+/* espaçamento icons */
+.sidebar ul li .icone {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    min-width: 60px;
+    height: 60px;
+    color:black;
+}
+
+.sidebar ul li .titulo {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 60px;
+    font-size: 1rem;
+    letter-spacing: .05rem;
+}
+
+.sidebar ul li.logo {
+    margin-bottom: 50px;
+}
+.sidebar ul li.logo:hover {
+    background-color: none;
+}
+
+.sidebar ul li.logo .icone {
+    font-size: 2rem;
+}
+
+.sidebar ul li.logo .titulo {
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.logo {
+    width: 80px;
+    height: auto;    
+}
+
+.titulo {
+    color: #161616;
+}
+
+/* perfil */
+.sidebar ul li.conta {
+    position: absolute;
+    bottom: 60px;
+    width: 100%;
+}
+
+.sidebar ul li.conta .titulo {
+    text-transform: none;
+}
+
+.sidebar ul li.conta .imgCaixa {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.sidebar ul li.conta img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* primeiro e ultimo */
+.sidebar ul li:first-of-type{
+    bottom: 100;
+    width: 100%;
+    margin-bottom: 60px;
+}
+
+.sidebar ul li:last-of-type{
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+
+/* Aqui começa a home*/
+main {
+    margin-left: 60px;
+    padding: 30px;
+    transition: .5s;
+    z-index: 1;
+
+}
+
+/* Header Home*/
+.dashboard-header{
+    margin-left: 25px;
+    margin-top: 10px;
+
+}
+.dashboard-header h1 {
+    font-size: 2.2rem;
+    color: #290041;
+    font-weight:600;
+}
+
+.dashboard-header h4 {
+    color: #290041;
+    font-weight:500;
+}
+
+/* Conteúdo */
+.dashboard-content {
+    display: flex;
+    gap: 30px;
+    margin-top: 30px;
+}
+
+/* Notificações */
+.iconeNoti{
+    font-size: 30px;
+    color: #7a5cff;
+;
+}
+
+.notificacoes {
+    padding: 20px;
+    border-radius: 12px;
+    width: 60%;
+}
+
+.notificacoes-header{
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    gap: 5px;
+}
+.notificacoes-header h3 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+h3{
+    font-weight: 600;
+}
+
+
+/* Cards */
+.card {
+    display: flex;
+    align-items: center; 
+    gap: 15px; 
+    background: #f9f9f9;
+    border-radius: 10px;
+    padding: 15px;
+    margin-top: 15px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.card ion-icon{
+    font-size: 26px;
+    color: #7a5cff;
+    flex-shrink: 0;
+}
+
+.card strong {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.card span {
+    font-size: 0.8rem;
+    color: #777;
+}
+
+/* Ver mais */
+.ver-mais {
+    display: block;
+    text-align: center;
+    margin-top: 10px;
+    color: #919191;
+    text-decoration: none;
+}
+
+/* Área lateral */
+.area-lateral {
+    width: 40%;
+    background: #ddd;
+    border-radius: 12px;
+}
+
+/* Atalhos */
+.atalhos {
+    background: #fff;
+    margin-top: 30px;
+    padding: 30px;
+    border-radius: 12px;
+    margin-left: 20px;
+
+}
+
+.atalhos-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.atalho-card{
+    background: #ece4fc;
+    padding: 18px;
+    border-radius: 12px;
+
+    display: flex;
+    align-items: center; 
+    gap: 15px; 
+}
+
+.iconeAtalho{
+    font-size: 28px;
+    color: #7a5cff;
+}
+
+strong{
+    font-weight: 600;
+}
+
+.atalho-card p{
+    font-size: 0.85rem;
+    color: #555;
+}

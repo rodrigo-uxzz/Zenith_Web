@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/loginScreen.css">
+    <title>Zenith</title>
+    <link rel="icon" type="image/x-icon" href="./img/logo z.PNG">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    
+   
+    <main> <!-- main: 1 -->
+
+        <section> <!-- section: 2 -->
+            
+            <!-- logo e nome do site -->
+            <article>
+                <figure>
+                    <img src="./img/logo.png" alt="Logo Zenith">
+                </figure>
+                <p>Utilize seu e-mail ou CRP e sua senha cadastrada para entrar </p>
+            </article>
+
+        <!-- botões e etc abaixo em section-->
+            <form id="loginForm" action="#" method="post">
+                <div class="input-container">
+                <label for="email">E-mail ou CRP:</label>
+                    <input type="text" id="email" name="email" placeholder="Seu@gmail.com" required>
+                </div>
+
+                <div class="input-container">
+                <label for="password">Senha:</label>
+                    <input type="password" id="password" name="password" placeholder="******" required>
+                </div>
+                
+                <button type="submit" class="botaoE">Entrar</button>
+                <a href="./criarScreen.html" class="botaoC" type="submit">Criar conta</a>
+                <a href="#" class="esqueci">Esqueci minha senha</a>
+            </form>
+
+        </section>
+
+    </main>
+        <p class="mds">&copy; 2026 Zenith. Todos os direitos reservados.</p>
+    
+    <script>
+        document.getElementById('loginForm').addEventListener('submit',async function(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
+            
+            if (email === '') {
+                alert('Por favor, preencha o campo de E-mail ou CRP');
+                return;
+            }
+            
+            if (password === '') {
+                alert('Por favor, preencha o campo de Senha');
+                return;
+            }
+
+            const login = {
+                login: email,
+                senha: password
+            }
+            console.log(login)
+            const resposta = await fetch("http://127.0.0.1:8000/api/login",{
+                method : "POST",
+                headers:{
+                    "Content-Type": "application/json"
+                },
+                body: JSON .stringify(login)
+            });
+
+            const result = await resposta.json();
+            console.log(result);
+
+            if (resposta.ok){
+                    
+                localStorage.setItem('token', result.access_token);
+                    
+                // Se passou nas validações, redireciona
+                window.location.href = "homeScreen.html";
+                    
+            }else{
+                if(result.error === "Aguarde verificação da conta"){
+                    alert("SUA CONTA ESTA EM ANÁLISE PELO ADMINISTRADOR, AGUARDE")
+                }else{
+                    alert("LOGIN INVALIDO");
+                }
+            }
+
+
+            
+        });
+    </script>
+</body>
+</html>

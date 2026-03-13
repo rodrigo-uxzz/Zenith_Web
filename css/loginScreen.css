@@ -1,0 +1,179 @@
+* { 
+    box-sizing: border-box; 
+    margin: 0; 
+    padding: 0; 
+}
+
+html, body { 
+    height: 100%;              
+}
+
+body { 
+    display: flex;
+    flex-direction: column;
+    font-family: 'Poppins', 
+    sans-serif; 
+    color: #290041; 
+    background-color: #A383FB40;
+}
+
+
+/* Main / conteúdo */
+main { 
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    align-self: center;
+    max-width: 1200px;
+    padding: 10px 20rem;
+    margin: auto;
+}
+
+/* section principal */
+section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+    width: 100%;
+    max-width: 720px;
+    gap: 0.6rem;
+    background-color: #fff;
+    padding: 0 5rem 2.5rem;
+    border-radius: 15px;
+    box-shadow: #00000060 0px 4px 8px;
+    height: auto;
+}
+
+/* logo e frase */
+article {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.1rem;
+}
+
+figure {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    min-width: 300px;
+}
+
+figure img {
+    max-width: 100%;
+    height: auto;
+    width: auto;
+    object-fit: contain;
+}   
+
+article p{
+    font-weight: 500;
+    font-size: 1.25rem;
+    color: #290041;
+}
+
+/* todos inputs, butões, etc. */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 100%;
+}
+
+ /* Estilo da borda do input */
+input {
+    width: 100%;
+    padding: 17px 0 12px 15px;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    outline: none;
+    font-size: 16px;
+}
+
+input::placeholder {
+    color: #C0B4B4; 
+    opacity: 1;      
+    font-size: 0.9rem;
+}
+
+.input-container {
+    position: relative;
+    margin-top: 20px;
+    width: 100%;
+}
+
+/* Efeito de cor quando clica no input */
+input:focus {
+    border-color: #007bff;
+}
+
+input:focus + label {
+    color: #007bff;
+}
+
+label {
+    position: absolute;
+    left: 12px;
+    top: -10px; 
+    background-color: white; 
+    padding: 0 5px;
+    font-size: 14px;
+    color: #666;
+    pointer-events: none; 
+    transition: 0.2s;
+}
+
+/* buttons */
+.botaoE {
+    background-color: #A383FB;  
+    color: #FFF;
+    border: 1px solid #A383FB;
+    text-align: center;
+    text-decoration: none;
+    padding: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.botaoE:hover {
+    background-color: #a383fbe0; 
+    color: #FFF;
+    transition: all 0.5s ease;
+}
+
+.botaoC{
+    background-color: #FFF; 
+    color: #A383FB;
+    border: 1px solid #A383FB;
+    text-align: center;
+    text-decoration: none;
+    padding: 0.75rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.botaoC:hover {
+    color: #a383fbe0;
+    transition: all 0.5s ease;
+}
+
+.esqueci {
+    color: #a383fb;
+    font-size: 0.9rem;
+    align-self: center;
+}
+
+.mds {
+    text-align: center;
+    font-size: 0.9rem;
+    color: #666;
+    margin: 1.5rem 0 2rem;
+}
+

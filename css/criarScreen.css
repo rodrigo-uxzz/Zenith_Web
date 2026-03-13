@@ -1,0 +1,240 @@
+* { 
+    box-sizing: border-box; 
+    margin: 0; 
+    padding: 0; 
+}
+
+html, body { 
+    height: 100%;              
+}
+
+body { 
+    display: flex;
+    flex-direction: column;
+    font-family: 'Poppins', sans-serif; 
+    color: #290041; 
+    background-color: #A383FB40;
+}
+
+/* Main / conteúdo */
+main { 
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    max-width: 1200px;
+    padding: 10px 20rem;
+    margin: auto;
+}
+
+/* section principal */
+section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 1000px;
+    gap: 0.75rem;
+    background-color: #fff;
+    padding: 0 2rem 2.5rem;
+    border-radius: 15px;
+    box-shadow: #00000060 0px 4px 8px;
+    height: auto;
+}
+
+/* logo e frase */
+article {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.1rem;
+}
+
+figure {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    min-width: 300px;
+}
+
+figure img {
+    max-width: 100%;
+    height: auto;
+    width: auto;
+    object-fit: contain;
+}
+
+
+article p{
+    font-weight: 500;
+    font-size: 1.25rem;
+    color: #290041;
+}
+
+/* todos inputs, butões, etc. */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 100%;
+}
+
+ /* Estilo da borda do input */
+.input-diferenciado {
+    width: 100%;
+    padding: 15px 10px 10px 40px;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    outline: none;
+    font-size: 16px;
+    color: #C0B4B4;
+}
+
+.input-container {
+    position: relative;
+    margin-top: 20px;
+    width: 100%;
+}
+
+.icon-input {
+    position: absolute;
+    height: 20px;
+    width: auto;
+    left: 15px;
+    top: 56%;
+    transform: translateY(-50%);
+    color: #666;
+    pointer-events: none; 
+}
+
+/* Efeito de cor quando clica no input */
+input:focus {
+    border-color: #007bff;
+}
+
+input:focus + label {
+    color: #007bff;
+}
+ 
+.label-diferenciado {
+    position: absolute;
+    left: 12px;
+    top: -10px; 
+    background-color: white; 
+    padding: 0 5px;
+    font-size: 14px;
+    color: #666;
+    pointer-events: none; 
+    transition: 0.2s;
+} 
+
+input::placeholder {
+    color: #C0B4B4; 
+    opacity: 1;      
+    font-size: 0.8rem;
+}
+
+/* buttons */
+.botaoC{
+    background-color: #a383fb; 
+    color: #FFF;
+    border: 1px solid #A383FB;
+    text-align: center;
+    text-decoration: none;
+    padding: 0.75rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-top: 10px;
+}
+
+.botaoC:hover {
+    color: #FFF;
+    background-color: #a383fbe0;
+    transition: all 0.5s ease;
+}
+/* select genero */
+select {
+    width: 100%;
+    padding: 15px 10px 10px 40px;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    outline: none;
+    font-size: 16px;
+    color: #C0B4B4;
+    background-color: white;
+}   
+
+/* termos e privacidade */
+.containerT {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    font-size: 0.9rem;
+    gap: 10px;
+    font-size: 13.5px;
+}
+
+.termos, #termos {
+    color: #666;
+    display: inline-block;
+    white-space: nowrap;
+    margin: 5px 5px 0 5px;
+}
+
+.link-termos {
+    color: #A383FB;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+/* parte pra voltar ao login */
+.façaContainer {
+    display: flex;
+    font-size: 0.9rem;
+    align-self: center;
+    gap: 5px;
+}
+
+.faça-login {
+    color: #a383fb;
+    font-size: 0.9rem;
+    align-self: center;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+/* arrumando e alinhando input e label */
+.linha1, .linha2, .linha3 {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.50rem;
+}
+
+/* copyright abaixo do section */
+.mds {
+    text-align: center;
+    font-size: 0.9rem;
+    color: #666;
+    margin: 1.5rem 0 2rem;
+}
+
+/* Remove o ícone do date picker */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    display: none;
+}
+
+input[type="date"]::-webkit-outer-spin-button,
+input[type="date"]::-webkit-inner-spin-button {
+    display: none;
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="date"] {
+    color-scheme: light;
+}

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/criarScreen.css">
+    <title>Criar conta</title>
+    <link rel="icon" type="image/x-icon" href="./img/logo z.PNG">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <main> <!-- main: 1 -->
+        
+        <section> <!-- section: 2 -->
+            
+            <!-- logo e nome do site -->
+            <article>
+                <figure>
+                    <img src="./img/logo.png" alt="Logo Zenith">
+                </figure>
+                <p>Cadastro de Psicólogo</p>
+            </article>
+
+            <!-- botões e etc abaixo em section-->
+               <form action="#" method="post">
+
+                   <div class="linha1">
+                       <div class="input-container">
+                           <img src="./img/user.svg" alt="icone" class="icon-input">
+                           <label for="fullName" class="label-diferenciado">Nome Completo:</label>
+                           <input type="text" class="input-diferenciado" id="fullName" name="fullName" required placeholder="Seu nome completo">
+                       </div>
+                       <div class="input-container">
+                           <img src="./img/telefone.svg" alt="icone" class="icon-input">
+                           <label for="telefone" class="label-diferenciado">Telefone:</label>
+                           <input type="text" class="input-diferenciado" id="telefone" name="telefone" required placeholder="(00) 00000-0000">
+                       </div>
+                   </div>
+                   
+                   <!-- ----separador---- -->
+                   
+                   <div class="linha2">
+                       <div class="input-container">
+                           <img src="./img/calendar.png" alt="icone" class="icon-input">
+                           <label for="dataNascimento" class="label-diferenciado">Data Nascimento:</label>
+                           <input type="date" class="input-diferenciado" id="dataNascimento" name="dataNascimento" required>
+                       </div>
+                       <div class="input-container">
+                           <img src="./img/arrow.png" alt="icone" class="icon-input">
+                           <label for="genero" class="label-diferenciado">Gênero:</label>
+                           <select class="input-diferenciado" id="genero" name="genero" required>
+                               <option value="">Selecione um gênero</option>
+                               <option value="MASCULINO">Masculino</option>
+                               <option value="FEMININO">Feminino</option>
+                               <option value="OUTRO">Outro</option>
+                               <option value="PREFIRO_NAO_INFORMAR">Prefiro não informar</option>
+                           </select>
+                        </div>
+                   </div>
+                       
+                       
+                   <!-- ----separador---- -->
+
+                   <div class="linha3">
+                       <div class="input-container">
+                           <img src="./img/lock.svg" alt="icone" class="icon-input">
+                           <label for="cpf" class="label-diferenciado">CPF:</label>
+                           <input type="text" class="input-diferenciado" id="cpf" name="cpf" required placeholder="000.000.000-0">
+                       </div>
+                       
+                       <div class="input-container">
+                           <img src="./img/user.svg" alt="icone" class="icon-input">
+                           <label for="crp" class="label-diferenciado">Número do CRP:</label>
+                           <input type="text" class="input-diferenciado" id="crp" name="crp" required placeholder="XX/XXXXX">
+                       </div>
+                   </div>
+
+                   <!-- ----separador---- -->
+                    
+                    <button type="button" class="botaoC" onclick="validarEProximo()">Próximo -></button>
+                    
+                    <div class="façaContainer">
+                        <p>Já possui conta? </p><a href="./loginScreen.html" class="faça-login">Faça login</a>
+                    </div>
+                </form>
+                
+            </section>
+        
+        </main>
+        <p class="mds">&copy; 2026 Zenith. Todos os direitos reservados.</p>
+
+        <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+        <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+        <script>
+            // Função para validar e ir pra próxima tela
+            function validarEProximo() {
+                // Pegando os valores dos campos
+                let nome = document.getElementById("fullName").value;
+                let telefone = document.getElementById("telefone").value;
+                let data = document.getElementById("dataNascimento").value;
+                let genero = document.getElementById("genero").value;
+                let cpf = document.getElementById("cpf").value;
+                let crp = document.getElementById("crp").value;
+
+                // Validando se algum campo está vazio
+                if (nome === "" || telefone === "" || data === "" || genero === "" || cpf === "" || crp === "") {
+                    alert("❌ ERRO: Preencha TODOS os campos!");
+                    return; 
+                }
+
+                // Se tudo preenchido, salva no localStorage
+                localStorage.setItem("nome", nome);
+                localStorage.setItem("telefone", telefone);
+                localStorage.setItem("data", data);
+                localStorage.setItem("genero", genero);
+                localStorage.setItem("cpf", cpf);
+                localStorage.setItem("crp", crp);
+
+                alert("✅ Dados salvos! Continuando...");
+                
+                // Redireciona pra próxima página
+                window.location.href = "./criarScreen2.html";
+            }
+        </script>
+</body>
+</html>

@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Zenith</title>
+    <link rel="icon" type="image/png" sizes="64x64" href="./img/logoZ.png" />
+    <link rel="stylesheet" href="./css/perfilScreen.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="sidebar">
+      <ul>
+        <li>
+          <a href="#">
+            <span class="icone"
+              ><img src="img/logo.png" class="logo" alt="logo do site"
+            /></span>
+            <span class="titulo">ZENITH</span>
+          </a>
+        </li>
+        <li>
+          <a href="./homeScreen.html">
+            <span class="icone"><ion-icon name="home-outline"></ion-icon></span>
+            <span class="titulo">Inicio</span>
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <span class="icone"
+              ><ion-icon name="person-outline"></ion-icon
+            ></span>
+            <span class="titulo">Perfil</span>
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <span class="icone"
+              ><ion-icon name="heart-outline"></ion-icon
+            ></span>
+            <span class="titulo">Central</span>
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <span class="icone"
+              ><ion-icon name="chatbubbles-outline"></ion-icon
+            ></span>
+            <span class="titulo">Chat</span>
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            <span class="icone"
+              ><ion-icon name="settings-outline"></ion-icon
+            ></span>
+            <span class="titulo">Configurações</span>
+          </a>
+        </li>
+        <li class="conta">
+          <!--<a href="#">
+<span class="icone">
+<div class="imgCaixa">
+<img src="img/user.svg"> 
+A parte q o Roberto já fez
+</div>
+</span>
+<span class="titulo">Moana Dark</span>
+</a>-->
+        </li>
+        <li>
+          <a href="#" id="sair">
+            <span class="icone"
+              ><ion-icon name="log-out-outline"></ion-icon
+            ></span>
+            <span class="titulo">Logout</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+    <!-- Perfil do Psicólogo -->
+    <main>
+      <section class="perfil">
+
+        <div class="topo">
+            <h1>Perfil do Psicólogo</h1>
+            <h3>Gerencie suas informações e preferências</h3>
+        </div>
+
+        <div class="container-perfil">
+          <a href="./perfilEditar.html" class="botao-editar">
+            Editar Perfil
+          </a>
+
+          <!-- Banner -->
+          <div class="banner-perfil"></div>
+
+          <!-- Foto + Dados -->
+          <div class="perfil-topo">
+            <div class="foto-perfil">
+              <div class="avatar">RA</div>
+            </div>
+
+            <div class="dados-psicologo">
+              <h2>Ricardo Almeida</h2>
+              <span>Psicólogo Clínico</span>
+              <p class="crp">CRP: 06/123456</p>
+            </div>
+          </div>
+
+          <!-- Biografia -->
+          <div class="card biografia">
+            <h3>Biografia</h3>
+            <p>
+              Psicólogo clínico com 12 anos de experiência em saúde mental. Atua
+              com terapia cognitivo comportamental e atendimento online.
+            </p>
+          </div>
+
+          <!-- Contato e Segurança -->
+          <div class="perfil-contato">
+            <div class="card contato">
+              <h3>Informações de Contato</h3>
+
+              <div class="linha-contato">
+                <span>Email</span>
+                <p>ricardo.almeida@terapia.com</p>
+              </div>
+
+              <div class="linha-contato">
+                <span>Telefone</span>
+                <p>(11) 98876-5432</p>
+              </div>
+
+              <div class="linha-contato">
+                <span>Data de nascimento</span>
+                <p>15/05/1985</p>
+              </div>
+            </div>
+
+            <div class="card seguranca">
+              <h3>Segurança da Conta</h3>
+
+              <div class="linha-seguranca">
+                <div>
+                  <strong>Senha ******</strong>
+                  <p>Última alteração: 30 dias atrás</p>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+    ></script>
+
+    <script>
+        document.getElementById('sair').addEventListener('click', function(event) {
+            event.preventDefault();
+            if (confirm('Tem certeza que deseja sair?')) {
+                window.location.href = 'loginScreen.html';
+            }
+        });
+    </script>  
+      
+  </body>
+</html>

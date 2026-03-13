@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Zenith</title>
+
+    <link rel="icon" type="image/png" sizes="64x64" href="./img/logoZ.png" />
+    <link rel="stylesheet" href="./css/perfilEditar.css" />
+    <link  href="./perfilScreen.html" />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <div class="sidebar">
+      <ul>
+        <li>
+          <a href="#">
+            <span class="icone">
+              <img src="img/logo.png" class="logo" />
+            </span>
+            <span class="titulo">ZENITH</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="#">
+            <span class="icone">
+              <ion-icon name="home-outline"></ion-icon>
+            </span>
+            <span class="titulo">Inicio</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="#">
+            <span class="icone">
+              <ion-icon name="person-outline"></ion-icon>
+            </span>
+            <span class="titulo">Perfil</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="#">
+            <span class="icone">
+              <ion-icon name="heart-outline"></ion-icon>
+            </span>
+            <span class="titulo">Central</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="#">
+            <span class="icone">
+              <ion-icon name="chatbubbles-outline"></ion-icon>
+            </span>
+            <span class="titulo">Chat</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="#">
+            <span class="icone">
+              <ion-icon name="settings-outline"></ion-icon>
+            </span>
+            <span class="titulo">Configurações</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="#">
+            <span class="icone">
+              <ion-icon name="log-out-outline"></ion-icon>
+            </span>
+            <span class="titulo">Logout</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <main>
+      <section class="perfil">
+        <div class="topo">
+          <h1>Perfil do Psicólogo</h1>
+          <h3>Gerencie suas informações e preferências</h3>
+        </div>
+
+        <div class="container-perfil">
+
+          <div class="banner-perfil">
+            <img id="previewBanner" class="img-banner" />
+
+            <label for="uploadBanner" class="botao-banner">
+              <ion-icon name="camera-outline"></ion-icon>
+            </label>
+
+            <input type="file" id="uploadBanner" accept="image/*" />
+          </div>
+
+
+          <div class="perfil-topo">
+            <div class="avatar-container">
+              <div class="avatar-img">RA</div>
+
+              <label for="uploadFoto" class="botao-foto">
+                <ion-icon name="camera-outline"></ion-icon>
+              </label>
+
+              <input type="file" id="uploadFoto" accept="image/*" />
+            </div>
+
+            <div class="dados-psicologo">
+              <h2>Ricardo Almeida</h2>
+              <span>Psicólogo Clínico</span>
+              <p class="crp">CRP: 06/123456</p>
+            </div>
+          </div>
+
+          <div class="editar-perfil">
+            <!-- DADOS PESSOAIS -->
+
+            <h2 class="titulo-secao">Dados Pessoais</h2>
+
+            <div class="grid-perfil">
+              <div class="campo">
+                <div class="linha">
+                    <label>Nome completo</label> <p class="asterisco">*</p>
+                </div>
+                <input type="text" value="Dr. Ricardo Almeida" />
+              </div>
+
+              <div class="campo">
+                <div class="linha">
+                    <label>Email</label> <p class="asterisco">*</p>
+                </div>
+                <input
+                  type="email"
+                  value="ricardo.almeida@terapiaconnect.com.br"
+                />
+              </div>
+
+              <div class="campo">
+                <label>Telefone</label>
+                <input type="text" value="(11) 98876-5432" />
+              </div>
+
+              <div class="campo">
+                <label>Data de nascimento</label>
+                <input type="date" value="1985-05-15" />
+              </div>
+            </div>
+
+            <!-- DADOS PROFISSIONAIS -->
+
+            <h2 class="titulo-secao">Dados Profissionais</h2>
+
+            <div class="grid-perfil">
+              <div class="campo">
+                <div class="linha">
+                    <label>CRP</label> <p class="asterisco">*</p>
+                </div>
+                <input type="text" value="06/123456" />
+              </div>
+
+              <div class="campo">
+                <label>Especialidade</label>
+                <input type="text" value="Psicologia Clínica" />
+              </div>
+            </div>
+
+            <div class="campo">
+              <label>Biografia / Descrição profissional</label>
+
+              <textarea>
+Psicólogo clínico com 12 anos de experiência em saúde mental. Responsável pela supervisão clínica e qualidade dos atendimentos na plataforma.
+            </textarea
+              >
+            </div>
+
+            <!-- ALTERAR SENHA -->
+
+            <div class="alterar-senha-box">
+              <h2 class="titulo-secao">Alterar Senha</h2>
+
+              <div class="grid-perfil">
+                <div class="campo">
+                  <label>Nova senha</label>
+                  <input type="password" placeholder="Mínimo 8 caracteres" />
+                </div>
+
+                <div class="campo">
+                  <label>Confirmar nova senha</label>
+                  <input type="password" placeholder="Repita a senha" />
+                </div>
+              </div>
+
+              <p class="senha-info">
+                * Deixe em branco se não desejar alterar a senha
+              </p>
+
+              <div class="form-senha">
+
+                <a href="./perfilScreen.html" class="salvar">
+                    <ion-icon name="save-outline"></ion-icon>
+                  Salvar alterações  
+                </a>
+
+                <a href="./perfilScreen.html" class="cancelar">
+                    Cancelar
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+    ></script>
+
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+    ></script>
+  </body>
+</html>
