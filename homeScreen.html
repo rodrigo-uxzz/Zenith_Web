@@ -154,7 +154,8 @@
     </footer>
 
     <script>
-        document.getElementById('sair').addEventListener('click', function(event) {
+
+        document.getElementById('sair').addEventListener('click', async function(event) {
             event.preventDefault();
             if (confirm('Tem certeza que deseja sair?')) {
                 window.location.href = 'splashScreen.html';

@@ -105,18 +105,17 @@ A parte q o Roberto já fez
             </div>
 
             <div class="dados-psicologo">
-              <h2>Ricardo Almeida</h2>
+              <h2 id="nome"></h2>
               <span>Psicólogo Clínico</span>
-              <p class="crp">CRP: 06/123456</p>
+              <p class="crp">CRP <span class="crp" id="crp"></span></p>
             </div>
           </div>
 
           <!-- Biografia -->
           <div class="card biografia">
             <h3>Biografia</h3>
-            <p>
-              Psicólogo clínico com 12 anos de experiência em saúde mental. Atua
-              com terapia cognitivo comportamental e atendimento online.
+            <p id="biografia">
+
             </p>
           </div>
 
@@ -127,17 +126,17 @@ A parte q o Roberto já fez
 
               <div class="linha-contato">
                 <span>Email</span>
-                <p>ricardo.almeida@terapia.com</p>
+                <p id="email"></p>
               </div>
 
               <div class="linha-contato">
                 <span>Telefone</span>
-                <p>(11) 98876-5432</p>
+                <p id="telefone"></p>
               </div>
 
               <div class="linha-contato">
                 <span>Data de nascimento</span>
-                <p>15/05/1985</p>
+                <p id="data"></p>
               </div>
             </div>
 
@@ -167,12 +166,57 @@ A parte q o Roberto já fez
     ></script>
 
     <script>
-        document.getElementById('sair').addEventListener('click', function(event) {
+        document.getElementById('sair').addEventListener('click', async function(event) {
+
+          const token = localStorage.getItem("token");
+
             event.preventDefault();
             if (confirm('Tem certeza que deseja sair?')) {
                 window.location.href = 'loginScreen.html';
+
+
             }
         });
+
+        document.addEventListener("DOMContentLoaded", function(){
+          carregarPerfil();
+        });
+
+        async function carregarPerfil() {
+          
+          const token = localStorage.getItem("token");
+
+          try{
+            if(!token){
+              window.location.href = "loginScreen.html";
+            }
+            const response = await fetch("http://127.0.0.1:8000/api/perfil", {
+              method: "GET",
+              headers: {
+                  "Content-Type": "application/json",
+                  "Authorization": "Bearer " + token
+              }
+            });
+            const dados = await response.json();
+
+            console.log(dados);
+
+            document.getElementById('nome').textContent = dados.user.nome;
+            document.getElementById('email').textContent = dados.user.email;
+            document.getElementById('telefone').textContent = dados.user.telefone;
+            document.getElementById('data').textContent = dados.user.data_nascimento;
+
+            if(dados.psicologo){
+              document.getElementById('crp').textContent = dados.psicologo.crp;
+              document.getElementById('biografia').textContent = dados.psicologo.biografia;
+
+            }
+
+          }catch (error){
+            console.error("Erro ao carregar perfil:", error);
+          }
+        }
+
     </script>  
       
   </body>
