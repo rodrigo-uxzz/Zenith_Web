@@ -391,4 +391,16 @@ textarea {
     cursor: pointer;
 }
 
+/* EXCLUIR CONTA */
+
+.excluir {
+  font-size: medium;
+  color: red;
+  background: #fff;
+  box-shadow: #00000030 0px 4px 8px;
+  border: none;
+  padding: 14px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+}
 
