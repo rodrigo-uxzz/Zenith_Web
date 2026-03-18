@@ -166,30 +166,58 @@ A parte q o Roberto já fez
     ></script>
 
     <script>
+
+
         document.getElementById('sair').addEventListener('click', async function(event) {
 
           const token = localStorage.getItem("token");
 
             event.preventDefault();
-            if (confirm('Tem certeza que deseja sair?')) {
-                window.location.href = 'loginScreen.html';
+            if (confirm('Tem certeza que deseja sair?')){
+
+              
+              try{
+                  const response = await fetch("http://127.0.0.1:8000/api/logout",{
+                    method: "POST",
+                    headers: {
+                      "Authorization": "Bearer " + token,
+                      "Content-Type": "application/json"
+                    }
+                  })
 
 
+                }catch(error){
+                    console.error(error);
+                }
+
+              localStorage.removeItem("token");    
+              window.location.href = 'loginScreen.html';
             }
         });
 
+
         document.addEventListener("DOMContentLoaded", function(){
+          verificarAutenticacao();
           carregarPerfil();
         });
+
+        function verificarAutenticacao(){
+            
+          const token = localStorage.getItem("token");
+
+          if(!token){
+            window.location.href = "loginScreen.html";
+            
+          }
+        }
+
 
         async function carregarPerfil() {
           
           const token = localStorage.getItem("token");
 
           try{
-            if(!token){
-              window.location.href = "loginScreen.html";
-            }
+
             const response = await fetch("http://127.0.0.1:8000/api/perfil", {
               method: "GET",
               headers: {
