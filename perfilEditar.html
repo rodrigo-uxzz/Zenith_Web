@@ -79,7 +79,7 @@
             <span class="icone">
               <ion-icon name="log-out-outline"></ion-icon>
             </span>
-            <span class="titulo">Logout</span>
+            <span class="titulo" id="sair">Logout</span>
           </a>
         </li>
       </ul>
@@ -117,9 +117,9 @@
             </div>
 
             <div class="dados-psicologo">
-              <h2 id="nomeExibir"></h2>
+              <h2 id="mostrarNome"></h2>
               <span>Psicólogo Clínico</span>
-              <p class="crp">CRP: <span id="crpExibir"></span></p>
+              <p class="crp">CRP: <span id="mostrarCrp"></span></p>
             </div>
           </div>
 
@@ -266,8 +266,7 @@
           }
 
           try{
-
-            
+ 
             const response = await fetch("http://127.0.0.1:8000/api/delete", {
               method: "DELETE",
               headers:{
@@ -315,10 +314,10 @@
 
             console.log(dados);
 
-            document.getElementById('nomeExibir').textContent = dados.user.nome;
+            document.getElementById('mostrarNome').textContent = dados.user.nome;
 
             if (dados.psicologo) {
-              document.getElementById('crpExibir').textContent = dados.psicologo.crp;
+              document.getElementById('mostrarCrp').textContent = dados.psicologo.crp;
             }
 
             document.getElementById('nome').value = dados.user.nome;
@@ -379,6 +378,33 @@
             console.error(error);
           }
         }
+
+         document.getElementById('sair').addEventListener('click', async function(event) {
+
+          const token = localStorage.getItem("token");
+
+            event.preventDefault();
+            if (confirm('Tem certeza que deseja sair?')){
+
+              
+              try{
+                  const response = await fetch("http://127.0.0.1:8000/api/logout",{
+                    method: "POST",
+                    headers: {
+                      "Authorization": "Bearer " + token,
+                      "Content-Type": "application/json"
+                    }
+                  })
+
+
+                }catch(error){
+                    console.error(error);
+                }
+
+              localStorage.removeItem("token");    
+              window.location.href = 'loginScreen.html';
+            }
+        });
 
 
     </script>
