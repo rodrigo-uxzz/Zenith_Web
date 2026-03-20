@@ -79,7 +79,7 @@
 
                    <!-- ----separador---- -->
                     
-                    <button type="button" class="botaoC" onclick="validarEProximo()">Próximo -></button>
+                    <button type="button" class="botaoC" id="proximaTela"">Próximo -></button>
                     
                     <div class="façaContainer">
                         <p>Já possui conta? </p><a href="./loginScreen.html" class="faça-login">Faça login</a>
@@ -93,37 +93,6 @@
 
         <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
         <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-
-        <script>
-            // Função para validar e ir pra próxima tela
-            function validarEProximo() {
-                // Pegando os valores dos campos
-                let nome = document.getElementById("fullName").value;
-                let telefone = document.getElementById("telefone").value;
-                let data = document.getElementById("dataNascimento").value;
-                let genero = document.getElementById("genero").value;
-                let cpf = document.getElementById("cpf").value;
-                let crp = document.getElementById("crp").value;
-
-                // Validando se algum campo está vazio
-                if (nome === "" || telefone === "" || data === "" || genero === "" || cpf === "" || crp === "") {
-                    alert("❌ ERRO: Preencha TODOS os campos!");
-                    return; 
-                }
-
-                // Se tudo preenchido, salva no localStorage
-                localStorage.setItem("nome", nome);
-                localStorage.setItem("telefone", telefone);
-                localStorage.setItem("data", data);
-                localStorage.setItem("genero", genero);
-                localStorage.setItem("cpf", cpf);
-                localStorage.setItem("crp", crp);
-
-                alert("✅ Dados salvos! Continuando...");
-                
-                // Redireciona pra próxima página
-                window.location.href = "./criarScreen2.html";
-            }
-        </script>
+        <script type="module" src="./js/cadastrar1.js"></script>
 </body>
 </html>

@@ -9,10 +9,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <script>
         const token = localStorage.getItem("token");
-
+        
         if(!token){
             window.location.href = "loginScreen.html";  
-            
         }
     </script>
 </head>
@@ -156,37 +155,6 @@
         <!-- <p>&copy; 2026 Zenith. Todos os direitos reservados.</p> -->
     </footer>
 
-    <script>
-        
-        //logout
-        document.getElementById('sair').addEventListener('click', async function(event) {
-
-          const token = localStorage.getItem("token");
-
-            event.preventDefault();
-            if (confirm('Tem certeza que deseja sair?')){
-
-              
-              try{
-                  const response = await fetch("http://127.0.0.1:8000/api/logout",{
-                    method: "POST",
-                    headers: {
-                      "Authorization": "Bearer " + token,
-                      "Content-Type": "application/json"
-                    }
-                  })
-
-
-                }catch(error){
-                    console.error(error);
-                }
-
-              localStorage.removeItem("token");    
-              window.location.href = 'loginScreen.html';
-            }
-        });
-        
-        
-    </script>    
+    <script type="module" src="./js/home.js"></script>    
 </body>
 </html>

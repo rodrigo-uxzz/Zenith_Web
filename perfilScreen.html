@@ -173,76 +173,7 @@ A parte q o Roberto já fez
       src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
     ></script>
 
-    <script>
-
-        //função de logout
-        document.getElementById('sair').addEventListener('click', async function(event) {
-
-          const token = localStorage.getItem("token");
-
-            event.preventDefault();
-            if (confirm('Tem certeza que deseja sair?')){
-
-              
-              try{
-                  const response = await fetch("http://127.0.0.1:8000/api/logout",{
-                    method: "POST",
-                    headers: {
-                      "Authorization": "Bearer " + token,
-                      "Content-Type": "application/json"
-                    }
-                  })
-
-
-                }catch(error){
-                    console.error(error);
-                }
-
-              localStorage.removeItem("token");    
-              window.location.href = 'loginScreen.html';
-            }
-        });
-
-
-        document.addEventListener("DOMContentLoaded", function(){
-          carregarPerfil();
-        });
-
-        //funçao de mostrar os dados do usuario
-        async function carregarPerfil() {
-          
-          const token = localStorage.getItem("token");
-
-          try{
-
-            const response = await fetch("http://127.0.0.1:8000/api/perfil", {
-              method: "GET",
-              headers: {
-                  "Content-Type": "application/json",
-                  "Authorization": "Bearer " + token
-              }
-            });
-            const dados = await response.json();
-
-            console.log(dados);
-
-            document.getElementById('nome').textContent = dados.user.nome;
-            document.getElementById('email').textContent = dados.user.email;
-            document.getElementById('telefone').textContent = dados.user.telefone;
-            document.getElementById('data').textContent = dados.user.data_nascimento;
-
-            if(dados.psicologo){
-              document.getElementById('crp').textContent = dados.psicologo.crp;
-              document.getElementById('biografia').textContent = dados.psicologo.biografia;
-
-            }
-
-          }catch (error){
-            console.error("Erro ao carregar perfil:", error);
-          }
-        }
-
-    </script>  
+    <script type="module" src="./js/perfil.js"></script>  
       
   </body>
 </html>
