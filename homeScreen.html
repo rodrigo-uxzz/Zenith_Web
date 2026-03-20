@@ -7,6 +7,14 @@
     <link rel="icon" type="image/png" sizes="64x64" href="./img/logoZ.png">
     <link rel="stylesheet" href="./css/homeScreen.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <script>
+        const token = localStorage.getItem("token");
+
+        if(!token){
+            window.location.href = "loginScreen.html";  
+            
+        }
+    </script>
 </head>
 <body>
     <div class="sidebar">
@@ -149,7 +157,8 @@
     </footer>
 
     <script>
-
+        
+        //logout
         document.getElementById('sair').addEventListener('click', async function(event) {
 
           const token = localStorage.getItem("token");
@@ -176,21 +185,8 @@
               window.location.href = 'loginScreen.html';
             }
         });
-
-        document.addEventListener("DOMContentLoaded", function(){
-          verificarAutenticacao();
-        });
-
-        function verificarAutenticacao(){
-            
-          const token = localStorage.getItem("token");
-
-          if(!token){
-            window.location.href = "loginScreen.html";
-            alert("realize o login")
-            
-          }
-        }
+        
+        
     </script>    
 </body>
 </html>

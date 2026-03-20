@@ -11,6 +11,13 @@
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
       rel="stylesheet"
     />
+    <script>
+      const token = localStorage.getItem("token");
+
+      if(!token){
+        window.location.href = "loginScreen.html";
+      }
+    </script>
   </head>
   <body>
     <div class="sidebar">
@@ -168,7 +175,7 @@ A parte q o Roberto já fez
 
     <script>
 
-
+        //função de logout
         document.getElementById('sair').addEventListener('click', async function(event) {
 
           const token = localStorage.getItem("token");
@@ -198,21 +205,10 @@ A parte q o Roberto já fez
 
 
         document.addEventListener("DOMContentLoaded", function(){
-          verificarAutenticacao();
           carregarPerfil();
         });
 
-        function verificarAutenticacao(){
-            
-          const token = localStorage.getItem("token");
-
-          if(!token){
-            window.location.href = "loginScreen.html";
-            
-          }
-        }
-
-
+        //funçao de mostrar os dados do usuario
         async function carregarPerfil() {
           
           const token = localStorage.getItem("token");

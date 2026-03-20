@@ -15,6 +15,14 @@
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
       rel="stylesheet"
     />
+    <script>
+      const token = localStorage.getItem("token");
+
+      if(!token){
+        window.location.href = "loginScreen.html";
+      }
+
+    </script>
   </head>
 
   <body>
@@ -205,13 +213,14 @@
               </p>
 
               <div class="form-senha">
+                <div class="separar">
 
                 <a id="atualizarPerfil" class="salvar">
                     <ion-icon name="save-outline"></ion-icon>
-                  Salvar alterações  
-                </a>
-
-                <a href="./perfilScreen.html" class="cancelar">
+                    Salvar alterações  
+                  </a>
+                  
+                  <a href="./perfilScreen.html" class="cancelar">
                     Cancelar
                 </a>
                 <a id="deletar" class="excluir">
@@ -237,21 +246,10 @@
     <script>
       
         document.addEventListener("DOMContentLoaded", function(){
-          verificarAutenticacao();
           carregarPerfil();
         });
-
-        function verificarAutenticacao(){
             
-          const token = localStorage.getItem("token");
-
-          if(!token){
-            window.location.href = "loginScreen.html";
-            alert("realize o login")
-            
-          }
-        }
-
+        //função de excluir conta
         document.getElementById("deletar").addEventListener("click", async function () {
 
           const confirmar = confirm("Tem certeza que deseja excluir essa conta ?")
@@ -295,6 +293,8 @@
 
         let dadosOriginais = {};
 
+
+        //função de mostrar os dados do usuario
         async function carregarPerfil() {
           
           const token = localStorage.getItem("token");
@@ -314,12 +314,14 @@
 
             console.log(dados);
 
+            //mostra dados no topo como titulos do perfil
             document.getElementById('mostrarNome').textContent = dados.user.nome;
 
             if (dados.psicologo) {
               document.getElementById('mostrarCrp').textContent = dados.psicologo.crp;
             }
 
+            //mostra os dados que podem ser atualizados
             document.getElementById('nome').value = dados.user.nome;
             document.getElementById('email').value = dados.user.email;
             document.getElementById('telefone').value = dados.user.telefone;
@@ -336,10 +338,12 @@
           }
         }
 
+
         document.getElementById("atualizarPerfil").addEventListener("click", async function () {
           atualizarPerfil()
         });
 
+        //função de atualizar os dados do usuario
         async function atualizarPerfil() {
           const token = localStorage.getItem("token");
 
@@ -379,6 +383,7 @@
           }
         }
 
+        //função de logout
          document.getElementById('sair').addEventListener('click', async function(event) {
 
           const token = localStorage.getItem("token");
