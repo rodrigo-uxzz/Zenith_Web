@@ -5,16 +5,17 @@ export async function apiRequest(endPoint, method = "GET", dados = null) {
 
   const options = {
     method: method,
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: {},
   };
 
   if (token) {
     options.headers["Authorization"] = "Bearer " + token;
   }
 
-  if (dados) {
+  if (dados instanceof FormData) {
+    options.body = dados;
+  } else if (dados) {
+    options.headers["Content-Type"] = "application/json";
     options.body = JSON.stringify(dados);
   }
 
@@ -22,7 +23,7 @@ export async function apiRequest(endPoint, method = "GET", dados = null) {
 
   const result = await response.json();
 
-  return {  
+  return {
     ok: response.ok,
     dados: result,
   };

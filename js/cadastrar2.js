@@ -124,6 +124,11 @@ async function criarConta() {
     // Ir pra login
     window.location.href = "./loginScreen.html";
   } else {
+    if (dados?.errors?.cpf) {
+        alert("Erro: " + dados.errors.cpf[0]);
+    } else {
+        alert("Erro: " + (dados.message || "cpf Invalido"));
+    }
     console.error(error);
     alert("Erro ao Cadastrar tente novamente");
   }

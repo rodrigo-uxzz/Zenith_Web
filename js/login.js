@@ -30,7 +30,6 @@ document.getElementById("loginForm").addEventListener("submit", async function (
     if (ok) {
       localStorage.setItem("token", dados.access_token);
 
-      // Se passou nas validações, redireciona
       window.location.href = "homeScreen.html";
     } else {
       if (result.error === "Aguarde verificação da conta") {
@@ -39,4 +38,5 @@ document.getElementById("loginForm").addEventListener("submit", async function (
         alert("LOGIN INVALIDO");
       }
     }
+    console.log(ok);
   });

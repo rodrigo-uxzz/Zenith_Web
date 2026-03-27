@@ -35,6 +35,15 @@ async function carregarPerfil() {
     document.getElementById("telefone").value = dados.user.telefone;
     document.getElementById("data").value = dados.user.data_nascimento;
 
+    const foto = dados.user.foto_perfil;
+
+    if (foto) {
+      document.getElementById("foto_perfil").src =
+        `http://127.0.0.1:8000/Storage/${foto}`;
+    } else {
+      document.getElementById("foto_perfil").src = "./img/avatarZ.png";
+    }
+
     if (dados.psicologo) {
       document.getElementById("crp").value = dados.psicologo.crp;
       document.getElementById("biografia").value = dados.psicologo.biografia;
@@ -58,11 +67,25 @@ async function atualizarPerfil() {
     Object.entries(dados).filter(([_, v]) => v !== ""),
   );
 
+  const formData = new FormData();
+
+  Object.entries(dadosFiltrados).forEach(([key, value]) => {
+    formData.append(key, value);
+  });
+
+  const foto = document.getElementById("fotoPerfil").files[0];
+
+  if (foto) {
+    formData.append("foto_perfil", foto);
+  }
+
+  formData.append("_method", "PATCH");
+
   try {
-    const { ok, dados } = await apiRequest("/update", "PATCH", dadosFiltrados);
+    const { ok, dados } = await apiRequest("/update", "POST", formData);
 
     if (ok) {
-      alert("Dados atualizados com suceso !");
+      alert("Dados atualizados com sucesso!");
       window.location.href = "perfilScreen.html";
     } else {
       console.error(dados);
@@ -101,22 +124,23 @@ document.getElementById("deletar").addEventListener("click", async function () {
   }
 });
 
-document.getElementById("sair").addEventListener("click", async function (event) {
+document
+  .getElementById("sair")
+  .addEventListener("click", async function (event) {
     event.preventDefault();
 
-    if (!confirm("Tem certeza que deseja sair?"))return;
+    if (!confirm("Tem certeza que deseja sair?")) return;
 
-      try {
-        const {ok, dados} = await apiRequest("/logout", "POST");
+    try {
+      const { ok, dados } = await apiRequest("/logout", "POST");
 
-        if(!ok){
-            console.warn("Erro ao deslogar api", dados)
-        }
-
-      } catch (error) {
-        console.error(error);
+      if (!ok) {
+        console.warn("Erro ao deslogar api", dados);
       }
+    } catch (error) {
+      console.error(error);
+    }
 
-      localStorage.removeItem("token");
-      window.location.href = "loginScreen.html";
+    localStorage.removeItem("token");
+    window.location.href = "loginScreen.html";
   });

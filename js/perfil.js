@@ -38,6 +38,14 @@ async function carregarPerfil() {
         document.getElementById("email").textContent = dados.user.email;
         document.getElementById("telefone").textContent = dados.user.telefone;
         document.getElementById("data").textContent = dados.user.data_nascimento;
+
+        const foto = dados.user.foto_perfil;
+
+        if(foto){
+          document.getElementById("foto_perfil").src = `http://127.0.0.1:8000/Storage/${foto}` ;
+        }else{
+          document.getElementById("foto_perfil").src = './img/avatarZ.png';
+        }
         
         if (dados.psicologo) {
             document.getElementById("crp").textContent = dados.psicologo.crp;
