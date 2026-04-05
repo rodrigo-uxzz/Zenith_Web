@@ -1,7 +1,9 @@
 import { apiRequest } from "./api.js";
 
 //login
-document.getElementById("loginForm").addEventListener("submit", async function (event) {
+document
+  .getElementById("loginForm")
+  .addEventListener("submit", async function (event) {
     event.preventDefault();
 
     const email = document.getElementById("email").value.trim();
@@ -23,19 +25,23 @@ document.getElementById("loginForm").addEventListener("submit", async function (
     };
     console.log(login);
 
-    const {ok,dados} = await apiRequest("/login", "POST", login);
+    const { ok, dados } = await apiRequest("/login", "POST", login);
 
     console.log(dados);
 
-    if (ok) {
-      localStorage.setItem("token", dados.access_token);
-
-      window.location.href = "homeScreen.html";
+    if (dados.user.tipo_usuario !== "psicologo") {
+      alert("login invalido");
     } else {
-      if (result.error === "Aguarde verificação da conta") {
-        alert("SUA CONTA ESTA EM ANÁLISE PELO ADMINISTRADOR, AGUARDE");
+      if (ok) {
+        localStorage.setItem("token", dados.access_token);
+
+        window.location.href = "homeScreen.html";
       } else {
-        alert("LOGIN INVALIDO");
+        if (result.error === "Aguarde verificação da conta") {
+          alert("SUA CONTA ESTA EM ANÁLISE PELO ADMINISTRADOR, AGUARDE");
+        } else {
+          alert("LOGIN INVALIDO");
+        }
       }
     }
     console.log(ok);

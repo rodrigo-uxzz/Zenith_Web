@@ -10,10 +10,11 @@ document
     atualizarPerfil();
   });
 
-//função mostrar perfil
-
 let dadosOriginais = {};
+let fotoOriginal = null;
+let novaFoto = null;
 
+//função mostrar perfil
 async function carregarPerfil() {
   try {
     const { dados } = await apiRequest("/perfil");
@@ -36,12 +37,14 @@ async function carregarPerfil() {
     document.getElementById("data").value = dados.user.data_nascimento;
 
     const foto = dados.user.foto_perfil;
+    const fotoPerfil = document.getElementById("foto_perfil");
+
+    fotoOriginal = foto;
 
     if (foto) {
-      document.getElementById("foto_perfil").src =
-        `http://127.0.0.1:8000/Storage/${foto}`;
+      fotoPerfil.src = "http://127.0.0.1:8000/storage/" + foto;
     } else {
-      document.getElementById("foto_perfil").src = "./img/avatarZ.png";
+      fotoPerfil.src = "./img/avatarZ.png";
     }
 
     if (dados.psicologo) {
@@ -73,10 +76,8 @@ async function atualizarPerfil() {
     formData.append(key, value);
   });
 
-  const foto = document.getElementById("fotoPerfil").files[0];
-
-  if (foto) {
-    formData.append("foto_perfil", foto);
+  if (novaFoto) {
+    formData.append("foto_perfil", novaFoto);
   }
 
   formData.append("_method", "PATCH");
@@ -94,6 +95,19 @@ async function atualizarPerfil() {
     console.error(error);
   }
 }
+
+const inputFoto = document.getElementById("fotoPerfil");
+
+inputFoto.addEventListener("change", function () {
+  const arquivo = this.files[0];
+
+  if (arquivo) {
+    novaFoto = arquivo;
+
+    const preview = URL.createObjectURL(arquivo);
+    document.getElementById("foto_perfil").src = preview;
+  }
+});
 
 //função de excluir conta
 document.getElementById("deletar").addEventListener("click", async function () {
