@@ -3,7 +3,6 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/png" sizes="64x64" href="./img/logoZ.png">
 
     <title>Zenith</title>
 
@@ -30,29 +29,38 @@
         </li>
 
         <li>
-          <a href="homeScreen.html">
+          <a href="./homeScreen.html">
             <span class="icone">
               <ion-icon name="home-outline"></ion-icon>
             </span>
-            <span class="titulo">Inicio</span>
+            <span class="titulo">Home</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="./agendaScreen.html">
+            <span class="icone">
+              <ion-icon name="calendar-outline"></ion-icon>
+            </span>
+            <span class="titulo">Agenda</span>
           </a>
         </li>
 
         <li>
           <a href="#">
             <span class="icone">
-              <ion-icon name="person-outline"></ion-icon>
+              <ion-icon name="people-outline"></ion-icon>
             </span>
-            <span class="titulo">Perfil</span>
+            <span class="titulo">Pacientes</span>
           </a>
         </li>
 
         <li>
           <a href="#">
             <span class="icone">
-              <ion-icon name="heart-outline"></ion-icon>
+              <ion-icon name="wallet-outline"></ion-icon>
             </span>
-            <span class="titulo">Central</span>
+            <span class="titulo">Financeiro</span>
           </a>
         </li>
 
@@ -72,6 +80,27 @@
             </span>
             <span class="titulo">Configurações</span>
           </a>
+        </li>
+
+        <li>
+          <a href="./perfilEditar.html">
+            <span class="icone">
+              <ion-icon name="person-outline"></ion-icon>
+            </span>
+            <span class="titulo">Perfil</span>
+          </a>
+        </li>
+
+        <li class="conta">
+          <!--<a href="#">
+            <span class="icone">
+              <div class="imgCaixa">
+                <img src="img/user.svg"> 
+                A parte q o Roberto já fez
+              </div>
+            </span>
+            <span class="titulo">Moana Dark</span>
+          </a>-->
         </li>
 
         <li>
@@ -206,20 +235,14 @@ Psicólogo clínico com 12 anos de experiência em saúde mental. Responsável p
               </p>
 
               <div class="form-senha">
-                <div class="separar">
 
-                  <a href="./perfilScreen.html" class="salvar">
+                <a href="./perfilScreen.html" class="salvar">
                     <ion-icon name="save-outline"></ion-icon>
-                    Salvar alterações  
-                  </a>
-                  
-                  <a href="./perfilScreen.html" class="cancelar">
+                  Salvar alterações  
+                </a>
+
+                <a href="./perfilScreen.html" class="cancelar">
                     Cancelar
-                  </a>
-                </div>
-                
-                <a href="./index.html" class="excluir">
-                  Excluir conta
                 </a>
               </div>
             </div>
@@ -237,25 +260,5 @@ Psicólogo clínico com 12 anos de experiência em saúde mental. Responsável p
       nomodule
       src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
     ></script>
-
-    <!-- <script>
-
-
-      
-        document.addEventListener("DOMContentLoaded", function(){
-          verificarAutenticacao();
-        });
-
-        function verificarAutenticacao(){
-            
-          const token = localStorage.getItem("token");
-
-          if(!token){
-            window.location.href = "loginScreen.html";
-            alert("realize o login")
-            
-          }
-        }
-    </script> -->
   </body>
 </html>

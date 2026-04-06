@@ -1,9 +1,8 @@
 <!doctype html>
-<html lang="pt-br">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/png" sizes="64x64" href="./img/logoZ.png">
     <title>Zenith</title>
     <link rel="icon" type="image/png" sizes="64x64" href="./img/logoZ.png" />
     <link rel="stylesheet" href="./css/perfilScreen.css" />
@@ -17,66 +16,66 @@
       <ul>
         <li>
           <a href="#">
-            <span class="icone"
-              ><img src="img/logo.png" class="logo" alt="logo do site"
-            /></span>
+            <span class="icone"><img src="img/logo.png" class="logo" alt="logo do site"/></span>
             <span class="titulo">ZENITH</span>
           </a>
         </li>
         <li>
           <a href="./homeScreen.html">
             <span class="icone"><ion-icon name="home-outline"></ion-icon></span>
-            <span class="titulo">Inicio</span>
+            <span class="titulo">Home</span>
+          </a>
+        </li>
+        <li>
+          <a href="./agendaScreen.html">
+            <span class="icone"><ion-icon name="calendar-outline"></ion-icon></span>
+            <span class="titulo">Agenda</span>
           </a>
         </li>
         <li>
           <a href="#">
-            <span class="icone"
-              ><ion-icon name="person-outline"></ion-icon
-            ></span>
-            <span class="titulo">Perfil</span>
+            <span class="icone"><ion-icon name="people-outline"></ion-icon></span>
+            <span class="titulo">Pacientes</span>
           </a>
         </li>
         <li>
           <a href="#">
-            <span class="icone"
-              ><ion-icon name="heart-outline"></ion-icon
-            ></span>
-            <span class="titulo">Central</span>
+            <span class="icone"><ion-icon name="wallet-outline"></ion-icon></span>
+            <span class="titulo">Financeiro</span>
           </a>
         </li>
         <li>
           <a href="#">
-            <span class="icone"
-              ><ion-icon name="chatbubbles-outline"></ion-icon
-            ></span>
+            <span class="icone"><ion-icon name="chatbubbles-outline"></ion-icon></span>
             <span class="titulo">Chat</span>
           </a>
         </li>
         <li>
           <a href="#">
-            <span class="icone"
-              ><ion-icon name="settings-outline"></ion-icon
-            ></span>
+            <span class="icone"><ion-icon name="settings-outline"></ion-icon></span>
             <span class="titulo">Configurações</span>
+          </a>
+        </li>
+        <li>
+          <a href="./perfilScreen.html">
+            <span class="icone"><ion-icon name="person-outline"></ion-icon></span>
+            <span class="titulo">Perfil</span>
           </a>
         </li>
         <li class="conta">
           <!--<a href="#">
-<span class="icone">
-<div class="imgCaixa">
-<img src="img/user.svg"> 
-A parte q o Roberto já fez
-</div>
-</span>
-<span class="titulo">Moana Dark</span>
-</a>-->
+            <span class="icone">
+              <div class="imgCaixa">
+                <img src="img/user.svg"> 
+                A parte q o Roberto já fez
+              </div>
+            </span>
+            <span class="titulo">Moana Dark</span>
+          </a>-->
         </li>
         <li>
           <a href="#" id="sair">
-            <span class="icone"
-              ><ion-icon name="log-out-outline"></ion-icon
-            ></span>
+            <span class="icone"><ion-icon name="log-out-outline"></ion-icon></span>
             <span class="titulo">Logout</span>
           </a>
         </li>
@@ -106,17 +105,18 @@ A parte q o Roberto já fez
             </div>
 
             <div class="dados-psicologo">
-              <h2 id="nome"></h2>
+              <h2>Ricardo Almeida</h2>
               <span>Psicólogo Clínico</span>
-              <p class="crp">CRP <span class="crp" id="crp"></span></p>
+              <p class="crp">CRP: 06/123456</p>
             </div>
           </div>
 
           <!-- Biografia -->
           <div class="card biografia">
             <h3>Biografia</h3>
-            <p id="biografia">
-
+            <p>
+              Psicólogo clínico com 12 anos de experiência em saúde mental. Atua
+              com terapia cognitivo comportamental e atendimento online.
             </p>
           </div>
 
@@ -127,17 +127,17 @@ A parte q o Roberto já fez
 
               <div class="linha-contato">
                 <span>Email</span>
-                <p id="email"></p>
+                <p>ricardo.almeida@terapia.com</p>
               </div>
 
               <div class="linha-contato">
                 <span>Telefone</span>
-                <p id="telefone"></p>
+                <p>(11) 98876-5432</p>
               </div>
 
               <div class="linha-contato">
                 <span>Data de nascimento</span>
-                <p id="data"></p>
+                <p>15/05/1985</p>
               </div>
             </div>
 
@@ -165,87 +165,14 @@ A parte q o Roberto já fez
       nomodule
       src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
     ></script>
-<!-- 
+
     <script>
-
-
-        document.getElementById('sair').addEventListener('click', async function(event) {
-
-          const token = localStorage.getItem("token");
-
+        document.getElementById('sair').addEventListener('click', function(event) {
             event.preventDefault();
-            if (confirm('Tem certeza que deseja sair?')){
-
-              
-              try{
-                  const response = await fetch("http://127.0.0.1:8000/api/logout",{
-                    method: "POST",
-                    headers: {
-                      "Authorization": "Bearer " + token,
-                      "Content-Type": "application/json"
-                    }
-                  })
-
-
-                }catch(error){
-                    console.error(error);
-                }
-
-              localStorage.removeItem("token");    
-              window.location.href = 'loginScreen.html';
+            if (confirm('Tem certeza que deseja sair?')) {
+                window.location.href = 'loginScreen.html';
             }
         });
-
-
-        document.addEventListener("DOMContentLoaded", function(){
-          verificarAutenticacao();
-          carregarPerfil();
-        });
-
-        function verificarAutenticacao(){
-            
-          const token = localStorage.getItem("token");
-
-          if(!token){
-            window.location.href = "loginScreen.html";
-            
-          }
-        }
-
-
-        async function carregarPerfil() {
-          
-          const token = localStorage.getItem("token");
-
-          try{
-
-            const response = await fetch("http://127.0.0.1:8000/api/perfil", {
-              method: "GET",
-              headers: {
-                  "Content-Type": "application/json",
-                  "Authorization": "Bearer " + token
-              }
-            });
-            const dados = await response.json();
-
-            console.log(dados);
-
-            document.getElementById('nome').textContent = dados.user.nome;
-            document.getElementById('email').textContent = dados.user.email;
-            document.getElementById('telefone').textContent = dados.user.telefone;
-            document.getElementById('data').textContent = dados.user.data_nascimento;
-
-            if(dados.psicologo){
-              document.getElementById('crp').textContent = dados.psicologo.crp;
-              document.getElementById('biografia').textContent = dados.psicologo.biografia;
-
-            }
-
-          }catch (error){
-            console.error("Erro ao carregar perfil:", error);
-          }
-        } -->
-
     </script>  
       
   </body>

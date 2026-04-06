@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,21 +18,27 @@
                 </a>
             </li>
             <li>
-                <a href="#">
+                <a href="./homeScreen.html">
                     <span class="icone"><ion-icon name="home-outline"></ion-icon></span>
-                    <span class="titulo">Inicio</span>
+                    <span class="titulo">Home</span>
                 </a>
             </li>
             <li>
-                <a href="./perfilScreen.html">
-                    <span class="icone"><ion-icon name="person-outline"></ion-icon></span>
-                    <span class="titulo">Perfil</span>
+                <a href="./agendaScreen.html">
+                    <span class="icone"><ion-icon name="calendar-outline"></ion-icon></span>
+                    <span class="titulo">Agenda</span>
                 </a>
             </li>
             <li>
                 <a href="#">
-                    <span class="icone"><ion-icon name="heart-outline"></ion-icon></span>
-                    <span class="titulo">Central</span>
+                    <span class="icone"><ion-icon name="people-outline"></ion-icon></span>
+                    <span class="titulo">Pacientes</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <span class="icone"><ion-icon name="wallet-outline"></ion-icon></span>
+                    <span class="titulo">Financeiro</span>
                 </a>
             </li>
             <li>
@@ -45,6 +51,12 @@
                 <a href="#">
                     <span class="icone"><ion-icon name="settings-outline"></ion-icon></span>
                     <span class="titulo">Configurações</span>
+                </a>
+            </li>
+            <li>
+                <a href="./perfilScreen.html">
+                    <span class="icone"><ion-icon name="person-outline"></ion-icon></span>
+                    <span class="titulo">Perfil</span>
                 </a>
             </li>
             <li class="conta">
@@ -67,78 +79,129 @@
         </ul>
     </div>
 
-    <main>
-        <header class="dashboard-header">
-            <h1> Bem Vindo!</h1>
-            <h4> Confira o que está acontecendo hoje em seu consultório</h4>
-        </header>
+   <main class="container">
 
-        <section class="dashboard-content">
-            <!-- Notificações -->
-            <div class="notificacoes">
-                <div class="notificacoes-header">
-                    <!-- <ion-icon name="notifications-outline" class="iconeNoti"></ion-icon> -->
-                    <h3>NOTIFICAÇÕES</h3>
+    <!-- CARDS SUPERIORES -->
+    <section class="cards-resumo">
+
+        <div class="card">
+            <h3>Total de Pacientes</h3>
+            <p class="numero">41</p>
+        </div>
+
+        <div class="card">
+            <h3>Consultas no Mês</h3>
+            <p class="numero">132</p>
+        </div>
+
+        <div class="card">
+            <h3>Faturamento</h3>
+            <p class="numero">R$3000</p>
+        </div>
+
+        <div class="card">
+            <h3>Consultas Hoje</h3>
+            <p class="numero">8</p>
+        </div>
+
+    </section>
+
+    <!-- ÁREA CENTRAL -->
+    <section class="grid-principal">
+
+        <!-- Próximas consultas -->
+        <div class="painel">
+            <h2>Próximas Consultas</h2>
+
+            <div class="consulta">
+                <div>
+                    <strong>Ana Carolina Silva</strong>
+                    <span>09:00</span>
                 </div>
-
-                <div class="card">
-                    <ion-icon name="checkmark-circle-outline"></ion-icon>
-
-                    <div>
-                        <strong>Agendamento Confirmado</strong>
-                        <p>Sarah Johnson confirmou a consulta para amanhã às 14:00</p>
-                        <span>há 5 minutos</span>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <ion-icon name="cash-outline"></ion-icon>
-
-                    <div>
-                        <strong>Pagamento Recebido</strong>
-                        <p>Pagamento de R$ 250,00 recebido de Michael Jackson</p>
-                        <span>há 1 hora</span>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <ion-icon name="person-add-outline"></ion-icon>
-
-                    <div>
-                        <strong>Novo Pedido de Agendamento</strong>
-                        <p>Aline Ferreira solicitou uma sessão para sexta-feira às 14:00</p>
-                        <span>há 2 horas</span>
-                    </div>
-                </div>
-
-                <a href="#" class="ver-mais">Ver Mais</a>
+                <button class="btn">Entrar</button>
             </div>
+
+            <div class="consulta">
+                <div>
+                    <strong>Carlos Silva</strong>
+                    <span>11:00</span>
+                </div>
+                <button class="btn secundario">Aguarde</button>
+            </div>
+
+            <div class="consulta">
+                <div>
+                    <strong>Mariana Costa</strong>
+                    <span>14:00</span>
+                </div>
+                <button class="btn secundario">Aguarde</button>
+            </div>
+
+        </div>
 
         <!-- Atalhos -->
-        <section class="atalhos">
-            <h3>Atalhos Rápidos</h3>
+        <div class="painelCard atalhosRapidos">
 
-            <div class="atalhos-grid">
-                <div class="atalho-card">
-                    <ion-icon name="calendar-clear-outline" class="iconeAtalho"></ion-icon>
+            <h2 class="tituloPainel">Atalhos Rápidos</h2>
 
-                    <div>
-                        <strong>Ver Todas as Sessões</strong>
-                        <p>Gerencie seus compromissos</p>
-                    </div>
-                </div>
-
-                <div class="atalho-card">
-                    <ion-icon name="time-outline" class="iconeAtalho"></ion-icon>
-                    <div>
-                        <strong>Ver Minha Agenda</strong>
-                        <p>Verifique sua disponibilidade</p>
-                    </div>
-                </div>
-
+            <div class="listaAtalhos">
+            
+                <button class="botaoAtalho">
+                    <span class="iconeAtalho">👤</span>
+                    <p class="textoAtalho">Novo Paciente</p>
+                </button>
+            
+                <button class="botaoAtalho">
+                    <span class="iconeAtalho">📝</span>
+                    <p class="textoAtalho">Nova Consulta</p>
+                </button>
+            
+                <button class="botaoAtalho">
+                    <span class="iconeAtalho">📅</span>
+                    <p class="textoAtalho">Ver Agenda</p>
+                </button>
+            
+                <button class="botaoAtalho">
+                    <span class="iconeAtalho">📄</span>
+                    <p class="textoAtalho">Ver Prontuários</p>
+                </button>
+            
             </div>
-        </section>
-    </main>
+        
+        </div>
+
+    </section>
+
+    <!-- PARTE INFERIOR -->
+    <section class="grid-inferior">
+
+        <div class="painel">
+            <h2>Consultas por Semana</h2>
+            <div class="grafico-fake"></div>
+        </div>
+
+        <div class="painel">
+            <h2>Faturamento Mensal</h2>
+            <div class="grafico-fake"></div>
+        </div>
+
+        <div class="painel">
+            <h2>Alertas</h2>
+
+            <div class="alerta cancelado">
+                Consulta Cancelada<br>
+                Pedro Silva cancelou consulta às 15h.
+            </div>
+
+            <div class="alerta pendente">
+                Pagamento Pendente<br>
+                3 consultas aguardando pagamento.
+            </div>
+        </div>
+
+    </section>
+
+</main>
     
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
@@ -148,49 +211,13 @@
         <!-- <p>&copy; 2026 Zenith. Todos os direitos reservados.</p> -->
     </footer>
 
-    <!-- <script>
-
-        document.getElementById('sair').addEventListener('click', async function(event) {
-
-          const token = localStorage.getItem("token");
-
+    <script>
+        document.getElementById('sair').addEventListener('click', function(event) {
             event.preventDefault();
-            if (confirm('Tem certeza que deseja sair?')){
-
-              
-              try{
-                  const response = await fetch("http://127.0.0.1:8000/api/logout",{
-                    method: "POST",
-                    headers: {
-                      "Authorization": "Bearer " + token,
-                      "Content-Type": "application/json"
-                    }
-                  })
-
-
-                }catch(error){
-                    console.error(error);
-                }
-
-              localStorage.removeItem("token");    
-              window.location.href = 'loginScreen.html';
+            if (confirm('Tem certeza que deseja sair?')) {
+                window.location.href = 'loginScreen.html';
             }
         });
-
-        document.addEventListener("DOMContentLoaded", function(){
-          verificarAutenticacao();
-        });
-
-        function verificarAutenticacao(){
-            
-          const token = localStorage.getItem("token");
-
-          if(!token){
-            window.location.href = "loginScreen.html";
-            alert("realize o login")
-            
-          }
-        }
-    </script>     -->
+    </script>    
 </body>
 </html>

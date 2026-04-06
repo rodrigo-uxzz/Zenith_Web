@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" sizes="64x64" href="./img/logoZ.png">
     <link rel="stylesheet" href="./css/criarScreen.css">
-    <title>ZENITH - Criar conta</title>
+    <title>Criar conta</title>
     <link rel="icon" type="image/x-icon" href="./img/logo z.PNG">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
@@ -52,10 +51,10 @@
                            <label for="genero" class="label-diferenciado">Gênero:</label>
                            <select class="input-diferenciado" id="genero" name="genero" required>
                                <option value="">Selecione um gênero</option>
-                               <option value="MASCULINO">Masculino</option>
-                               <option value="FEMININO">Feminino</option>
-                               <option value="OUTRO">Outro</option>
-                               <option value="PREFIRO_NAO_INFORMAR">Prefiro não informar</option>
+                               <option value="masculino">Masculino</option>
+                               <option value="feminino">Feminino</option>
+                               <option value="outro">Outro</option>
+                               <option value="prefiro_nao_informar">Prefiro não informar</option>
                            </select>
                         </div>
                    </div>
@@ -91,10 +90,35 @@
         </main>
         <p class="mds">&copy; 2026 Zenith. Todos os direitos reservados.</p>
 
+        <!-- Modal -->
+        <div id="modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <p id="modal-message"></p>
+            </div>
+        </div>
+
         <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
         <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 
         <script>
+            // Função para mostrar modal
+            function showModal(message) {
+                document.getElementById('modal-message').textContent = message;
+                document.getElementById('modal').style.display = 'block';
+            }
+
+            // Fechar modal
+            document.querySelector('.close').onclick = function() {
+                document.getElementById('modal').style.display = 'none';
+            }
+
+            window.onclick = function(event) {
+                if (event.target == document.getElementById('modal')) {
+                    document.getElementById('modal').style.display = 'none';
+                }
+            }
+
             // Função para validar e ir pra próxima tela
             function validarEProximo() {
                 // Pegando os valores dos campos
@@ -107,7 +131,7 @@
 
                 // Validando se algum campo está vazio
                 if (nome === "" || telefone === "" || data === "" || genero === "" || cpf === "" || crp === "") {
-                    alert("❌ ERRO: Preencha TODOS os campos!");
+                    showModal("❌ ERRO: Preencha TODOS os campos!");
                     return; 
                 }
 
@@ -119,10 +143,12 @@
                 localStorage.setItem("cpf", cpf);
                 localStorage.setItem("crp", crp);
 
-                alert("✅ Dados salvos! Continuando...");
+                showModal("✅ Dados salvos! Continuando...");
                 
-                // Redireciona pra próxima página
-                window.location.href = "./criarScreen2.html";
+                // Redireciona pra próxima página após fechar modal
+                setTimeout(() => {
+                    window.location.href = "./criarScreen2.html";
+                }, 2000); // 2 segundos para o usuário ver
             }
         </script>
 </body>

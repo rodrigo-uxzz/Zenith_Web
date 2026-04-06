@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" sizes="64x64" href="./img/logoZ.png">
     <link rel="stylesheet" href="./css/criarScreen2.css">
-    <title>ZENITH - Criar conta</title>
+    <title>Criar conta</title>
     <link rel="icon" type="image/x-icon" href="./img/logo z.PNG">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
@@ -29,8 +28,8 @@
                    <div class="linha1"> 
                        <div class="input-container">
                            <img src="./img/user.svg" alt="icone" class="icon-input">
-                           <label for="username" class="label-diferenciado">Username:</label>
-                           <input type="text" class="input-diferenciado" id="username" name="username" required placeholder="username">
+                           <label for="crp" class="label-diferenciado">CRP (Registro Profissional):</label>
+                           <input type="text" class="input-diferenciado" id="crp" name="crp" required placeholder="00/00000">
                        </div>
                    </div>
                    
@@ -57,10 +56,10 @@
                            <label for="formacao" class="label-diferenciado">Qual seu grau de formação?</label>
                            <select class="input-diferenciado" id="formacao" name="formacao" required>
                                <option value="">Selecione uma opção</option>
-                               <option value="GRADUACAO">Graduação</option>
-                               <option value="ESPECIALIZACAO">Especialização</option>
-                               <option value="MESTRADO">Mestrado</option>
-                               <option value="DOUTORADO">Doutorado</option>
+                               <option value="graduado">Graduado</option>
+                               <option value="especialista">Especialista</option>
+                               <option value="mestre">Mestre</option>
+                               <option value="doutor">Doutor</option>
                            </select>
                        </div>
                     </div>
@@ -109,15 +108,42 @@
         </main>
         <p class="mds">&copy; 2026 Zenith. Todos os direitos reservados.</p>
 
+        <!-- Modal -->
+        <div id="modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <p id="modal-message"></p>
+            </div>
+        </div>
+
         <script>
+            // Função para mostrar modal
+            function showModal(message) {
+                document.getElementById('modal-message').textContent = message;
+                document.getElementById('modal').style.display = 'block';
+            }
+
+            // Fechar modal
+            document.querySelector('.close').onclick = function() {
+                document.getElementById('modal').style.display = 'none';
+            }
+
+            window.onclick = function(event) {
+                if (event.target == document.getElementById('modal')) {
+                    document.getElementById('modal').style.display = 'none';
+                }
+            }
+
             // Quando a página abre, valida se tem dados salvos
             window.addEventListener("DOMContentLoaded", function() {
                 let nome = localStorage.getItem("nome");
                 
                 // Se não encontrou, volta pra tela 1
                 if (nome === null) {
-                    alert("⚠️ Você precisa preencher a tela anterior!");
-                    window.location.href = "./criarScreen.html";
+                    showModal("⚠️ Você precisa preencher a tela anterior!");
+                    setTimeout(() => {
+                        window.location.href = "./criarScreen.html";
+                    }, 2000);
                 }
             });
 
@@ -127,9 +153,8 @@
             }
 
             // Função pra criar conta
-            async function criarConta() {
+            function criarConta() {
                 // Pegando os valores dos campos da tela 2
-                let username = document.getElementById("username").value;
                 let email = document.getElementById("email").value;
                 let senha = document.getElementById("senha").value;
                 let confirmarSenha = document.getElementById("confirmarSenha").value;
@@ -138,14 +163,14 @@
                 let termos = document.getElementById("termos").checked;
 
                 // Validando se estão vazios
-                if (email === "" || senha === "" || confirmarSenha === "" || !cadastroEpsi || formacao === "" || !termos || username === "") {
-                    alert("❌ ERRO: Preencha TODOS os campos e aceite os termos!");
+                if (email === "" || senha === "" || confirmarSenha === "" || !cadastroEpsi || formacao === "" || !termos) {
+                    showModal("❌ ERRO: Preencha TODOS os campos e aceite os termos!");
                     return;
                 }
 
                 // Validando se as senhas são iguais
                 if (senha !== confirmarSenha) {
-                    alert("❌ ERRO: As senhas não conferem!");
+                    showModal("❌ ERRO: As senhas não conferem!");
                     return;
                 }
 
@@ -158,72 +183,37 @@
                 let crp = localStorage.getItem("crp");
 
                 // Salvando dados da tela 2 também
-                localStorage.setItem("username", username);
                 localStorage.setItem("email", email);
                 localStorage.setItem("senha", senha);
                 localStorage.setItem("cadastroEpsi", cadastroEpsi.value);
                 localStorage.setItem("formacao", formacao);
-                localStorage.setItem("termos", termos.checked);
 
-                // salvando no banco de dados
-                const dados = {
-                    nome: localStorage.getItem("nome"),
-                    telefone: localStorage.getItem("telefone"),
-                    data: localStorage.getItem("data"),
-                    genero: localStorage.getItem("genero"),
-                    cpf: localStorage.getItem("cpf"),
-                    crp: localStorage.getItem("crp"),
-                    username: localStorage.getItem("username"),
-                    email: localStorage.getItem("email"),
-                    senha: localStorage.getItem("senha"),
-                    cadastroEpsi: localStorage.getItem("cadastroEpsi") === "sim",
-                    formacao:localStorage.getItem("formacao"),
-                    termos:termos
-                }
-
-                console.log(dados);
-
-                const resposta = await fetch("http://127.0.0.1:8000/api/registerPsicologo", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-
-                    body: JSON.stringify(dados)
-
-                });
-
-                const resultado = await resposta.json();
-                console.log(resultado);
-                if(resposta.ok){
-                    
-                    // Mostrando um resumo de todos os dados
+                // Mostrando um resumo de todos os dados
                 let resumo = `
-                    ✅ CONTA CRIADA COM SUCESSO!
+✅ CONTA CRIADA COM SUCESSO!
 
-                    📋 DADOS PESSOAIS:
-                    • Nome: ${nome}
-                    • Telefone: ${telefone}
-                    • Data Nascimento: ${data}
-                    • Gênero: ${genero}
+📋 DADOS PESSOAIS:
+• Nome: ${nome}
+• Telefone: ${telefone}
+• Data Nascimento: ${data}
+• Gênero: ${genero}
 
-                    📄 DOCUMENTOS:
-                    • CPF: ${cpf}
-                    • CRP: ${crp}
+📄 DOCUMENTOS:
+• CPF: ${cpf}
+• CRP: ${crp}
 
-                    💼 DADOS PROFISSIONAIS:
-                    • Email: ${email}
-                    • E-psi: ${cadastroEpsi.value}
-                    • Formação: ${formacao}
-                    `;
+💼 DADOS PROFISSIONAIS:
+• Email: ${email}
+• E-psi: ${cadastroEpsi.value}
+• Formação: ${formacao}
+                `;
 
-                    alert(resumo);
-
-                    // Ir pra home
-                    window.location.href = "./splashScreen.html";
-                }else{
-                    alert("Erro ao Cadastrar tente novamente");
-                }
+                showModal(resumo);
+                
+                // Ir pra home
+                setTimeout(() => {
+                    window.location.href = "./homeScreen.html";
+                }, 5000); // Mais tempo para o resumo
             }
         </script>
 </body>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agenda</title>
+
+    <link rel="stylesheet" href="./css/agendaScreen.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="sidebar">
+        <ul>
+            <li>
+                <a href="#">
+                    <span class="icone"><img src="img/logo.png" class="logo" alt="logo do site"></span>
+                    <span class="titulo">ZENITH</span>
+                </a>
+            </li>
+            <li>
+                <a href="./homeScreen.html">
+                    <span class="icone"><ion-icon name="home-outline"></ion-icon></span>
+                    <span class="titulo">Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="./agendaScreen.html">
+                    <span class="icone"><ion-icon name="calendar-outline"></ion-icon></span>
+                    <span class="titulo">Agenda</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <span class="icone"><ion-icon name="people-outline"></ion-icon></span>
+                    <span class="titulo">Pacientes</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <span class="icone"><ion-icon name="wallet-outline"></ion-icon></span>
+                    <span class="titulo">Financeiro</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <span class="icone"><ion-icon name="chatbubbles-outline"></ion-icon></span>
+                    <span class="titulo">Chat</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <span class="icone"><ion-icon name="settings-outline"></ion-icon></span>
+                    <span class="titulo">Configurações</span>
+                </a>
+            </li>
+            <li>
+                <a href="./perfilScreen.html">
+                    <span class="icone"><ion-icon name="person-outline"></ion-icon></span>
+                    <span class="titulo">Perfil</span>
+                </a>
+            </li>
+            <li class="conta">
+                <!--<a href="#">
+                    <span class="icone">
+                        <div class="imgCaixa">
+                             <img src="img/user.svg"> 
+                             A parte q o Roberto já fez
+                        </div>
+                    </span>
+                    <span class="titulo">Moana Dark</span>
+                </a>-->
+            </li>
+            <li>
+                <a href="#" id="sair">
+                    <span class="icone"><ion-icon name="log-out-outline"></ion-icon></span>
+                    <span class="titulo">Logout</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <main class="agendaContainer">
+
+        <!-- HEADER -->
+        <header class="agendaHeader">
+
+            <div>
+                <h1 class="tituloAgenda">Agenda</h1>
+                <p class="dataAgenda">terça-feira, 31 de março de 2026</p>
+            </div>
+
+            <div class="acoesAgenda">
+                <button class="btnNavegacao">‹</button>
+                <span class="hojeTexto">Hoje</span>
+                <button class="btnNavegacao">›</button>
+
+                <button class="btnPrincipal">
+                    + Nova Consulta
+                </button>
+            </div>
+
+        </header>
+
+        <!-- FILTROS -->
+        <section class="filtrosAgenda">
+
+            <div class="tabsAgenda">
+                <button class="tabAtiva">Diário</button>
+                <button>Semanal</button>
+            </div>
+
+            <input
+                type="text"
+                placeholder="Buscar paciente"
+                class="inputBusca"
+            >
+
+            <button class="btnFiltro">
+                Todos os Status
+            </button>
+
+        </section>
+
+        <!-- LISTA DE HORÁRIOS -->
+        <section class="listaHorarios">
+
+            <!-- ITEM -->
+            <div class="linhaHorario">
+                <div class="hora">08:00</div>
+                <div class="horarioLivre">Horário disponível</div>
+            </div>
+
+            <div class="linhaHorario">
+                <div class="hora">09:00</div>
+
+                <div class="consultaCard">
+                    <strong>Ana Carolina Silva</strong>
+                    <span>09h</span>
+                </div>
+            </div>
+
+            <div class="linhaHorario">
+                <div class="hora">10:00</div>
+                <div class="horarioLivre">Horário disponível</div>
+            </div>
+
+            <div class="linhaHorario">
+                <div class="hora">11:00</div>
+
+                <div class="consultaCard">
+                    <strong>Carlos Silva</strong>
+                    <span>11h</span>
+                </div>
+            </div>
+
+            <div class="linhaHorario">
+                <div class="hora">12:00</div>
+                <div class="horarioLivre">Horário disponível</div>
+            </div>
+
+            <div class="linhaHorario">
+                <div class="hora">13:00</div>
+                <div class="horarioLivre">Horário disponível</div>
+            </div>
+
+            <div class="linhaHorario">
+                <div class="hora">14:00</div>
+
+                <div class="consultaCard">
+                    <strong>Mariana Costa</strong>
+                    <span>14h</span>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+</body>
+</html>
