@@ -1,26 +1,27 @@
 const API_URL = "http://127.0.0.1:8000/api";
 
-async function apiRequest(endPoint, method = "GET", dados = null) {
+export async function apiRequest(endPoint, method = "GET", dados = null) {
   const token = localStorage.getItem("token");
 
   const options = {
     method: method,
-    headers: {
-      "Content-Type": "application./json",
-    },
+    headers: {},
   };
 
   if (token) {
-    options.headers["Authorization"] = "Bearer" + token;
+    options.headers["Authorization"] = "Bearer " + token;
   }
 
-  if (dados) {
+  if (dados instanceof FormData) {
+    options.body = dados;
+  } else if (dados) {
+    options.headers["Content-Type"] = "application/json";
     options.body = JSON.stringify(dados);
   }
 
-  const response = await fetch(API_URL, endPoint, options);
+  const response = await fetch(API_URL + endPoint, options);
 
-  const result = response.json();
+  const result = await response.json();
 
   return {
     ok: response.ok,

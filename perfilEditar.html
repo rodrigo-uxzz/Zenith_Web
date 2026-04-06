@@ -14,6 +14,14 @@
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
       rel="stylesheet"
     />
+    <script>
+      const token = localStorage.getItem("token");
+
+      if(!token){
+        window.location.href = "loginScreen.html";
+      }
+
+    </script>
   </head>
 
   <body>
@@ -108,7 +116,7 @@
             <span class="icone">
               <ion-icon name="log-out-outline"></ion-icon>
             </span>
-            <span class="titulo">Logout</span>
+            <span class="titulo" id="sair">Logout</span>
           </a>
         </li>
       </ul>
@@ -136,19 +144,21 @@
 
           <div class="perfil-topo">
             <div class="avatar-container">
-              <div class="avatar-img">RA</div>
+              <div class="avatar-img">
+                <img id="foto_perfil" src="./img/avatarZ.png" alt="foto de perfil" >
+              </div>
 
-              <label for="uploadFoto" class="botao-foto">
+              <label for="fotoPerfil" class="botao-foto">
                 <ion-icon name="camera-outline"></ion-icon>
               </label>
 
-              <input type="file" id="uploadFoto" accept="image/*" />
+              <input type="file" id="fotoPerfil" accept="image/*" />
             </div>
 
-            <div class="dados-psicologo">
-              <h2>Ricardo Almeida</h2>
+            <div class="dados-psicologo"> 
+              <h2 id="mostrarNome"></h2>
               <span>Psicólogo Clínico</span>
-              <p class="crp">CRP: 06/123456</p>
+              <p class="crp">CRP: <span id="mostrarCrp"></span></p>
             </div>
           </div>
 
@@ -162,7 +172,7 @@
                 <div class="linha">
                     <label>Nome completo</label> <p class="asterisco">*</p>
                 </div>
-                <input type="text" value="Dr. Ricardo Almeida" />
+                <input type="text" id="nome" />
               </div>
 
               <div class="campo">
@@ -171,18 +181,18 @@
                 </div>
                 <input
                   type="email"
-                  value="ricardo.almeida@terapiaconnect.com.br"
+                  id="email"
                 />
               </div>
 
               <div class="campo">
                 <label>Telefone</label>
-                <input type="text" value="(11) 98876-5432" />
+                <input type="text" id="telefone" />
               </div>
 
               <div class="campo">
                 <label>Data de nascimento</label>
-                <input type="date" value="1985-05-15" />
+                <input type="date" id="data" />
               </div>
             </div>
 
@@ -195,7 +205,7 @@
                 <div class="linha">
                     <label>CRP</label> <p class="asterisco">*</p>
                 </div>
-                <input type="text" value="06/123456" />
+                <input type="text" id="crp" />
               </div>
 
               <div class="campo">
@@ -207,8 +217,7 @@
             <div class="campo">
               <label>Biografia / Descrição profissional</label>
 
-              <textarea>
-Psicólogo clínico com 12 anos de experiência em saúde mental. Responsável pela supervisão clínica e qualidade dos atendimentos na plataforma.
+              <textarea id="biografia">
             </textarea
               >
             </div>
@@ -226,7 +235,7 @@ Psicólogo clínico com 12 anos de experiência em saúde mental. Responsável p
 
                 <div class="campo">
                   <label>Confirmar nova senha</label>
-                  <input type="password" placeholder="Repita a senha" />
+                  <input type="password" placeholder="Repita a senha" id="senha"/>
                 </div>
               </div>
 
@@ -236,13 +245,16 @@ Psicólogo clínico com 12 anos de experiência em saúde mental. Responsável p
 
               <div class="form-senha">
 
-                <a href="./perfilScreen.html" class="salvar">
+                <a id="atualizarPerfil" class="salvar">
                     <ion-icon name="save-outline"></ion-icon>
                   Salvar alterações  
                 </a>
 
                 <a href="./perfilScreen.html" class="cancelar">
                     Cancelar
+                </a>
+                <a id="deletar" class="excluir">
+                  Excluir conta
                 </a>
               </div>
             </div>
@@ -260,5 +272,7 @@ Psicólogo clínico com 12 anos de experiência em saúde mental. Responsável p
       nomodule
       src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
     ></script>
+
+    <script type="module" src="./js/editarPerfil.js"></script>
   </body>
 </html>

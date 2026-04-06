@@ -7,6 +7,13 @@
     <link rel="icon" type="image/png" sizes="64x64" href="./img/logoZ.png">
     <link rel="stylesheet" href="./css/homeScreen.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <script>
+        const token = localStorage.getItem("token");
+        
+        if(!token){
+            window.location.href = "loginScreen.html";  
+        }
+    </script>
 </head>
 <body>
     <div class="sidebar">
@@ -211,13 +218,6 @@
         <!-- <p>&copy; 2026 Zenith. Todos os direitos reservados.</p> -->
     </footer>
 
-    <script>
-        document.getElementById('sair').addEventListener('click', function(event) {
-            event.preventDefault();
-            if (confirm('Tem certeza que deseja sair?')) {
-                window.location.href = 'loginScreen.html';
-            }
-        });
-    </script>    
+    <script type="module" src="./js/home.js"></script>    
 </body>
 </html>

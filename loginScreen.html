@@ -45,7 +45,9 @@
     </main>
         <p class="mds">&copy; 2026 Zenith. Todos os direitos reservados.</p>
     
-        <!-- Modal -->
+    <script type="module" src="./js/login.js"></script>
+
+            <!-- Modal -->
         <div id="modal" class="modal">
             <div class="modal-content">
                 <span class="close">&times;</span>
@@ -53,43 +55,5 @@
             </div>
         </div>
     
-    <script>
-        // Função para mostrar modal
-        function showModal(message) {
-            document.getElementById('modal-message').textContent = message;
-            document.getElementById('modal').style.display = 'block';
-        }
-
-        // Fechar modal
-        document.querySelector('.close').onclick = function() {
-            document.getElementById('modal').style.display = 'none';
-        }
-
-        window.onclick = function(event) {
-            if (event.target == document.getElementById('modal')) {
-                document.getElementById('modal').style.display = 'none';
-            }
-        }
-
-        // document.getElementById('loginForm').addEventListener('submit', function(event) {
-        //     event.preventDefault();
-            
-        //     const email = document.getElementById('email').value.trim();
-        //     const password = document.getElementById('password').value.trim();
-            
-        //     if (email === '') {
-        //         showModal('Por favor, preencha o campo de E-mail ou CRP');
-        //         return;
-        //     }
-            
-        //     if (password === '') {
-        //         showModal('Por favor, preencha o campo de Senha');
-        //         return;
-        //     }
-            
-        //     // Se passou nas validações, redireciona
-        //     window.location.href = 'homeScreen.html';
-        // });
-    </script>
 </body>
 </html>
