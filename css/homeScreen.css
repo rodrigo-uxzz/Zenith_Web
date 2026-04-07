@@ -197,6 +197,15 @@ h3{
     box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
+.card-icon {
+    margin-bottom: 10px;
+}
+
+.card-icon img {
+    width: 40px;
+    height: 40px;
+}
+
 .card h3 {
     font-size: 14px;
     color: #666;
@@ -274,7 +283,12 @@ h3{
 /* ÍCONE */
 
 .iconeAtalho {
-    font-size: 22px;
+    font-size: 40px;
+}
+
+.botaoAtalho img.iconAtalho {
+    width: 48px;
+    height: 48px;
 }
 
 /* TEXTO */
@@ -359,7 +373,6 @@ strong{
 
 .consulta {
     display: flex;
-    justify-content: space-between;
     align-items: center;
     background: #f7f5fd;
     padding: 12px;
@@ -367,7 +380,25 @@ strong{
     margin-bottom: 10px;
 }
 
-.consulta span {
+.consulta .btn {
+    margin-left: auto;
+}
+
+.consulta .iconConsulta {
+    font-size: 20px;
+    color: #7b5cff;
+    margin-right: 20px;
+    margin-left: 10px;
+}
+
+.consulta .iconeC {
+    font-size: 16px;
+    color: #fff;
+    
+    width: 30px;
+}
+
+.consulta .hora {
     display: block;
     font-size: 13px;
     color: #777;
@@ -379,17 +410,28 @@ strong{
     border: none;
     background: #7b5cff;
     color: white;
-    padding: 8px 14px;
+    padding: 5px 0px 5px 12px;
     border-radius: 6px;
     cursor: pointer;
     font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 120px;
+    min-height: 36px;
+}
+
+.btn .iconeC ion-icon {
+    font-size: 16px;
 }
 
 .btn.secundario {
+    padding: 5px 14px 5px 12px;
+    text-align: center;
     background: #cfc6ff;
     color: #4a3ab0;
 }
-
 /* GRID INFERIOR */
 
 .grid-inferior {
@@ -427,6 +469,11 @@ strong{
 .pendente {
     background: #fff4d6;
     color: #a07900;
+}
+
+.tituloAlerta {
+    font-weight: 600;
+    margin-bottom: 5px;
 }
 
 /* RESPONSIVO */
