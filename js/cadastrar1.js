@@ -4,39 +4,51 @@ document.getElementById("proximaTela").addEventListener("click", function () {
 });
 
 // Função para validar e ir pra próxima tela
-function validarProximo() {
-  // Pegando os valores dos campos
-  let nome = document.getElementById("fullName").value;
-  let telefone = document.getElementById("telefone").value;
-  let data = document.getElementById("dataNascimento").value;
-  let genero = document.getElementById("genero").value;
-  let cpf = document.getElementById("cpf").value;
-  let crp = document.getElementById("crp").value;
+function showModal(message) {
+                document.getElementById('modal-message').textContent = message;
+                document.getElementById('modal').style.display = 'block';
+            }
 
-  // Validando se algum campo está vazio
-  if (
-    nome === "" ||
-    telefone === "" ||
-    data === "" ||
-    genero === "" ||
-    cpf === "" ||
-    crp === ""
-  ) {
-    alert("❌ ERRO: Preencha TODOS os campos!");
-    return;
-  }
+            // Fechar modal
+            document.querySelector('.close').onclick = function() {
+                document.getElementById('modal').style.display = 'none';
+            }
 
-  // Se tudo preenchido, salva no localStorage
-  localStorage.setItem("nome", nome);
-  localStorage.setItem("telefone", telefone);
-  localStorage.setItem("data", data);
-  localStorage.setItem("genero", genero);
-  localStorage.setItem("cpf", cpf);
-  localStorage.setItem("crp", crp);
+            window.onclick = function(event) {
+                if (event.target == document.getElementById('modal')) {
+                    document.getElementById('modal').style.display = 'none';
+                }
+            }
 
-  alert("✅ Dados salvos! Continuando...");
+            // Função para validar e ir pra próxima tela
+            function validarProximo() {
+                // Pegando os valores dos campos
+                let nome = document.getElementById("fullName").value;
+                let telefone = document.getElementById("telefone").value;
+                let data = document.getElementById("dataNascimento").value;
+                let genero = document.getElementById("genero").value;
+                let cpf = document.getElementById("cpf").value;
+                let crp = document.getElementById("crp").value;
 
-  // Redireciona pra próxima página
-  window.location.href = "./criarScreen2.html";
-}
+                // Validando se algum campo está vazio
+                if (nome === "" || telefone === "" || data === "" || genero === "" || cpf === "" || crp === "") {
+                    showModal("❌ ERRO: Preencha TODOS os campos!");
+                    return; 
+                }
+
+                // Se tudo preenchido, salva no localStorage
+                localStorage.setItem("nome", nome);
+                localStorage.setItem("telefone", telefone);
+                localStorage.setItem("data", data);
+                localStorage.setItem("genero", genero);
+                localStorage.setItem("cpf", cpf);
+                localStorage.setItem("crp", crp);
+
+                showModal("✅ Dados salvos! Continuando...");
+                
+                // Redireciona pra próxima página após fechar modal
+                setTimeout(() => {
+                    window.location.href = "./criarScreen2.html";
+                }, 2000); // 2 segundos para o usuário ver
+            }
 

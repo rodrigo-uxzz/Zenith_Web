@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" sizes="64x64" href="./img/logoZ.png">
     <link rel="stylesheet" href="./css/criarScreen.css">
-    <title>ZENITH - Criar conta</title>
+    <title>Criar conta</title>
     <link rel="icon" type="image/x-icon" href="./img/logo z.PNG">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
@@ -79,7 +78,7 @@
 
                    <!-- ----separador---- -->
                     
-                    <button type="button" class="botaoC" id="proximaTela"">Próximo -></button>
+                    <button type="button" class="botaoC" id="proximaTela">Próximo -></button>
                     
                     <div class="façaContainer">
                         <p>Já possui conta? </p><a href="./loginScreen.html" class="faça-login">Faça login</a>
@@ -90,6 +89,14 @@
         
         </main>
         <p class="mds">&copy; 2026 Zenith. Todos os direitos reservados.</p>
+
+        <!-- Modal -->
+        <div id="modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <p id="modal-message"></p>
+            </div>
+        </div>
 
         <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
         <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>

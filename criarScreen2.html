@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" sizes="64x64" href="./img/logoZ.png">
     <link rel="stylesheet" href="./css/criarScreen2.css">
-    <title>ZENITH - Criar conta</title>
+    <title>Criar conta</title>
     <link rel="icon" type="image/x-icon" href="./img/logo z.PNG">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
@@ -29,7 +28,7 @@
                    <div class="linha1"> 
                        <div class="input-container">
                            <img src="./img/user.svg" alt="icone" class="icon-input">
-                           <label for="username" class="label-diferenciado">Username:</label>
+                           <label for="crp" class="label-diferenciado">Nome de usuário:</label>
                            <input type="text" class="input-diferenciado" id="username" name="username" required placeholder="username">
                        </div>
                    </div>
@@ -57,10 +56,10 @@
                            <label for="formacao" class="label-diferenciado">Qual seu grau de formação?</label>
                            <select class="input-diferenciado" id="formacao" name="formacao" required>
                                <option value="">Selecione uma opção</option>
-                               <option value="GRADUACAO">Graduação</option>
-                               <option value="ESPECIALIZACAO">Especialização</option>
-                               <option value="MESTRADO">Mestrado</option>
-                               <option value="DOUTORADO">Doutorado</option>
+                               <option value="GRADUACAO">Graduado</option>
+                               <option value="ESPECIALIZACAO">Especialista</option>
+                               <option value="MESTRADO">Mestre</option>
+                               <option value="DOUTORADO">Doutor</option>
                            </select>
                        </div>
                     </div>
@@ -99,7 +98,7 @@
                     </div>
                     
                     <div class="botoes-footer">
-                        <button type="button" class="botaoC botao-anterior" id="botaoVoltar"">← Anterior</button>
+                        <button type="button" class="botaoC botao-anterior" id="botaoVoltar">← Anterior</button>
                         <button type="button" class="botaoC" id="criarConta">Criar conta</button>
                     </div>
                 </form>
@@ -110,5 +109,12 @@
         <p class="mds">&copy; 2026 Zenith. Todos os direitos reservados.</p>
 
         <script type="module" src="./js/cadastrar2.js"></script>
+                <!-- Modal -->
+        <div id="modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <p id="modal-message"></p>
+            </div>
+        </div>
 </body>
 </html>

@@ -2,6 +2,19 @@ import { apiRequest } from "./api.js";
 
 document.addEventListener("DOMContentLoaded", function () {
   carregarPerfil();
+
+  const modal = document.getElementById("modal");
+  const modalClose = document.querySelector(".close");
+
+  if (modalClose) {
+    modalClose.addEventListener("click", hideModal);
+  }
+
+  window.addEventListener("click", function (event) {
+    if (event.target === modal) {
+      hideModal();
+    }
+  });
 });
 
 document
@@ -9,6 +22,27 @@ document
   .addEventListener("click", async function () {
     atualizarPerfil();
   });
+
+function showModal(message) {
+  const modal = document.getElementById("modal");
+  const modalMessage = document.getElementById("modal-message");
+
+  if (modalMessage) {
+    modalMessage.textContent = message;
+  }
+
+  if (modal) {
+    modal.style.display = "block";
+  }
+}
+
+function hideModal() {
+  const modal = document.getElementById("modal");
+
+  if (modal) {
+    modal.style.display = "none";
+  }
+}
 
 let dadosOriginais = {};
 let fotoOriginal = null;
@@ -86,10 +120,14 @@ async function atualizarPerfil() {
     const { ok, dados } = await apiRequest("/update", "POST", formData);
 
     if (ok) {
-      alert("Dados atualizados com sucesso!");
-      window.location.href = "perfilScreen.html";
+      showModal("✅ Dados atualizados com sucesso!");
+      setTimeout(() => {
+        hideModal();
+        window.location.href = "perfilScreen.html";
+      }, 1500);
     } else {
       console.error(dados);
+      showModal("❌ Erro ao atualizar perfil. Tente novamente.");
     }
   } catch (error) {
     console.error(error);

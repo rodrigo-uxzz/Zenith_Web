@@ -3,7 +3,6 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/png" sizes="64x64" href="./img/logoZ.png">
 
     <title>Zenith</title>
 
@@ -38,29 +37,38 @@
         </li>
 
         <li>
-          <a href="homeScreen.html">
+          <a href="./homeScreen.html">
             <span class="icone">
               <ion-icon name="home-outline"></ion-icon>
             </span>
-            <span class="titulo">Inicio</span>
+            <span class="titulo">Home</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="./agendaScreen.html">
+            <span class="icone">
+              <ion-icon name="calendar-outline"></ion-icon>
+            </span>
+            <span class="titulo">Agenda</span>
           </a>
         </li>
 
         <li>
           <a href="#">
             <span class="icone">
-              <ion-icon name="person-outline"></ion-icon>
+              <ion-icon name="people-outline"></ion-icon>
             </span>
-            <span class="titulo">Perfil</span>
+            <span class="titulo">Pacientes</span>
           </a>
         </li>
 
         <li>
           <a href="#">
             <span class="icone">
-              <ion-icon name="heart-outline"></ion-icon>
+              <ion-icon name="wallet-outline"></ion-icon>
             </span>
-            <span class="titulo">Central</span>
+            <span class="titulo">Financeiro</span>
           </a>
         </li>
 
@@ -80,6 +88,27 @@
             </span>
             <span class="titulo">Configurações</span>
           </a>
+        </li>
+
+        <li>
+          <a href="./perfilEditar.html">
+            <span class="icone">
+              <ion-icon name="person-outline"></ion-icon>
+            </span>
+            <span class="titulo">Perfil</span>
+          </a>
+        </li>
+
+        <li class="conta">
+          <!--<a href="#">
+            <span class="icone">
+              <div class="imgCaixa">
+                <img src="img/user.svg"> 
+                A parte q o Roberto já fez
+              </div>
+            </span>
+            <span class="titulo">Moana Dark</span>
+          </a>-->
         </li>
 
         <li>
@@ -215,14 +244,13 @@
               </p>
 
               <div class="form-senha">
-                <div class="separar">
 
                 <a id="atualizarPerfil" class="salvar">
                     <ion-icon name="save-outline"></ion-icon>
-                    Salvar alterações  
-                  </a>
-                  
-                  <a href="./perfilScreen.html" class="cancelar">
+                  Salvar alterações  
+                </a>
+
+                <a href="./perfilScreen.html" class="cancelar">
                     Cancelar
                 </a>
                 <a id="deletar" class="excluir">
@@ -246,5 +274,13 @@
     ></script>
 
     <script type="module" src="./js/editarPerfil.js"></script>
+
+    <!-- Modal -->
+    <div id="modal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <p id="modal-message"></p>
+      </div>
+    </div>
   </body>
 </html>
