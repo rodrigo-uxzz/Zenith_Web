@@ -98,8 +98,8 @@
                     </div>
                     
                     <div class="botoes-footer">
-                        <button type="button" class="botaoC botao-anterior" onclick="voltarTela1()">← Anterior</button>
-                        <button type="button" class="botaoC" onclick="criarConta()">Criar conta</button>
+                        <button type="button" class="botaoC botao-anterior" id="botaoVoltar">← Anterior</button>
+                        <button type="button" class="botaoC" id="criarConta">Criar conta</button>
                     </div>
                 </form>
                 
@@ -108,113 +108,13 @@
         </main>
         <p class="mds">&copy; 2026 Zenith. Todos os direitos reservados.</p>
 
-        <!-- Modal -->
+        <script type="module" src="./js/cadastrar2.js"></script>
+                <!-- Modal -->
         <div id="modal" class="modal">
             <div class="modal-content">
                 <span class="close">&times;</span>
                 <p id="modal-message"></p>
             </div>
         </div>
-
-        <script>
-            // Função para mostrar modal
-            function showModal(message) {
-                document.getElementById('modal-message').textContent = message;
-                document.getElementById('modal').style.display = 'block';
-            }
-
-            // Fechar modal
-            document.querySelector('.close').onclick = function() {
-                document.getElementById('modal').style.display = 'none';
-            }
-
-            window.onclick = function(event) {
-                if (event.target == document.getElementById('modal')) {
-                    document.getElementById('modal').style.display = 'none';
-                }
-            }
-
-            // Quando a página abre, valida se tem dados salvos
-            window.addEventListener("DOMContentLoaded", function() {
-                let nome = localStorage.getItem("nome");
-                
-                // Se não encontrou, volta pra tela 1
-                if (nome === null) {
-                    showModal("⚠️ Você precisa preencher a tela anterior!");
-                    setTimeout(() => {
-                        window.location.href = "./criarScreen.html";
-                    }, 2000);
-                }
-            });
-
-            // Função pra voltar pra tela 1
-            function voltarTela1() {
-                window.location.href = "./criarScreen.html";
-            }
-
-            // Função pra criar conta
-            function criarConta() {
-                // Pegando os valores dos campos da tela 2
-                let email = document.getElementById("email").value;
-                let senha = document.getElementById("senha").value;
-                let confirmarSenha = document.getElementById("confirmarSenha").value;
-                let cadastroEpsi = document.querySelector('input[name="cadastroEpsi"]:checked');
-                let formacao = document.getElementById("formacao").value;
-                let termos = document.getElementById("termos").checked;
-
-                // Validando se estão vazios
-                if (email === "" || senha === "" || confirmarSenha === "" || !cadastroEpsi || formacao === "" || !termos) {
-                    showModal("❌ ERRO: Preencha TODOS os campos e aceite os termos!");
-                    return;
-                }
-
-                // Validando se as senhas são iguais
-                if (senha !== confirmarSenha) {
-                    showModal("❌ ERRO: As senhas não conferem!");
-                    return;
-                }
-
-                // Pegando dados da tela 1 (que já foram salvos)
-                let nome = localStorage.getItem("nome");
-                let telefone = localStorage.getItem("telefone");
-                let data = localStorage.getItem("data");
-                let genero = localStorage.getItem("genero");
-                let cpf = localStorage.getItem("cpf");
-                let crp = localStorage.getItem("crp");
-
-                // Salvando dados da tela 2 também
-                localStorage.setItem("email", email);
-                localStorage.setItem("senha", senha);
-                localStorage.setItem("cadastroEpsi", cadastroEpsi.value);
-                localStorage.setItem("formacao", formacao);
-
-                // Mostrando um resumo de todos os dados
-                let resumo = `
-✅ CONTA CRIADA COM SUCESSO!
-
-📋 DADOS PESSOAIS:
-• Nome: ${nome}
-• Telefone: ${telefone}
-• Data Nascimento: ${data}
-• Gênero: ${genero}
-
-📄 DOCUMENTOS:
-• CPF: ${cpf}
-• CRP: ${crp}
-
-💼 DADOS PROFISSIONAIS:
-• Email: ${email}
-• E-psi: ${cadastroEpsi.value}
-• Formação: ${formacao}
-                `;
-
-                showModal(resumo);
-                
-                // Ir pra home
-                setTimeout(() => {
-                    window.location.href = "./homeScreen.html";
-                }, 5000); // Mais tempo para o resumo
-            }
-        </script>
 </body>
 </html>
