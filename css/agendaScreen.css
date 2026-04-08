@@ -238,6 +238,8 @@ main.agendaContainer {
 }
 
 .hora {
+    display: flex;
+    gap: 10px;
     padding-left: 20px;
     font-weight: 500;
     color: #5b3cc4;
@@ -267,4 +269,22 @@ main.agendaContainer {
 .consultaCard span {
     font-size: 13px;
     color: #555;
+}
+
+
+.iconHora {
+    font-size: 10px; 
+}
+
+.card-icon {
+    display: flex;
+    gap: 5px;
+}
+
+.card-icon p {
+    margin-top: 5px;
+}
+
+ion-icon {
+    font-size: 30px;
 }
