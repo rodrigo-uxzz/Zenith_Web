@@ -24,17 +24,17 @@ window.onclick = function (event) {
 };
 
 // Quando a página abre, valida se tem dados salvos
-window.addEventListener("DOMContentLoaded", function () {
-  let nome = localStorage.getItem("nome");
+// window.addEventListener("DOMContentLoaded", function () {
+//   let nome = localStorage.getItem("nome");
 
-  // Se não encontrou, volta pra tela 1
-  if (nome === null) {
-    showModal("⚠️ Você precisa preencher a tela anterior!");
-    setTimeout(() => {
-      window.location.href = "./criarScreen.html";
-    }, 2000);
-  }
-});
+//   // Se não encontrou, volta pra tela 1
+//   if (nome === null) {
+//     showModal("⚠️ Você precisa preencher a tela anterior!");
+//     setTimeout(() => {
+//       window.location.href = "./criarScreen.html";
+//     }, 2000);
+//   }
+// });
 
 // Função pra voltar pra tela 1
 function voltarTela1() {

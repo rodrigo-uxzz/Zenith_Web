@@ -171,12 +171,14 @@ main.agendaContainer {
 .btnNavegacao {
     border: none;
     background: transparent;
-    font-size: 18px;
+    font-size: 25px;
+    margin-inline: 10px;
     cursor: pointer;
 }
 
 .hojeTexto {
     font-weight: 500;
+    font-size: 20px;
 }
 
 /* FILTROS */
