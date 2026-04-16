@@ -7,13 +7,13 @@
 
     <link rel="stylesheet" href="./css/agendaScreen.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <!-- <script>
+    <script>
       const token = localStorage.getItem("token");
 
       if(!token){
         window.location.href = "loginScreen.html";
       }
-    </script> -->
+    </script>
 </head>
 
 <body>
@@ -95,13 +95,13 @@
 
             <div>
                 <h1 class="tituloAgenda">Agenda</h1>
-                <p class="dataAgenda">terça-feira, 31 de março de 2026</p>
+                <span class="dataAgenda" id="dia2"></span>
             </div>
 
             <div class="acoesAgenda">
-                <button class="btnNavegacao">‹</button>
-                <span class="hojeTexto">Hoje</span>
-                <button class="btnNavegacao">›</button>
+                <button class="btnNavegacao" id="voltarDia" onclick="voltarDia()">‹</button>
+                <span class="hojeTexto" id="dia"></span>
+                <button class="btnNavegacao" id="avancarDia" onclick="avancarDia()">›</button>
                 <button class="btnConfigHorario" id="btn-config-horario">Configurar horários</button>
             </div>
 
@@ -127,64 +127,9 @@
 
         </section>
 
-        <!-- LISTA DE HORÁRIOS -->
-        <section class="listaHorarios">
+        <section class="listaHorarios" id="listaHorarios"></section>
+ 
 
-            <!-- ITEM -->
-            <div class="linhaHorario">
-                <div class="hora">08:00</div>
-                <div class="horarioLivre">Horário disponível</div>
-            </div>
-
-            <div class="linhaHorario">
-                <div class="hora">09:00</div>
-                
-                <button class="botaoConsulta">
-                    <div class="consultaCard">
-                        <strong>Ana Carolina Silva</strong>
-                        <span>09h</span>
-                    </div>
-                </button>
-            </div>
-
-            <div class="linhaHorario">
-                <div class="hora">10:00</div>
-                <div class="horarioLivre">Horário disponível</div>
-            </div>
-
-            <div class="linhaHorario">
-                <div class="hora">11:00</div>
-                
-                <button class="botaoConsulta">
-                    <div class="consultaCard">
-                        <strong>Carlos Silva</strong>
-                        <span>11h</span>
-                    </div>
-                </button>
-            </div>
-
-            <div class="linhaHorario">
-                <div class="hora">12:00</div>
-                <div class="horarioLivre">Horário disponível</div>
-            </div>
-
-            <div class="linhaHorario">
-                <div class="hora">13:00</div>
-                <div class="horarioLivre">Horário disponível</div>
-            </div>
-
-            <div class="linhaHorario">
-                <div class="hora">14:00</div>
-
-                <button class="botaoConsulta">
-                    <div class="consultaCard">
-                        <strong>Mariana Costa</strong>
-                        <span>14h</span>
-                    </div>
-                </button>
-            </div>
-
-        </section>
 
     </main>
 

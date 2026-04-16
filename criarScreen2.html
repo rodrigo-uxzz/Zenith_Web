@@ -109,11 +109,27 @@
         <p class="mds">&copy; 2026 Zenith. Todos os direitos reservados.</p>
 
         <script type="module" src="./js/cadastrar2.js"></script>
-                <!-- Modal -->
-        <div id="modal" class="modal">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <p id="modal-message"></p>
+                <!-- Modal de Erro -->
+        <div id="error-modal" class="modal" style="display:none;">
+            <div class="modal-content error-modal-content">
+                <span class="close" id="close-error-modal">&times;</span>
+                <h2>Erro no cadastro</h2>
+                <p id="error-modal-message"></p>
+                <div class="error-buttons">
+                    <button class="btnOk" id="btn-error-ok" type="button">OK</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de Sucesso -->
+        <div id="success-modal" class="modal" style="display:none;">
+            <div class="modal-content success-modal-content">
+                <span class="close" id="close-success-modal">&times;</span>
+                <h2>Cadastro realizado</h2>
+                <p id="success-modal-message"></p>
+                <div class="success-buttons">
+                    <button class="btnSuccess" id="btn-success-ok" type="button">OK</button>
+                </div>
             </div>
         </div>
 </body>

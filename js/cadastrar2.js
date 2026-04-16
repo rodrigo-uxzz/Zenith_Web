@@ -9,17 +9,40 @@ document.getElementById("criarConta").addEventListener("click", function () {
   criarConta();
 });
 
-function showModal(message) {
-  document.getElementById("modal-message").textContent = message;
-  document.getElementById("modal").style.display = "block";
+function showErrorModal(message) {
+  document.getElementById("error-modal-message").textContent = message;
+  document.getElementById("error-modal").style.display = "flex";
 }
-// Fechar modal
-document.querySelector(".close").onclick = function () {
-  document.getElementById("modal").style.display = "none";
+
+function showSuccessModal(message) {
+  document.getElementById("success-modal-message").textContent = message;
+  document.getElementById("success-modal").style.display = "flex";
+}
+
+// Fechar modal de erro
+document.getElementById("close-error-modal").onclick = function () {
+  document.getElementById("error-modal").style.display = "none";
 };
+
+document.getElementById("btn-error-ok").onclick = function () {
+  document.getElementById("error-modal").style.display = "none";
+};
+
+// Fechar modal de sucesso
+document.getElementById("close-success-modal").onclick = function () {
+  document.getElementById("success-modal").style.display = "none";
+};
+
+document.getElementById("btn-success-ok").onclick = function () {
+  document.getElementById("success-modal").style.display = "none";
+};
+
 window.onclick = function (event) {
-  if (event.target == document.getElementById("modal")) {
-    document.getElementById("modal").style.display = "none";
+  if (event.target == document.getElementById("error-modal")) {
+    document.getElementById("error-modal").style.display = "none";
+  }
+  if (event.target == document.getElementById("success-modal")) {
+    document.getElementById("success-modal").style.display = "none";
   }
 };
 
@@ -63,13 +86,13 @@ async function criarConta() {
     formacao === "" ||
     !termos
   ) {
-    showModal("❌ ERRO: Preencha TODOS os campos e aceite os termos!");
+    showErrorModal("Preencha TODOS os campos e aceite os termos!");
     return;
   }
 
   // Validando se as senhas são iguais
   if (senha !== confirmarSenha) {
-    showModal("❌ ERRO: As senhas não conferem!");
+    showErrorModal("As senhas não conferem!");
     return;
   }
 
@@ -118,8 +141,8 @@ async function criarConta() {
   if (ok) {
     console.log(dados);
 
-    showModal(
-      "✅ CONTA CRIADA! Sua conta entrará em análise. Aguarde um pouco e em breve você poderá fazer login."
+    showSuccessModal(
+      "Conta criada com sucesso! Sua conta entrará em análise. Aguarde um pouco e em breve você poderá fazer login.",
     );
 
     // Ir pra login
@@ -133,6 +156,6 @@ async function criarConta() {
     //     alert("Erro: " + (dados.message || "cpf Invalido"));
     // }
     console.error(dados);
-    alert("Erro ao Cadastrar tente novamente");
+    showErrorModal("Erro ao cadastrar. Tente novamente!");
   }
 }

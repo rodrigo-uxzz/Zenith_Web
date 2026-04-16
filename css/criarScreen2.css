@@ -354,3 +354,85 @@ select.input-diferenciado:focus {
     border-color: #a383fbe0;
     transition: all 0.5s ease;
 }
+
+/* Modal de Erro */
+.error-modal-content {
+    padding: 28px 22px 18px;
+    max-width: 360px;
+    background-color: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.16);
+}
+
+.error-modal-content h2 {
+    margin-bottom: 12px;
+    color: #ff7d7d;
+    font-size: 20px;
+}
+
+.error-modal-content p {
+    margin: 0 0 18px;
+    color: #4d4d4d;
+    line-height: 1.6;
+}
+
+.error-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.btnOk {
+    flex: 1;
+    border: none;
+    border-radius: 12px;
+    padding: 14px 0;
+    font-weight: 700;
+    cursor: pointer;
+    background: #ff7d7d;
+    color: #fff;
+}
+
+.btnOk:hover {
+    opacity: 0.95;
+}
+
+/* Modal de Sucesso */
+.success-modal-content {
+    padding: 28px 22px 18px;
+    max-width: 360px;
+    background-color: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.16);
+}
+
+.success-modal-content h2 {
+    margin-bottom: 12px;
+    color: #2ad4b0;
+    font-size: 20px;
+}
+
+.success-modal-content p {
+    margin: 0 0 18px;
+    color: #4d4d4d;
+    line-height: 1.6;
+}
+
+.success-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.btnSuccess {
+    flex: 1;
+    border: none;
+    border-radius: 12px;
+    padding: 14px 0;
+    font-weight: 700;
+    cursor: pointer;
+    background: #2ad4b0;
+    color: #fff;
+}
+
+.btnSuccess:hover {
+    opacity: 0.95;
+}

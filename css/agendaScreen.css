@@ -193,6 +193,8 @@ main.agendaContainer {
 .hojeTexto {
     font-weight: 500;
     font-size: 20px;
+    width: 200px;
+    text-align: center;
 }
 
 /* FILTROS */
@@ -241,7 +243,7 @@ main.agendaContainer {
     background: white;
     border-radius: 12px;
     overflow: hidden;
-    max-height: 420px;
+    max-height: calc(100vh - 200px);
     overflow-y: auto;
 }
 
@@ -303,11 +305,19 @@ main.agendaContainer {
 
 .botaoConsulta {
     border: none;
-    background: transparent;
-    width: 100%;
+    background: #dcd2ff;
+    display: block;
+    width: auto;
     text-align: left;
-    padding: 0;
+    padding: 30px 16px;
+    border-radius: 8px;
+    margin: 10px;
     cursor: pointer;
+    font-family: inherit;
+    color: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    box-sizing: border-box;
 }
 
 .botaoConsulta:focus,
@@ -688,6 +698,21 @@ main.agendaContainer {
 .editar-modal-content {
     padding: 24px 24px 18px;
     max-width: 420px;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+}
+
+.editar-modal-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.editar-modal-content::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.editar-modal-content::-webkit-scrollbar-thumb {
+    background: rgba(95, 63, 209, 0.3);
+    border-radius: 999px;
 }
 
 .editar-label {

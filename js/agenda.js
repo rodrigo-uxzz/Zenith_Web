@@ -1,24 +1,100 @@
 import { apiRequest } from "./api.js";
 
-//logout
-document.getElementById("sair").addEventListener("click", async function (event) {
+let dataAtual = new Date();
 
-    event.preventDefault();
-    if (!confirm("Tem certeza que deseja sair?")) return;
+document.getElementById("avancarDia").addEventListener("click", avancarDia);
+document.getElementById("voltarDia").addEventListener("click", voltarDia);
 
-    try {
-      const { ok, dados } = await apiRequest("/logout", "POST");
+function avancarDia() {
+  dataAtual.setDate(dataAtual.getDate() + 1);
+  atualizarData();
+}
 
-      if (!ok) {
-        console.warn("erro ao deslogar api", dados);
-      }
-    } catch (error) {
-      console.error(error);
+function voltarDia() {
+  dataAtual.setDate(dataAtual.getDate() - 1);
+  atualizarData();
+}
+
+async function atualizarData() {
+  try {
+    const dataFormatada = dataAtual.toISOString().split("T")[0];
+
+    const hoje = new Date();
+    let textoData = "";
+    let textoData2 = "";
+
+    if (dataAtual.toDateString() === hoje.toDateString()) {
+      textoData = "Hoje";
+      textoData2 = "Hoje";
+    } else {
+      textoData = dataAtual.toLocaleDateString("pt-BR", {
+        day: "2-digit",
+        month: "long",
+        year: "numeric",
+      });
+      textoData2 = dataAtual.toLocaleDateString("pt-BR", {
+        weekday: "long",
+        day: "2-digit",
+        month: "long",
+        year: "numeric",
+      });
     }
 
-    localStorage.removeItem("token");
-    window.location.href = "loginScreen.html";
-  });
+    document.getElementById("dia").innerText = textoData;
+    document.getElementById("dia2").innerText = textoData2;
+
+    const { dados, ok } = await apiRequest(
+      `/consultasDoDia?data=${dataFormatada}`,
+    );
+
+    const container = document.getElementById("listaHorarios");
+    container.innerHTML = "";
+
+    const sessoes = dados.sessoes || [];
+
+    if (!ok || !dados.sessoes || dados.sessoes.length === 0) {
+      container.innerHTML = "<p>Dia sem consultas</p>";
+      return;
+    }
+
+    sessoes.forEach((item) => {
+      const linha = document.createElement("div");
+      linha.classList.add("linhaHorario");
+
+      const horaDiv = document.createElement("div");
+      horaDiv.classList.add("hora");
+      horaDiv.innerText = item.hora_inicio.slice(0, 5);
+
+      let conteudo;
+
+      if (item.status_sessao !== "disponivel" && item.sessao) {
+        conteudo = document.createElement("button");
+        conteudo.classList.add("consultaCard", "botaoConsulta");
+
+        const nome = item.sessao?.paciente?.usuario?.nome || "Paciente";
+
+        conteudo.innerHTML = `
+          <strong>${nome}</strong>
+          <span>${item.hora_inicio.slice(0, 2) + "h"}</span>
+        `;
+        conteudo.addEventListener("click", function () {
+          showConsultaModal(this);
+        });
+      } else {
+        conteudo = document.createElement("div");
+        conteudo.classList.add("horarioLivre");
+        conteudo.innerText = "Horário disponível";
+      }
+
+      linha.appendChild(horaDiv);
+      linha.appendChild(conteudo);
+
+      container.appendChild(linha);
+    });
+  } catch (error) {
+    console.error("Erro ao atualizar agenda:", error);
+  }
+}
 
 const consultaButtons = document.querySelectorAll(".botaoConsulta");
 const consultaModal = document.getElementById("consulta-modal");
@@ -54,7 +130,14 @@ function hideModal(modal) {
 }
 
 function closeAllModalsExcept(activeModal) {
-  [consultaModal, reagendarModal, editarModal, horarioModal, confirmModal, statusModal].forEach(function (modal) {
+  [
+    consultaModal,
+    reagendarModal,
+    editarModal,
+    horarioModal,
+    confirmModal,
+    statusModal,
+  ].forEach(function (modal) {
     if (modal && modal !== activeModal) {
       modal.style.display = "none";
     }
@@ -82,7 +165,8 @@ function showConsultaModal(button) {
   const consultaLink = document.getElementById("consulta-modal-link");
   consultaLink.href = link;
   consultaLink.textContent = "Abrir link externo";
-  document.getElementById("consulta-modal-observacao").textContent = "Primeira consulta";
+  document.getElementById("consulta-modal-observacao").textContent =
+    "Primeira consulta";
 
   consultaModal.style.display = "flex";
 }
@@ -90,9 +174,13 @@ function showConsultaModal(button) {
 function showEditarModal() {
   const nome = document.getElementById("consulta-modal-nome").textContent;
   const data = document.getElementById("consulta-modal-data").textContent;
-  const horario = document.getElementById("consulta-modal-horario").textContent.split(" - ")[0] || "";
+  const horario =
+    document
+      .getElementById("consulta-modal-horario")
+      .textContent.split(" - ")[0] || "";
   const link = document.getElementById("consulta-modal-link").href || "";
-  const observacoes = document.getElementById("consulta-modal-observacao").textContent || "";
+  const observacoes =
+    document.getElementById("consulta-modal-observacao").textContent || "";
 
   editarPaciente.value = nome;
   editarData.value = formatDateInput(data);
@@ -195,7 +283,10 @@ if (btnVoltarHorario) {
 if (btnSalvarHorario) {
   btnSalvarHorario.addEventListener("click", function () {
     horarioModal.style.display = "none";
-    showStatusModal("Horários salvos", "A configuração de horários foi atualizada com sucesso.");
+    showStatusModal(
+      "Horários salvos",
+      "A configuração de horários foi atualizada com sucesso.",
+    );
   });
 }
 
@@ -236,8 +327,12 @@ const reagendarTime = document.getElementById("reagendar-time");
 const btnReagendar = document.querySelector(".btnReagendar");
 if (btnReagendar) {
   btnReagendar.addEventListener("click", function () {
-    const dataAtual = document.getElementById("consulta-modal-data").textContent;
-    const horarioAtual = document.getElementById("consulta-modal-horario").textContent;
+    const dataAtual = document.getElementById(
+      "consulta-modal-data",
+    ).textContent;
+    const horarioAtual = document.getElementById(
+      "consulta-modal-horario",
+    ).textContent;
     if (reagendarDate) {
       // converte a data exibida no modal para o formato yyyy-MM-dd se possível
       const partes = dataAtual.split(",");
@@ -344,10 +439,16 @@ if (btnConfirmAction) {
     confirmModal.style.display = "none";
     if (confirmType === "cancel") {
       consultaModal.style.display = "none";
-      showStatusModal("Consulta cancelada", "A consulta foi cancelada com sucesso.");
+      showStatusModal(
+        "Consulta cancelada",
+        "A consulta foi cancelada com sucesso.",
+      );
     } else if (confirmType === "done") {
       consultaModal.style.display = "none";
-      showStatusModal("Consulta realizada", "A consulta foi realizada com sucesso.");
+      showStatusModal(
+        "Consulta realizada",
+        "A consulta foi realizada com sucesso.",
+      );
     }
   });
 }
@@ -361,7 +462,10 @@ if (statusModalOk) {
 if (btnSalvarReagendar) {
   btnSalvarReagendar.addEventListener("click", function () {
     reagendarModal.style.display = "none";
-    showStatusModal("Consulta reagendada", "A consulta foi reagendada com sucesso.");
+    showStatusModal(
+      "Consulta reagendada",
+      "A consulta foi reagendada com sucesso.",
+    );
   });
 }
 
@@ -375,11 +479,14 @@ if (btnSalvarEditar) {
 
     document.getElementById("consulta-modal-nome").textContent = nome;
     document.getElementById("consulta-modal-data").textContent = data;
-    document.getElementById("consulta-modal-horario").textContent = `${horario} - ${formatHorarioEnd(horario)}`;
+    document.getElementById("consulta-modal-horario").textContent =
+      `${horario} - ${formatHorarioEnd(horario)}`;
     const consultaLink = document.getElementById("consulta-modal-link");
     consultaLink.href = link;
-    consultaLink.textContent = link && link !== "#" ? "Abrir link externo" : "Sem link";
-    document.getElementById("consulta-modal-observacao").textContent = observacoes;
+    consultaLink.textContent =
+      link && link !== "#" ? "Abrir link externo" : "Sem link";
+    document.getElementById("consulta-modal-observacao").textContent =
+      observacoes;
 
     editarModal.style.display = "none";
     consultaModal.style.display = "flex";
@@ -399,9 +506,9 @@ function formatDateDisplay(value) {
     "07": "julho",
     "08": "agosto",
     "09": "setembro",
-    "10": "outubro",
-    "11": "novembro",
-    "12": "dezembro",
+    10: "outubro",
+    11: "novembro",
+    12: "dezembro",
   };
   return `terça-feira, ${dia} de ${meses[mes] || ""} de ${ano}`;
 }
@@ -414,3 +521,26 @@ function formatHorarioEnd(horario) {
   const fimHora = horaNumero + 1;
   return `${hora}:${minuto} - ${fimHora.toString().padStart(2, "0")}:${minuto}`;
 }
+
+// logout
+document
+  .getElementById("sair")
+  .addEventListener("click", async function (event) {
+    event.preventDefault();
+    if (!confirm("Tem certeza que deseja sair?")) return;
+
+    try {
+      const { ok, dados } = await apiRequest("/logout", "POST");
+
+      if (!ok) {
+        console.warn("erro ao deslogar api", dados);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+
+    localStorage.removeItem("token");
+    window.location.href = "loginScreen.html";
+  });
+
+window.onload = atualizarData;
