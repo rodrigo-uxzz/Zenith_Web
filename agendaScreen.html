@@ -102,6 +102,7 @@
                 <button class="btnNavegacao">‹</button>
                 <span class="hojeTexto">Hoje</span>
                 <button class="btnNavegacao">›</button>
+                <button class="btnConfigHorario" id="btn-config-horario">Configurar horários</button>
             </div>
 
         </header>
@@ -137,11 +138,13 @@
 
             <div class="linhaHorario">
                 <div class="hora">09:00</div>
-
-                <div class="consultaCard">
-                    <strong>Ana Carolina Silva</strong>
-                    <span>09h</span>
-                </div>
+                
+                <button class="botaoConsulta">
+                    <div class="consultaCard">
+                        <strong>Ana Carolina Silva</strong>
+                        <span>09h</span>
+                    </div>
+                </button>
             </div>
 
             <div class="linhaHorario">
@@ -151,11 +154,13 @@
 
             <div class="linhaHorario">
                 <div class="hora">11:00</div>
-
-                <div class="consultaCard">
-                    <strong>Carlos Silva</strong>
-                    <span>11h</span>
-                </div>
+                
+                <button class="botaoConsulta">
+                    <div class="consultaCard">
+                        <strong>Carlos Silva</strong>
+                        <span>11h</span>
+                    </div>
+                </button>
             </div>
 
             <div class="linhaHorario">
@@ -171,15 +176,212 @@
             <div class="linhaHorario">
                 <div class="hora">14:00</div>
 
-                <div class="consultaCard">
-                    <strong>Mariana Costa</strong>
-                    <span>14h</span>
-                </div>
+                <button class="botaoConsulta">
+                    <div class="consultaCard">
+                        <strong>Mariana Costa</strong>
+                        <span>14h</span>
+                    </div>
+                </button>
             </div>
 
         </section>
 
     </main>
+
+    <div id="consulta-modal" class="modal" style="display:none;">
+        <div class="modal-content consulta-modal-content">
+            <span class="close" id="close-consulta-modal">&times;</span>
+            <h2>Detalhes da Consulta</h2>
+            <hr>
+
+            <div class="consulta-modal-header">
+                <span id="consulta-modal-nome">Ana Carolina Silva</span>
+                <button class="btnEditar">
+                    <ion-icon name="pencil-outline"></ion-icon>
+                </button>
+            </div>
+
+            <div class="consulta-modal-item">
+                <div class="consulta-modal-item-icon"><ion-icon name="calendar-outline"></ion-icon></div>
+                <div>
+                    <p class="consulta-modal-item-label">Data</p>
+                    <p id="consulta-modal-data">terça-feira, 31 de março de 2026</p>
+                </div>
+            </div>
+
+            <div class="consulta-modal-item">
+                <div class="consulta-modal-item-icon"><ion-icon name="time-outline"></ion-icon></div>
+                <div>
+                    <p class="consulta-modal-item-label">Horário</p>
+                    <p id="consulta-modal-horario">09:00 - 10:00</p>
+                </div>
+            </div>
+
+            <div class="consulta-modal-item">
+                <div class="consulta-modal-item-icon"><ion-icon name="link-outline"></ion-icon></div>
+                <div>
+                    <p class="consulta-modal-item-label">Link da consulta</p>
+                    <a id="consulta-modal-link" href="#" target="_blank">Abrir link externo</a>
+                </div>
+            </div>
+
+            <div class="consulta-modal-item consulta-modal-observacao">
+                <div class="consulta-modal-item-icon"><ion-icon name="document-text-outline"></ion-icon></div>
+                <div>
+                    <p class="consulta-modal-item-label">Observações</p>
+                    <p id="consulta-modal-observacao">Primeira consulta</p>
+                </div>
+            </div>
+
+            <div class="consulta-modal-actions">
+                <button class="btnAcao btnReagendar">Reagendar</button>
+                <button class="btnAcao btnRealizada">Realizada</button>
+                <button class="btnAcao btnCancelada">Cancelada</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="reagendar-modal" class="modal" style="display:none;">
+        <div class="modal-content reagendar-modal-content">
+            <span class="close" id="close-reagendar-modal">&times;</span>
+            <h2>Reagendar Consulta</h2>
+            <hr>
+
+
+            <label class="reagendar-label" for="reagendar-date">Nova Data *</label>
+            <input id="reagendar-date" type="date" class="reagendar-input" />
+
+            <label class="reagendar-label" for="reagendar-time">Novo Horário *</label>
+            <input id="reagendar-time" type="time" class="reagendar-input" />
+
+            <div class="reagendar-buttons">
+                <button class="btnVoltar" id="btn-voltar-reagendar" type="button">Voltar</button>
+                <button class="btnSalvar" id="btn-salvar-reagendar" type="button">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="editar-modal" class="modal" style="display:none;">
+        <div class="modal-content editar-modal-content">
+            <span class="close" id="close-editar-modal">&times;</span>
+            <h2>Editar Consulta</h2>
+            <hr>
+
+            <label class="editar-label" for="editar-paciente">Paciente *</label>
+            <input id="editar-paciente" type="text" class="editar-input" />
+
+            <label class="editar-label" for="editar-data">Data da Consulta *</label>
+            <input id="editar-data" type="date" class="editar-input" />
+
+            <label class="editar-label" for="editar-horario">Horário *</label>
+            <input id="editar-horario" type="time" class="editar-input" />
+
+            <label class="editar-label" for="editar-link">Link da Consulta</label>
+            <input id="editar-link" type="text" class="editar-input" />
+
+            <label class="editar-label" for="editar-observacoes">Observações (opcional)</label>
+            <textarea id="editar-observacoes" class="editar-textarea"></textarea>
+
+            <div class="editar-buttons">
+                <button class="btnCancelEdit" id="btn-cancelar-editar" type="button">Cancelar</button>
+                <button class="btnSalvar" id="btn-salvar-editar" type="button">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="confirm-modal" class="modal" style="display:none;">
+        <div class="modal-content confirm-modal-content">
+            <span class="close" id="close-confirm-modal">&times;</span>
+            <h2>Confirmação</h2>
+            <p>Confirmar consulta cancelada?</p>
+            <div class="confirm-buttons">
+                <button class="btnVoltar" id="btn-voltar-confirm" type="button">Voltar</button>
+                <button class="btnCancelEdit" id="btn-confirm-action" type="button">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="horario-modal" class="modal" style="display:none;">
+        <div class="modal-content horario-modal-content">
+            <span class="close" id="close-horario-modal">&times;</span>
+            <h2>Configurar Horários</h2>
+            <hr>
+
+            <div class="horario-semana">
+                <h3>Disponibilidade Semanal</h3>
+
+                <label class="horario-row">
+                    <span class="diaLabel"><span class="dot"></span> Segunda</span>
+                    <div class="horario-row-inputs">
+                        <input type="time" value="09:00" />
+                        <span>até</span>
+                        <input type="time" value="18:00" />
+                    </div>
+                </label>
+
+                <label class="horario-row">
+                    <span class="diaLabel"><span class="dot"></span> Terça</span>
+                    <div class="horario-row-inputs">
+                        <input type="time" value="09:00" />
+                        <span>até</span>
+                        <input type="time" value="18:00" />
+                    </div>
+                </label>
+
+                <label class="horario-row horario-row-disabled">
+                    <span class="diaLabel"><span class="dot dot-disabled"></span> Quarta</span>
+                    <span class="diaIndisponivel">indisponível</span>
+                </label>
+
+                <label class="horario-row">
+                    <span class="diaLabel"><span class="dot"></span> Quinta</span>
+                    <div class="horario-row-inputs">
+                        <input type="time" value="09:00" />
+                        <span>até</span>
+                        <input type="time" value="18:00" />
+                    </div>
+                </label>
+
+                <label class="horario-row">
+                    <span class="diaLabel"><span class="dot"></span> Sexta</span>
+                    <div class="horario-row-inputs">
+                        <input type="time" value="09:00" />
+                        <span>até</span>
+                        <input type="time" value="18:00" />
+                    </div>
+                </label>
+            </div>
+
+            <div class="horario-almoco">
+                <h3>Horário Almoço</h3>
+                <div class="horario-almoco-row">
+                    <div>
+                        <label class="editar-label" for="almoco-inicio">Início</label>
+                        <input id="almoco-inicio" type="time" class="editar-input" value="12:00" />
+                    </div>
+                    <div>
+                        <label class="editar-label" for="almoco-fim">Fim</label>
+                        <input id="almoco-fim" type="time" class="editar-input" value="13:00" />
+                    </div>
+                </div>
+                <p class="horario-observacao">Atenção: Horários durante o almoço serão automaticamente bloqueados e não aparecerão como disponíveis para agendamento.</p>
+            </div>
+
+            <div class="horario-modal-buttons">
+                <button class="btnVoltar" id="btn-voltar-horario" type="button">Voltar</button>
+                <button class="btnSalvar" id="btn-salvar-horario" type="button">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="status-modal" class="modal" style="display:none;">
+        <div class="modal-content status-modal-content">
+            <span class="close" id="close-status-modal">&times;</span>
+            <h2 id="status-modal-title">Aviso</h2>
+            <p id="status-modal-text">Texto de status</p>
+            <button class="btnSalvar" id="status-modal-ok" type="button">OK</button>
+        </div>
+    </div>
 
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>

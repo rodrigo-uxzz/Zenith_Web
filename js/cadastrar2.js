@@ -118,27 +118,9 @@ async function criarConta() {
   if (ok) {
     console.log(dados);
 
-    // Mostrando um resumo de todos os dados
-    let resumo = `
-                    ✅ CONTA CRIADA COM SUCESSO!
-
-                    📋 DADOS PESSOAIS:
-                    • Nome: ${nome}
-                    • Telefone: ${telefone}
-                    • Data Nascimento: ${data}
-                    • Gênero: ${genero}
-
-                    📄 DOCUMENTOS:
-                    • CPF: ${cpf}
-                    • CRP: ${crp}
-
-                    💼 DADOS PROFISSIONAIS:
-                    • Email: ${email}
-                    • E-psi: ${cadastroEpsi.value}
-                    • Formação: ${formacao}
-                    `;
-
-    showModal(resumo);
+    showModal(
+      "✅ CONTA CRIADA! Sua conta entrará em análise. Aguarde um pouco e em breve você poderá fazer login."
+    );
 
     // Ir pra login
     setTimeout(() => {

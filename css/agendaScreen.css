@@ -159,6 +159,20 @@ main.agendaContainer {
     gap: 10px;
 }
 
+.btnConfigHorario {
+    background: #7b5cff;
+    color: #fff;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.btnConfigHorario:hover {
+    opacity: 0.95;
+}
+
 .btnPrincipal {
     background: #7b5cff;
     color: white;
@@ -227,6 +241,21 @@ main.agendaContainer {
     background: white;
     border-radius: 12px;
     overflow: hidden;
+    max-height: 420px;
+    overflow-y: auto;
+}
+
+.listaHorarios::-webkit-scrollbar {
+    width: 6px;
+}
+
+.listaHorarios::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.listaHorarios::-webkit-scrollbar-thumb {
+    background: rgba(95, 63, 209, 0.3);
+    border-radius: 999px;
 }
 
 /* LINHA */
@@ -257,16 +286,529 @@ main.agendaContainer {
 .consultaCard {
     background: #dcd2ff;
     margin: 10px;
-    padding: 12px 16px;
+    padding: 30px 16px;
     border-radius: 8px;
 }
 
 .consultaCard strong {
     display: block;
+    font-size: 18px;
     color: #3f2fa3;
 }
 
 .consultaCard span {
-    font-size: 13px;
+    font-size: 15px;
     color: #555;
+}
+
+.botaoConsulta {
+    border: none;
+    background: transparent;
+    width: 100%;
+    text-align: left;
+    padding: 0;
+    cursor: pointer;
+}
+
+.botaoConsulta:focus,
+.botaoConsulta:active {
+    outline: none;
+    box-shadow: none;
+}
+
+.botaoConsulta::-moz-focus-inner {
+    border: 0;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 50;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.modal-content {
+    background-color: #ffffff;
+    margin: auto;
+    padding: 24px 22px;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 420px;
+    max-height: calc(100vh - 80px);
+    overflow-y: auto;
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.16);
+    position: relative;
+    text-align: left;
+    overscroll-behavior: contain;
+}
+
+.consulta-modal-content {
+    padding: 24px 24px 20px;
+}
+
+.close {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    font-size: 26px;
+    color: #555;
+    cursor: pointer;
+}
+
+.modal h2 {
+    margin-bottom: 20px;
+    color: #3f2fa3;
+    font-size: 22px;
+}
+
+.consulta-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+#consulta-modal-nome {
+    display: block;
+    font-size: 20px;
+    font-weight: 600;
+    color: #3f2fa3;
+}
+
+.btnEditar {
+    border: none;
+    background: transparent;
+    color: #5b3cc4;
+    cursor: pointer;
+    font-size: 20px;
+    padding: 8px;
+    border-radius: 50%;
+}
+
+.consulta-modal-item {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    margin-bottom: 16px;
+}
+
+.consulta-modal-item-icon {
+    width: 32px;
+    min-width: 32px;
+    height: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    background: #f1ebff;
+    color: #5b3cc4;
+    font-size: 18px;
+}
+
+.consulta-modal-item-label {
+    font-size: 12px;
+    color: #6f6f8b;
+    margin-bottom: 4px;
+}
+
+#consulta-modal-data,
+#consulta-modal-horario,
+#consulta-modal-observacao {
+    font-size: 15px;
+    color: #333;
+    margin: 0;
+}
+
+#consulta-modal-link {
+    font-size: 15px;
+    color: #5b3cc4;
+    text-decoration: none;
+}
+
+#consulta-modal-link:hover {
+    text-decoration: underline;
+}
+
+.consulta-modal-observacao p {
+    max-width: 100%;
+}
+
+.consulta-modal-actions {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.btnAcao {
+    border: none;
+    border-radius: 10px;
+    padding: 12px 10px;
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.btnAcao:hover {
+    transform: translateY(-1px);
+}
+
+.btnReagendar {
+    background: #8c6cff;
+}
+
+.btnRealizada {
+    background: #2ad4b0;
+}
+
+.btnCancelada {
+    background: #ff7d7d;
+}
+
+.close:hover {
+    color: #000;
+}
+
+.modal h2 {
+    margin-bottom: 12px;
+    color: #3f2fa3;
+}
+
+.modal p {
+    color: #4d4d4d;
+    line-height: 1.6;
+}
+
+.reagendar-modal-content {
+    padding: 24px 24px 18px;
+}
+
+.status-modal-content {
+    padding: 28px 22px 18px;
+    max-width: 360px;
+}
+
+.status-modal-content h2 {
+    margin-bottom: 14px;
+    font-size: 20px;
+}
+
+.status-modal-content p {
+    margin: 0 0 18px;
+    color: #4d4d4d;
+    line-height: 1.6;
+}
+
+.status-modal-content button {
+    width: 100%;
+}
+
+.horario-modal-content {
+    padding: 28px 22px 18px;
+    max-width: 520px;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+}
+
+.horario-modal-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.horario-modal-content::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.horario-modal-content::-webkit-scrollbar-thumb {
+    background: rgba(95, 63, 209, 0.3);
+    border-radius: 999px;
+}
+
+.horario-modal-content h2 {
+    margin-bottom: 12px;
+    color: #3f2fa3;
+}
+
+.horario-semana h3,
+.horario-almoco h3 {
+    margin-bottom: 14px;
+    color: #5b3cc4;
+    font-size: 16px;
+}
+
+.horario-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #faf7ff;
+    border: 1px solid #e7dbff;
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+    gap: 10px;
+}
+
+.horario-row-disabled {
+    background: #f7f4ff;
+    color: #999;
+}
+
+.diaLabel {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    color: #3f2fa3;
+}
+
+.dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    background: #7b5cff;
+}
+
+.dot-disabled {
+    background: #ccc;
+}
+
+.diaIndisponivel {
+    font-size: 14px;
+    color: #999;
+}
+
+.horario-row-inputs {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.horario-row-inputs input {
+    width: 100px;
+    border: 1px solid #dcd2ff;
+    border-radius: 10px;
+    padding: 10px;
+    background: #fff;
+    color: #333;
+}
+
+.horario-row-inputs span {
+    color: #777;
+}
+
+.horario-almoco {
+    margin-top: 24px;
+}
+
+.horario-almoco-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 12px;
+}
+
+.horario-observacao {
+    font-size: 12px;
+    color: #777;
+    line-height: 1.5;
+    margin-bottom: 18px;
+}
+
+.horario-modal-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.horario-modal-buttons button {
+    flex: 1;
+}
+
+.confirm-modal-content {
+    padding: 28px 22px 18px;
+    max-width: 360px;
+}
+
+.confirm-modal-content h2 {
+    margin-bottom: 12px;
+}
+
+.confirm-modal-content p {
+    margin: 0 0 18px;
+    color: #4d4d4d;
+    line-height: 1.6;
+}
+
+.confirm-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+.btnConfirm,
+#btn-voltar-confirm,
+#btn-confirm-action {
+    flex: 1;
+    border: none;
+    border-radius: 12px;
+    padding: 14px 0;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+#btn-voltar-confirm {
+    background: #7b5cff;
+    color: #fff;
+}
+
+#btn-confirm-action,
+.btnCancelEdit {
+    background: #ff7d7d;
+    color: #fff;
+}
+
+.btnConfirm {
+    background: #3fe1d3;
+    color: #fff;
+}
+
+#btn-voltar-confirm:hover,
+#btn-confirm-action:hover,
+.btnConfirm:hover {
+    opacity: 0.95;
+}
+
+.editar-modal-content {
+    padding: 24px 24px 18px;
+    max-width: 420px;
+}
+
+.editar-label {
+    display: block;
+    margin: 18px 0 8px;
+    font-size: 13px;
+    color: #5b3cc4;
+    font-weight: 600;
+}
+
+.editar-input,
+.editar-textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #dcd2ff;
+    border-radius: 10px;
+    background: #faf7ff;
+    color: #333;
+    font-size: 15px;
+}
+
+.editar-textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.editar-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.btnCancelEdit {
+    flex: 1;
+    border: none;
+    border-radius: 12px;
+    padding: 14px 0;
+    font-weight: 700;
+    cursor: pointer;
+    background: #ff7d7d;
+    color: #fff;
+}
+
+.btnCancelEdit:hover {
+    opacity: 0.95;
+}
+
+.btnSalvar {
+    flex: 1;
+    border: none;
+    border-radius: 12px;
+    padding: 14px 0;
+    font-weight: 700;
+    cursor: pointer;
+    background: #7b5cff;
+    color: #fff;
+}
+
+.btnSalvar:hover {
+    opacity: 0.95;
+}
+
+.reagendar-label {
+    display: block;
+    margin: 18px 0 8px;
+    font-size: 13px;
+    color: #5b3cc4;
+    font-weight: 600;
+}
+
+.reagendar-input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #dcd2ff;
+    border-radius: 10px;
+    background: #faf7ff;
+    color: #333;
+    font-size: 15px;
+}
+
+.reagendar-input[type="time"] {
+    letter-spacing: 0.1em;
+}
+
+.reagendar-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 22px;
+}
+
+.btnVoltar,
+.btnSalvar {
+    flex: 1;
+    border: none;
+    border-radius: 12px;
+    padding: 14px 0;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.btnVoltar {
+    background: #f6f0ff;
+    color: #7b5cff;
+}
+
+.btnSalvar {
+    background: #7b5cff;
+    color: #fff;
+}
+
+.btnVoltar:hover,
+.btnSalvar:hover {
+    opacity: 0.95;
+}
+
+.botaoConsulta:focus,
+.botaoConsulta:active {
+    outline: none;
+    box-shadow: none;
+}
+
+.botaoConsulta::-moz-focus-inner {
+    border: 0;
 }
