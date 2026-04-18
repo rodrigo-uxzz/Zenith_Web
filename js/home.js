@@ -25,6 +25,10 @@ document.addEventListener("DOMContentLoaded", function () {
   consultasHoje();
 });
 
+document.getElementById("verAgenda").addEventListener("click", function () {
+  window.location.href = "agendaScreen.html";
+});
+
 async function consultasHoje() {
   let dataAtual = new Date();
 

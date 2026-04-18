@@ -99,9 +99,9 @@
             </div>
 
             <div class="acoesAgenda">
-                <button class="btnNavegacao" id="voltarDia" onclick="voltarDia()">‹</button>
+                <button class="btnNavegacao" id="voltarDia" >‹</button>
                 <span class="hojeTexto" id="dia"></span>
-                <button class="btnNavegacao" id="avancarDia" onclick="avancarDia()">›</button>
+                <button class="btnNavegacao" id="avancarDia" >›</button>
                 <button class="btnConfigHorario" id="btn-config-horario">Configurar horários</button>
             </div>
 
@@ -140,7 +140,7 @@
             <hr>
 
             <div class="consulta-modal-header">
-                <span id="consulta-modal-nome">Ana Carolina Silva</span>
+                <span id="consulta-modal-nome"></span>
                 <button class="btnEditar">
                     <ion-icon name="pencil-outline"></ion-icon>
                 </button>
@@ -256,41 +256,45 @@
                 <h3>Disponibilidade Semanal</h3>
 
                 <label class="horario-row">
-                    <span class="diaLabel"><span class="dot"></span> Segunda</span>
+                    <span class="diaLabel"><input type="checkbox" class="dot"> Segunda</span>
                     <div class="horario-row-inputs">
-                        <input type="time" value="09:00" />
+                        <input type="time" value="08:00" />
                         <span>até</span>
                         <input type="time" value="18:00" />
                     </div>
                 </label>
 
                 <label class="horario-row">
-                    <span class="diaLabel"><span class="dot"></span> Terça</span>
+                    <span class="diaLabel"><input type="checkbox" class="dot"> Terça</span>
                     <div class="horario-row-inputs">
-                        <input type="time" value="09:00" />
+                        <input type="time" value="08:00" />
                         <span>até</span>
                         <input type="time" value="18:00" />
                     </div>
                 </label>
 
                 <label class="horario-row horario-row-disabled">
-                    <span class="diaLabel"><span class="dot dot-disabled"></span> Quarta</span>
-                    <span class="diaIndisponivel">indisponível</span>
-                </label>
-
-                <label class="horario-row">
-                    <span class="diaLabel"><span class="dot"></span> Quinta</span>
+                    <span class="diaLabel"><input type="checkbox" class="dot"> Quarta</span>
                     <div class="horario-row-inputs">
-                        <input type="time" value="09:00" />
+                        <input type="time" value="08:00" />
                         <span>até</span>
                         <input type="time" value="18:00" />
                     </div>
                 </label>
 
                 <label class="horario-row">
-                    <span class="diaLabel"><span class="dot"></span> Sexta</span>
+                    <span class="diaLabel"><input type="checkbox" class="dot"> Quinta</span>
                     <div class="horario-row-inputs">
-                        <input type="time" value="09:00" />
+                        <input type="time" value="08:00" />
+                        <span>até</span>
+                        <input type="time" value="18:00" />
+                    </div>
+                </label>
+
+                <label class="horario-row">
+                    <span class="diaLabel"><input type="checkbox" class="dot"> Sexta</span>
+                    <div class="horario-row-inputs">
+                        <input type="time" value="08:00" />
                         <span>até</span>
                         <input type="time" value="18:00" />
                     </div>

@@ -309,7 +309,7 @@ main.agendaContainer {
     display: block;
     width: auto;
     text-align: left;
-    padding: 30px 16px;
+    padding: 16px 16px;
     border-radius: 8px;
     margin: 10px;
     cursor: pointer;
@@ -584,7 +584,16 @@ main.agendaContainer {
     width: 16px;
     height: 16px;
     border-radius: 4px;
-    background: #7b5cff;
+    accent-color: #7c3aed;
+}
+
+.horarioAlmoco {
+  background: #fff3cd;
+  color: #856404;
+  border-radius: 8px;
+  padding: 15px 15px;
+  margin: 10px;
+  
 }
 
 .dot-disabled {
@@ -836,4 +845,17 @@ main.agendaContainer {
 
 .botaoConsulta::-moz-focus-inner {
     border: 0;
+}
+
+.semConsultas {
+    width: 100%;
+    height: calc(100vh - 260px);
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 20px;
+    color: #777;
+    text-align: center;
 }

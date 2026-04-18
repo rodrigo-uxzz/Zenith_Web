@@ -51,9 +51,8 @@ let novaFoto = null;
 //função mostrar perfil
 async function carregarPerfil() {
   try {
-    const dataFormatada = dataAtual.toISOString().split("T")[0];
 
-   const { dados } = await apiRequest(`/consultasDoDia?data=${dataFormatada}`);
+   const {dados} = await apiRequest("/perfil");
    
     dadosOriginais = dados;
 

@@ -17,7 +17,7 @@ function voltarDia() {
 
 async function atualizarData() {
   try {
-    const dataFormatada = dataAtual.toISOString().split("T")[0];
+    const dataFormatada = dataAtual.toLocaleDateString("en-CA");
 
     const hoje = new Date();
     let textoData = "";
@@ -53,11 +53,13 @@ async function atualizarData() {
     const sessoes = dados.sessoes || [];
 
     if (!ok || !dados.sessoes || dados.sessoes.length === 0) {
-      container.innerHTML = "<p>Dia sem consultas</p>";
+      container.innerHTML = `<div class="semConsultas">Dia sem consultas</div>`;
       return;
     }
 
     sessoes.forEach((item) => {
+      console.log(item);
+
       const linha = document.createElement("div");
       linha.classList.add("linhaHorario");
 
@@ -67,9 +69,21 @@ async function atualizarData() {
 
       let conteudo;
 
-      if (item.status_sessao !== "disponivel" && item.sessao) {
+      if (item.tipo === "evento") {
+        if (item.slug === "almoco") {
+          conteudo = document.createElement("div");
+          conteudo.classList.add("horarioAlmoco");
+          conteudo.innerText = "🍽 Horário de almoço";
+        } else {
+          conteudo = document.createElement("div");
+          conteudo.classList.add("horarioAlmoco");
+          conteudo.innerText = "📌 " + (item.evento?.nome || "Evento");
+        }
+      } else if (item.status_sessao !== "disponivel" && item.sessao) {
         conteudo = document.createElement("button");
         conteudo.classList.add("consultaCard", "botaoConsulta");
+
+        conteudo.dataset.id = item.sessao?.id_sessao;
 
         const nome = item.sessao?.paciente?.usuario?.nome || "Paciente";
 
@@ -77,9 +91,6 @@ async function atualizarData() {
           <strong>${nome}</strong>
           <span>${item.hora_inicio.slice(0, 2) + "h"}</span>
         `;
-        conteudo.addEventListener("click", function () {
-          showConsultaModal(this);
-        });
       } else {
         conteudo = document.createElement("div");
         conteudo.classList.add("horarioLivre");
@@ -113,7 +124,7 @@ const btnConfigHorario = document.getElementById("btn-config-horario");
 const horarioModal = document.getElementById("horario-modal");
 const closeHorarioModal = document.getElementById("close-horario-modal");
 const btnVoltarHorario = document.getElementById("btn-voltar-horario");
-const btnSalvarHorario = document.getElementById("btn-salvar-horario");
+// const btnSalvarHorario = document.getElementById("btn-salvar-horario");
 const confirmModal = document.getElementById("confirm-modal");
 const closeConfirmModal = document.getElementById("close-confirm-modal");
 const btnVoltarConfirm = document.getElementById("btn-voltar-confirm");
@@ -230,12 +241,6 @@ function parseHorario(horarioTexto) {
   return `${hora}:${minuto} - ${fim}`;
 }
 
-consultaButtons.forEach(function (button) {
-  button.addEventListener("click", function () {
-    showConsultaModal(button);
-  });
-});
-
 if (closeConsultaModal) {
   closeConsultaModal.addEventListener("click", function () {
     consultaModal.style.display = "none";
@@ -277,16 +282,6 @@ if (closeHorarioModal) {
 if (btnVoltarHorario) {
   btnVoltarHorario.addEventListener("click", function () {
     horarioModal.style.display = "none";
-  });
-}
-
-if (btnSalvarHorario) {
-  btnSalvarHorario.addEventListener("click", function () {
-    horarioModal.style.display = "none";
-    showStatusModal(
-      "Horários salvos",
-      "A configuração de horários foi atualizada com sucesso.",
-    );
   });
 }
 
@@ -522,6 +517,66 @@ function formatHorarioEnd(horario) {
   return `${hora}:${minuto} - ${fimHora.toString().padStart(2, "0")}:${minuto}`;
 }
 
+document
+  .getElementById("listaHorarios")
+  .addEventListener("click", async function (event) {
+    const button = event.target.closest(".botaoConsulta");
+    if (!button) return;
+
+    const id = button.dataset.id;
+
+    consultaModal.style.display = "flex";
+
+    document.getElementById("consulta-modal-nome").textContent =
+      "Carregando...";
+    document.getElementById("consulta-modal-data").textContent = "";
+    document.getElementById("consulta-modal-horario").textContent = "";
+    document.getElementById("consulta-modal-observacao").textContent = "";
+    try {
+      const { ok, dados } = await apiRequest(`/detalhesConsulta/${id}`);
+
+      if (!ok) {
+        console.error("Erro ao buscar detalhes da consulta:", dados);
+        showStatusModal(
+          "Erro",
+          "Não foi possível carregar os detalhes da consulta. Tente novamente mais tarde.",
+        );
+        return;
+      }
+
+      function formatarData(data) {
+        return new Date(data + "T00:00:00").toLocaleDateString("pt-BR", {
+          weekday: "long",
+          day: "2-digit",
+          month: "long",
+          year: "numeric",
+        });
+      }
+
+      const sessao = dados.sessao;
+
+      document.getElementById("consulta-modal-nome").textContent =
+        sessao?.paciente?.usuario?.nome || "Paciente";
+
+      document.getElementById("consulta-modal-data").textContent = formatarData(
+        sessao.data_sessao,
+      );
+
+      document.getElementById("consulta-modal-horario").textContent =
+        sessao.hora_inicio.slice(0, 5) + " - " + sessao.hora_fim.slice(0, 5);
+
+      document.getElementById("consulta-modal-observacao").textContent =
+        sessao.observacoes || "Sem observações";
+
+      consultaModal.style.display = "flex";
+      console.log(dados);
+    } catch (error) {
+      console.error("Erro ao carregar detalhes da consulta:", error);
+    }
+
+    if (!button) return;
+  });
+
 // logout
 document
   .getElementById("sair")
@@ -541,6 +596,75 @@ document
 
     localStorage.removeItem("token");
     window.location.href = "loginScreen.html";
+  });
+
+document
+  .getElementById("btn-salvar-horario")
+  .addEventListener("click", async function () {
+    const dias = document.querySelectorAll(".horario-row");
+    let agendas = [];
+
+    dias.forEach((dia, index) => {
+      const checkbox = dia.querySelector("input[type='checkbox']");
+      const inputs = dia.querySelectorAll("input[type='time']");
+
+      if (checkbox && checkbox.checked) {
+        agendas.push({
+          dia_semana: index + 1,
+          hora_inicio: inputs[0].value,
+          hora_fim: inputs[1].value,
+        });
+      }
+    });
+
+    if (agendas.length === 0) {
+      showStatusModal(
+        "Atenção",
+        "Selecione pelo menos um dia e horário para configurar a agenda.",
+      );
+      return;
+    }
+
+    const { ok, dados } = await apiRequest("/configurarAgenda", "POST", {
+      agendas: agendas,
+    });
+
+    if (!ok) {
+      console.error("Erro ao salvar agenda:", dados);
+      showStatusModal(
+        "Erro",
+        "Não foi possível salvar a agenda. Tente novamente mais tarde.",
+      );
+      return;
+    }
+
+    const almocoInicio = document.getElementById("almoco-inicio").value;
+    const almocoFim = document.getElementById("almoco-fim").value;
+
+    if (almocoInicio && almocoFim) {
+      const { ok: okAlmoco, dados: dadosAlmoco } = await apiRequest(
+        "/marcarEvento",
+        "POST",
+        {
+          slug: "almoco",
+          hora_inicio: almocoInicio,
+          hora_fim: almocoFim,
+        },
+      );
+
+      if (!okAlmoco) {
+        console.error("Erro ao salvar horário de almoço:", dadosAlmoco);
+        showStatusModal("Erro", "Não foi possível salvar o horário de almoço.");
+        return;
+      }
+    }
+
+    horarioModal.style.display = "none";
+    showStatusModal(
+      "Horários salvos",
+      "A configuração de horários foi atualizada com sucesso.",
+    );
+    window.location.reload();
   });
 
 window.onload = atualizarData;
