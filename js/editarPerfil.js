@@ -1,5 +1,54 @@
 import { apiRequest } from "./api.js";
 
+// Modal de logout
+document.addEventListener("DOMContentLoaded", function () {
+  const modal = document.getElementById("modal-logout");
+  const openModalBtn = document.getElementById("open-Modal-logout");
+  const cancelBtn = document.getElementById("btn-cancel-logout");
+  const confirmBtn = document.getElementById("btn-confirm-logout");
+
+  // Abrir modal
+  if (openModalBtn) {
+    openModalBtn.addEventListener("click", function (e) {
+      e.preventDefault();
+      modal.style.display = "flex";
+    });
+  }
+
+  // Fechar modal ao clicar em cancelar
+  if (cancelBtn) {
+    cancelBtn.addEventListener("click", function () {
+      modal.style.display = "none";
+    });
+  }
+
+  // Confirmar logout
+  if (confirmBtn) {
+    confirmBtn.addEventListener("click", async function () {
+      try {
+        const { ok, dados } = await apiRequest("/logout", "POST");
+
+        if (!ok) {
+          console.warn("Erro ao deslogar da API", dados);
+        }
+      } catch (error) {
+        console.error("Erro ao fazer logout:", error);
+      }
+
+      // Limpar token e redirecionar
+      localStorage.removeItem("token");
+      window.location.href = "./pages/loginScreen.html";
+    });
+  }
+
+  // Fechar modal ao clicar fora
+  window.addEventListener("click", function (event) {
+    if (event.target === modal) {
+      modal.style.display = "none";
+    }
+  });
+});
+
 document.addEventListener("DOMContentLoaded", function () {
   carregarPerfil();
 
@@ -33,6 +82,10 @@ function showModal(message) {
 
   if (modal) {
     modal.style.display = "block";
+    // Fechar automaticamente em 3 segundos
+    setTimeout(() => {
+      modal.style.display = "none";
+    }, 3000);
   }
 }
 
@@ -124,7 +177,7 @@ async function atualizarPerfil() {
       showModal("✅ Dados atualizados com sucesso!");
       setTimeout(() => {
         hideModal();
-        window.location.href = "perfilScreen.html";
+        window.location.href = "./pages/perfilScreen.html";
       }, 1500);
     } else {
       console.error(dados);
@@ -157,7 +210,7 @@ document.getElementById("deletar").addEventListener("click", async function () {
   const token = localStorage.getItem("token");
 
   if (!token) {
-    window.location.href = "loginScreen.html";
+    window.location.href = "./pages/loginScreen.html";
     alert("realize o login");
   }
 
@@ -167,7 +220,7 @@ document.getElementById("deletar").addEventListener("click", async function () {
     if (ok) {
       alert("conta excluido com sucesso");
       localStorage.removeItem("token");
-      window.location.href = "index.html";
+      window.location.href = "./pages/index.html";
     } else {
       alert("erro ao excluir conta");
       console.error(dados);
@@ -176,24 +229,3 @@ document.getElementById("deletar").addEventListener("click", async function () {
     console.error("Erro: ", error);
   }
 });
-
-document
-  .getElementById("sair")
-  .addEventListener("click", async function (event) {
-    event.preventDefault();
-
-    if (!confirm("Tem certeza que deseja sair?")) return;
-
-    try {
-      const { ok, dados } = await apiRequest("/logout", "POST");
-
-      if (!ok) {
-        console.warn("Erro ao deslogar api", dados);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-
-    localStorage.removeItem("token");
-    window.location.href = "loginScreen.html";
-  });

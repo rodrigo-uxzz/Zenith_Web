@@ -9,42 +9,24 @@ document.getElementById("criarConta").addEventListener("click", function () {
   criarConta();
 });
 
-function showErrorModal(message) {
-  document.getElementById("error-modal-message").textContent = message;
-  document.getElementById("error-modal").style.display = "flex";
+function showModal(message) {
+  document.getElementById('modal-message').textContent = message;
+  document.getElementById('modal').style.display = 'block';
+  // Fechar automaticamente em 3 segundos
+  setTimeout(() => {
+    document.getElementById('modal').style.display = 'none';
+  }, 3000);
 }
 
-function showSuccessModal(message) {
-  document.getElementById("success-modal-message").textContent = message;
-  document.getElementById("success-modal").style.display = "flex";
+// Fechar modal
+document.querySelector('.close').onclick = function() {
+  document.getElementById('modal').style.display = 'none';
 }
-
-// Fechar modal de erro
-document.getElementById("close-error-modal").onclick = function () {
-  document.getElementById("error-modal").style.display = "none";
-};
-
-document.getElementById("btn-error-ok").onclick = function () {
-  document.getElementById("error-modal").style.display = "none";
-};
-
-// Fechar modal de sucesso
-document.getElementById("close-success-modal").onclick = function () {
-  document.getElementById("success-modal").style.display = "none";
-};
-
-document.getElementById("btn-success-ok").onclick = function () {
-  document.getElementById("success-modal").style.display = "none";
-};
-
-window.onclick = function (event) {
-  if (event.target == document.getElementById("error-modal")) {
-    document.getElementById("error-modal").style.display = "none";
+window.onclick = function(event) {
+  if (event.target == document.getElementById('modal')) {
+    document.getElementById('modal').style.display = 'none';
   }
-  if (event.target == document.getElementById("success-modal")) {
-    document.getElementById("success-modal").style.display = "none";
-  }
-};
+}
 
 // Quando a página abre, valida se tem dados salvos
 // window.addEventListener("DOMContentLoaded", function () {
@@ -54,14 +36,14 @@ window.onclick = function (event) {
 //   if (nome === null) {
 //     showModal("⚠️ Você precisa preencher a tela anterior!");
 //     setTimeout(() => {
-//       window.location.href = "./criarScreen.html";
+//       window.location.href = "./pages/criarScreen.html";
 //     }, 2000);
 //   }
 // });
 
 // Função pra voltar pra tela 1
 function voltarTela1() {
-  window.location.href = "./criarScreen.html";
+  window.location.href = "criarScreen.html";
 }
 
 // Função pra criar conta
@@ -86,13 +68,13 @@ async function criarConta() {
     formacao === "" ||
     !termos
   ) {
-    showErrorModal("Preencha TODOS os campos e aceite os termos!");
+    showModal("Preencha TODOS os campos e aceite os termos!");
     return;
   }
 
   // Validando se as senhas são iguais
   if (senha !== confirmarSenha) {
-    showErrorModal("As senhas não conferem!");
+    showModal("As senhas não conferem!");
     return;
   }
 
@@ -113,49 +95,50 @@ async function criarConta() {
   localStorage.setItem("termos", termos.checked);
 
   // salvando no banco de dados
-  const informacoes = {
-    nome: localStorage.getItem("nome"),
-    telefone: localStorage.getItem("telefone"),
-    data: localStorage.getItem("data"),
-    genero: localStorage.getItem("genero")?.toUpperCase(),
-    cpf: localStorage.getItem("cpf"),
-    crp: localStorage.getItem("crp"),
-    username: localStorage.getItem("username"),
-    email: localStorage.getItem("email"),
-    senha: localStorage.getItem("senha"),
-    cadastroEpsi: localStorage.getItem("cadastroEpsi") === "sim",
-    formacao: localStorage.getItem("formacao")?.toUpperCase(),
-    termos: termos,
-    foto: null, // Adicione a foto de perfil se necessário
-  };
+  // Criar FormData para enviar arquivo e dados
+  const formData = new FormData();
 
-  console.log(informacoes);
+  // Adicionar dados do formulário
+  formData.append("nome", localStorage.getItem("nome"));
+  formData.append("telefone", localStorage.getItem("telefone"));
+  formData.append("data_nascimento", localStorage.getItem("data"));
+  formData.append("genero", localStorage.getItem("genero")?.toUpperCase());
+  formData.append("cpf", localStorage.getItem("cpf"));
+  formData.append("crp", localStorage.getItem("crp"));
+  formData.append("username", localStorage.getItem("username"));
+  formData.append("email", localStorage.getItem("email"));
+  formData.append("senha", localStorage.getItem("senha"));
+  formData.append("ativo_para_cadastros", localStorage.getItem("cadastroEpsi") === "sim");
+  formData.append("formacao_academica", localStorage.getItem("formacao")?.toUpperCase());
+  formData.append("termos_aceitos", termos);
+
+  // Adicionar foto se existir
+  if (window.novaFoto) {
+    formData.append("foto_perfil", window.novaFoto);
+  }
+
+  console.log(formData);
 
   const { ok, dados } = await apiRequest(
     "/registerPsicologo",
     "POST",
-    informacoes,
+    formData,
   );
 
   console.log(dados);
   if (ok) {
     console.log(dados);
 
-    showSuccessModal(
+    showModal(
       "Conta criada com sucesso! Sua conta entrará em análise. Aguarde um pouco e em breve você poderá fazer login.",
     );
 
     // Ir pra login
     setTimeout(() => {
-      window.location.href = "./loginScreen.html";
+      window.location.href = "loginScreen.html";
     }, 5000);
   } else {
-    // if (dados?.errors?.cpf) {
-    //     alert("Erro: " + dados.errors.cpf[0]);
-    // } else {
-    //     alert("Erro: " + (dados.message || "cpf Invalido"));
-    // }
     console.error(dados);
-    showErrorModal("Erro ao cadastrar. Tente novamente!");
+    showModal("Erro ao cadastrar. Tente novamente!");
   }
 }

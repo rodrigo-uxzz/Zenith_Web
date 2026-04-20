@@ -51,6 +51,7 @@ article {
     align-items: center;
     justify-content: center;
     gap: 0.1rem;
+    margin-top: 2rem;
 }
 
 figure {
@@ -329,6 +330,7 @@ select.input-diferenciado:focus {
     float: right;
     font-size: 28px;
     font-weight: bold;
+    transform: translateY(-50%);
 }
 
 .close:hover,

@@ -7,6 +7,10 @@ document.getElementById("proximaTela").addEventListener("click", function () {
 function showModal(message) {
                 document.getElementById('modal-message').textContent = message;
                 document.getElementById('modal').style.display = 'block';
+                // Fechar automaticamente em 3 segundos
+                setTimeout(() => {
+                    document.getElementById('modal').style.display = 'none';
+                }, 3000);
             }
 
             // Fechar modal
@@ -32,7 +36,7 @@ function showModal(message) {
 
                 // Validando se algum campo está vazio
                 if (nome === "" || telefone === "" || data === "" || genero === "" || cpf === "" || crp === "") {
-                    showModal("❌ ERRO: Preencha TODOS os campos!");
+                    showModal("Preencha todos os campos!");
                     return; 
                 }
 
@@ -46,9 +50,31 @@ function showModal(message) {
 
                 showModal("✅ Dados salvos! Continuando...");
                 
-                // Redireciona pra próxima página após fechar modal
                 setTimeout(() => {
-                    window.location.href = "./criarScreen2.html";
-                }, 2000); // 2 segundos para o usuário ver
+                    window.location.href = "criarScreen2.html";
+                }, 2000); 
+            }
+
+            // Variável global para guardar a foto entre telas
+            window.novaFoto = null;
+
+            // Quando seleciona uma foto
+            const inputFoto = document.getElementById("fileInput");
+
+            if (inputFoto) {
+                inputFoto.addEventListener("change", function () {
+                    const arquivo = this.files[0];
+
+                    if (arquivo) {
+                        // Guarda o arquivo na variável global
+                        window.novaFoto = arquivo;
+
+                        // Cria preview da imagem
+                        const preview = URL.createObjectURL(arquivo);
+                        document.getElementById("preview").src = preview;
+                        document.getElementById("preview").hidden = false;
+                        document.getElementById("placeholder").hidden = true;
+                    }
+                });
             }
 

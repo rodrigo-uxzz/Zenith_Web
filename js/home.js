@@ -1,32 +1,61 @@
 import { apiRequest } from "./api.js";
 
-//logout
-document
-  .getElementById("sair")
-  .addEventListener("click", async function (event) {
-    event.preventDefault();
-    if (!confirm("Tem certeza que deseja sair?")) return;
+// Modal de logout
+document.addEventListener("DOMContentLoaded", function () {
+  const modal = document.getElementById("modal-logout");
+  const openModalBtn = document.getElementById("open-Modal-logout");
+  const cancelBtn = document.getElementById("btn-cancel-logout");
+  const confirmBtn = document.getElementById("btn-confirm-logout");
 
-    try {
-      const { ok, dados } = await apiRequest("/logout", "POST");
+  // Abrir modal
+  if (openModalBtn) {
+    openModalBtn.addEventListener("click", function (e) {
+      e.preventDefault();
+      modal.style.display = "flex";
+    });
+  }
 
-      if (!ok) {
-        console.warn("erro ao deslogar api", dados);
+  // Fechar modal ao clicar em cancelar
+  if (cancelBtn) {
+    cancelBtn.addEventListener("click", function () {
+      modal.style.display = "none";
+    });
+  }
+
+  // Confirmar logout
+  if (confirmBtn) {
+    confirmBtn.addEventListener("click", async function () {
+      try {
+        const { ok, dados } = await apiRequest("/logout", "POST");
+
+        if (!ok) {
+          console.warn("Erro ao deslogar da API", dados);
+        }
+      } catch (error) {
+        console.error("Erro ao fazer logout:", error);
       }
-    } catch (error) {
-      console.error(error);
+
+      // Limpar token e redirecionar
+      localStorage.removeItem("token");
+      window.location.href = "./pages/loginScreen.html";
+    });
+  }
+
+  // Fechar modal ao clicar fora
+  window.addEventListener("click", function (event) {
+    if (event.target === modal) {
+      modal.style.display = "none";
     }
-
-    localStorage.removeItem("token");
-    window.location.href = "loginScreen.html";
   });
+});
 
+// consultasHoje function
 document.addEventListener("DOMContentLoaded", function () {
   consultasHoje();
 });
 
 document.getElementById("verAgenda").addEventListener("click", function () {
-  window.location.href = "agendaScreen.html";
+  window.location.href = "./pages/agendaScreen.html";
 });
 
 async function consultasHoje() {
