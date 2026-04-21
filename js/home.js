@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       // Limpar token e redirecionar
       localStorage.removeItem("token");
-      window.location.href = "./pages/loginScreen.html";
+      window.location.href = "./../pages/loginScreen.html";
     });
   }
 
@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 document.getElementById("verAgenda").addEventListener("click", function () {
-  window.location.href = "./pages/agendaScreen.html";
+  window.location.href = "./../pages/agendaScreen.html";
 });
 
 async function consultasHoje() {

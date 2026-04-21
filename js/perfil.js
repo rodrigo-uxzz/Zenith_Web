@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       // Limpar token e redirecionar
       localStorage.removeItem("token");
-      window.location.href = "./pages/loginScreen.html";
+      window.location.href = "./../pages/loginScreen.html";
     });
   }
 
@@ -48,26 +48,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 });
-
-//logout
-document.getElementById("sair").addEventListener("click", async function (event) {
-    event.preventDefault();
-
-    if (!confirm("Tem certeza que deseja sair?")) return;
-
-    try {
-      const { ok, dados } = await apiRequest("/logout", "POST");
-
-      if (!ok) {
-        console.warn("erro ao deslogar api", dados);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-
-    localStorage.removeItem("token");
-    window.location.href = "./pages/loginScreen.html";
-  });
 
 //carregar perfil
 document.addEventListener("DOMContentLoaded", function () {
@@ -93,7 +73,7 @@ async function carregarPerfil() {
         if(foto){
           document.getElementById("foto_perfil").src = `http://127.0.0.1:8000/Storage/${foto}` ;
         }else{
-          document.getElementById("foto_perfil").src = './img/avatarZ.png';
+          document.getElementById("foto_perfil").src = './../img/avatarZ.png';
         }
         
         if (dados.psicologo) {

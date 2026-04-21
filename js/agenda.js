@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       // Limpar token e redirecionar
       localStorage.removeItem("token");
-      window.location.href = "./pages/loginScreen.html";
+      window.location.href = "./../pages/loginScreen.html";
     });
   }
 
@@ -479,20 +479,48 @@ if (btnVoltarConfirm) {
 }
 
 if (btnConfirmAction) {
-  btnConfirmAction.addEventListener("click", function () {
+  btnConfirmAction.addEventListener("click", async function () {
     confirmModal.style.display = "none";
-    if (confirmType === "cancel") {
+
+    const id = consultaModal.dataset.id;
+
+    if (!id) {
+      showStatusModal("Erro", "ID da sessão não encontrado");
+      return;
+    }
+
+    try {
+      let ok, dados;
+
+      if (confirmType === "cancel") {
+        ({ ok, dados } = await apiRequest(`/cancelarSessao/${id}`, "POST"));
+      } else if (confirmType === "done") {
+        ({ ok, dados } = await apiRequest(`/sessaoRealizada/${id}`, "POST"));
+      }
+
+      if (!ok) {
+        showStatusModal("Erro", dados?.error || "Erro na operação");
+        return;
+      }
+
       consultaModal.style.display = "none";
-      showStatusModal(
-        "Consulta cancelada",
-        "A consulta foi cancelada com sucesso.",
-      );
-    } else if (confirmType === "done") {
-      consultaModal.style.display = "none";
-      showStatusModal(
-        "Consulta realizada",
-        "A consulta foi realizada com sucesso.",
-      );
+
+      if (confirmType === "cancel") {
+        showStatusModal(
+          "Consulta cancelada",
+          "A consulta foi cancelada com sucesso.",
+        );
+      } else {
+        showStatusModal(
+          "Consulta realizada",
+          "A consulta foi marcada como realizada.",
+        );
+      }
+
+      atualizarData();
+    } catch (error) {
+      console.error(error);
+      showStatusModal("Erro", "Erro ao comunicar com o servidor");
     }
   });
 }
@@ -573,6 +601,7 @@ document
     if (!button) return;
 
     const id = button.dataset.id;
+    consultaModal.dataset.id = id;
 
     consultaModal.style.display = "flex";
 
