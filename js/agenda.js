@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       // Limpar token e redirecionar
       localStorage.removeItem("token");
-      window.location.href = "./pages/loginScreen.html";
+      window.location.href = "./../pages/loginScreen.html";
     });
   }
 
@@ -135,10 +135,16 @@ async function atualizarData() {
         conteudo.dataset.id = item.sessao?.id_sessao;
 
         const nome = item.sessao?.paciente?.usuario?.nome || "Paciente";
+        const status = item.sessao?.status || "agendada"; // assuming status is here
+
+        console.log("Status da sessão:", status);
+
+        conteudo.classList.add(status === "realizada" ? "consultaRealizada" : "consultaCard");
 
         conteudo.innerHTML = `
           <strong>${nome}</strong>
           <span>${item.hora_inicio.slice(0, 2) + "h"}</span>
+          <span class="status-badge status-${status}">${status}</span>
         `;
       } else {
         conteudo = document.createElement("div");
@@ -162,7 +168,6 @@ const closeConsultaModal = document.getElementById("close-consulta-modal");
 const btnEditar = document.querySelector(".btnEditar");
 const editarModal = document.getElementById("editar-modal");
 const closeEditarModal = document.getElementById("close-editar-modal");
-const editarPaciente = document.getElementById("editar-paciente");
 const editarData = document.getElementById("editar-data");
 const editarHorario = document.getElementById("editar-horario");
 const editarLink = document.getElementById("editar-link");
@@ -178,6 +183,10 @@ const confirmModal = document.getElementById("confirm-modal");
 const closeConfirmModal = document.getElementById("close-confirm-modal");
 const btnVoltarConfirm = document.getElementById("btn-voltar-confirm");
 const btnConfirmAction = document.getElementById("btn-confirm-action");
+const confirmDoneModal = document.getElementById("confirm-done-modal");
+const closeConfirmDoneModal = document.getElementById("close-confirm-done-modal");
+const btnVoltarConfirmDone = document.getElementById("btn-voltar-confirm-done");
+const btnConfirmDoneAction = document.getElementById("btn-confirm-done-action");
 const btnRealizada = document.querySelector(".btnRealizada");
 const statusModal = document.getElementById("status-modal");
 const closeStatusModal = document.getElementById("close-status-modal");
@@ -196,6 +205,7 @@ function closeAllModalsExcept(activeModal) {
     editarModal,
     horarioModal,
     confirmModal,
+    confirmDoneModal,
     statusModal,
   ].forEach(function (modal) {
     if (modal && modal !== activeModal) {
@@ -232,7 +242,6 @@ function showConsultaModal(button) {
 }
 
 function showEditarModal() {
-  const nome = document.getElementById("consulta-modal-nome").textContent;
   const data = document.getElementById("consulta-modal-data").textContent;
   const horario =
     document
@@ -242,7 +251,6 @@ function showEditarModal() {
   const observacoes =
     document.getElementById("consulta-modal-observacao").textContent || "";
 
-  editarPaciente.value = nome;
   editarData.value = formatDateInput(data);
   editarHorario.value = horario;
   editarLink.value = link === "#" ? "" : link;
@@ -371,46 +379,50 @@ const reagendarTime = document.getElementById("reagendar-time");
 const btnReagendar = document.querySelector(".btnReagendar");
 if (btnReagendar) {
   btnReagendar.addEventListener("click", function () {
-    const dataAtual = document.getElementById(
-      "consulta-modal-data",
-    ).textContent;
-    const horarioAtual = document.getElementById(
-      "consulta-modal-horario",
-    ).textContent;
-    if (reagendarDate) {
-      // converte a data exibida no modal para o formato yyyy-MM-dd se possível
-      const partes = dataAtual.split(",");
-      if (partes.length > 1) {
-        const inventarioData = partes[1].trim().split(" de ");
-        if (inventarioData.length === 3) {
-          const [dia, mes, ano] = inventarioData;
-          const meses = {
-            janeiro: "01",
-            fevereiro: "02",
-            março: "03",
-            abril: "04",
-            maio: "05",
-            junho: "06",
-            julho: "07",
-            agosto: "08",
-            setembro: "09",
-            outubro: "10",
-            novembro: "11",
-            dezembro: "12",
-          };
-          const mesNumero = meses[mes.toLowerCase()];
-          if (mesNumero) {
-            reagendarDate.value = `${ano}-${mesNumero}-${dia.padStart(2, "0")}`;
+    if (consultaModal.dataset.status === "realizada") {
+      showEditarModal();
+    } else {
+      const dataAtual = document.getElementById(
+        "consulta-modal-data",
+      ).textContent;
+      const horarioAtual = document.getElementById(
+        "consulta-modal-horario",
+      ).textContent;
+      if (reagendarDate) {
+        // converte a data exibida no modal para o formato yyyy-MM-dd se possível
+        const partes = dataAtual.split(",");
+        if (partes.length > 1) {
+          const inventarioData = partes[1].trim().split(" de ");
+          if (inventarioData.length === 3) {
+            const [dia, mes, ano] = inventarioData;
+            const meses = {
+              janeiro: "01",
+              fevereiro: "02",
+              março: "03",
+              abril: "04",
+              maio: "05",
+              junho: "06",
+              julho: "07",
+              agosto: "08",
+              setembro: "09",
+              outubro: "10",
+              novembro: "11",
+              dezembro: "12",
+            };
+            const mesNumero = meses[mes.toLowerCase()];
+            if (mesNumero) {
+              reagendarDate.value = `${ano}-${mesNumero}-${dia.padStart(2, "0")}`;
+            }
           }
         }
       }
+      if (reagendarTime) {
+        const horario = horarioAtual.split(" - ")[0];
+        reagendarTime.value = horario;
+      }
+      consultaModal.style.display = "none";
+      reagendarModal.style.display = "flex";
     }
-    if (reagendarTime) {
-      const horario = horarioAtual.split(" - ")[0];
-      reagendarTime.value = horario;
-    }
-    consultaModal.style.display = "none";
-    reagendarModal.style.display = "flex";
   });
 }
 
@@ -437,21 +449,11 @@ let confirmType = "cancel";
 
 function showConfirmModal(type) {
   confirmType = type;
-  const title = document.querySelector("#confirm-modal h2");
-  const text = document.querySelector("#confirm-modal p");
-  btnConfirmAction.classList.remove("btnCancelEdit", "btnConfirm", "btnSalvar");
   if (type === "cancel") {
-    title.textContent = "Confirmação";
-    text.textContent = "Confirmar consulta cancelada?";
-    btnConfirmAction.textContent = "Cancelar";
-    btnConfirmAction.classList.add("btnCancelEdit");
+    confirmModal.style.display = "flex";
   } else if (type === "done") {
-    title.textContent = "Confirmação";
-    text.textContent = "Confirmar consulta realizada?";
-    btnConfirmAction.textContent = "Confirmar";
-    btnConfirmAction.classList.add("btnConfirm");
+    confirmDoneModal.style.display = "flex";
   }
-  confirmModal.style.display = "flex";
 }
 
 if (btnCancelar) {
@@ -478,21 +480,82 @@ if (btnVoltarConfirm) {
   });
 }
 
-if (btnConfirmAction) {
-  btnConfirmAction.addEventListener("click", function () {
-    confirmModal.style.display = "none";
-    if (confirmType === "cancel") {
+if (closeConfirmDoneModal) {
+  closeConfirmDoneModal.addEventListener("click", function () {
+    confirmDoneModal.style.display = "none";
+  });
+}
+
+if (btnVoltarConfirmDone) {
+  btnVoltarConfirmDone.addEventListener("click", function () {
+    confirmDoneModal.style.display = "none";
+  });
+}
+
+if (btnConfirmDoneAction) {
+  btnConfirmDoneAction.addEventListener("click", async function () {
+    confirmDoneModal.style.display = "none";
+
+    const id = consultaModal.dataset.id;
+
+    if (!id) {
+      showStatusModal("Erro", "ID da sessão não encontrado");
+      return;
+    }
+
+    try {
+      const { ok, dados } = await apiRequest(`/sessaoRealizada/${id}`, "POST");
+
+      if (!ok) {
+        showStatusModal("Erro", dados?.error || "Erro na operação");
+        return;
+      }
+
       consultaModal.style.display = "none";
+
+      showStatusModal(
+        "Consulta realizada",
+        "A consulta foi marcada como realizada.",
+      );
+
+      atualizarData();
+    } catch (error) {
+      console.error(error);
+      showStatusModal("Erro", "Erro ao comunicar com o servidor");
+    }
+  });
+}
+
+if (btnConfirmAction) {
+  btnConfirmAction.addEventListener("click", async function () {
+    confirmModal.style.display = "none";
+
+    const id = consultaModal.dataset.id;
+
+    if (!id) {
+      showStatusModal("Erro", "ID da sessão não encontrado");
+      return;
+    }
+
+    try {
+      const { ok, dados } = await apiRequest(`/cancelarSessao/${id}`, "POST");
+
+      if (!ok) {
+        showStatusModal("Erro", dados?.error || "Erro na operação");
+        return;
+      }
+
+      consultaModal.style.display = "none";
+
       showStatusModal(
         "Consulta cancelada",
         "A consulta foi cancelada com sucesso.",
       );
-    } else if (confirmType === "done") {
-      consultaModal.style.display = "none";
-      showStatusModal(
-        "Consulta realizada",
-        "A consulta foi realizada com sucesso.",
-      );
+
+      atualizarData();
+    } catch (error) {
+      console.error(error);
+      showStatusModal("Erro", "Erro ao comunicar com o servidor");
     }
   });
 }
@@ -515,13 +578,11 @@ if (btnSalvarReagendar) {
 
 if (btnSalvarEditar) {
   btnSalvarEditar.addEventListener("click", function () {
-    const nome = editarPaciente.value.trim() || "Consulta";
     const data = formatDateDisplay(editarData.value);
     const horario = editarHorario.value;
     const link = editarLink.value.trim() || "#";
     const observacoes = editarObservacoes.value.trim();
 
-    document.getElementById("consulta-modal-nome").textContent = nome;
     document.getElementById("consulta-modal-data").textContent = data;
     document.getElementById("consulta-modal-horario").textContent =
       `${horario} - ${formatHorarioEnd(horario)}`;
@@ -573,6 +634,7 @@ document
     if (!button) return;
 
     const id = button.dataset.id;
+    consultaModal.dataset.id = id;
 
     consultaModal.style.display = "flex";
 
@@ -619,6 +681,13 @@ document
 
       consultaModal.style.display = "flex";
       console.log(dados);
+
+      consultaModal.dataset.status = sessao.status;
+      if (sessao.status === "realizada") {
+        document.querySelector(".btnReagendar").style.display = "inline-block";
+        document.querySelector(".btnReagendar").textContent = "Editar agenda";
+        document.querySelector(".btnRealizada").style.display = "none";
+      }
     } catch (error) {
       console.error("Erro ao carregar detalhes da consulta:", error);
     }

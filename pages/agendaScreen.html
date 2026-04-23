@@ -153,45 +153,43 @@
 
             <div class="consulta-modal-header">
                 <span id="consulta-modal-nome"></span>
-                <button class="btnEditar">
-                    <ion-icon name="pencil-outline"></ion-icon>
-                </button>
             </div>
 
             <div class="consulta-modal-item">
                 <div class="consulta-modal-item-icon"><ion-icon name="calendar-outline"></ion-icon></div>
-                <div>
-                    <p class="consulta-modal-item-label">Data</p>
-                    <p id="consulta-modal-data">terça-feira, 31 de março de 2026</p>
+                <div class="consulta-modal-item-details">
+                    <span class="consulta-modal-item-label">Data</span>
+                    <span id="consulta-modal-data">terça-feira, 31 de março de 2026</span>
                 </div>
             </div>
 
             <div class="consulta-modal-item">
                 <div class="consulta-modal-item-icon"><ion-icon name="time-outline"></ion-icon></div>
-                <div>
-                    <p class="consulta-modal-item-label">Horário</p>
-                    <p id="consulta-modal-horario">09:00 - 10:00</p>
+                <div class="consulta-modal-item-details">
+                    <span class="consulta-modal-item-label">Horário</span>
+                    <span id="consulta-modal-horario">09:00 - 10:00</span>
                 </div>
             </div>
 
             <div class="consulta-modal-item">
                 <div class="consulta-modal-item-icon"><ion-icon name="link-outline"></ion-icon></div>
-                <div>
-                    <p class="consulta-modal-item-label">Link da consulta</p>
+                <div class="consulta-modal-item-details">
+                    <span class="consulta-modal-item-label">Link da consulta</span>
                     <a id="consulta-modal-link" href="#" target="_blank">Abrir link externo</a>
                 </div>
             </div>
 
             <div class="consulta-modal-item consulta-modal-observacao">
                 <div class="consulta-modal-item-icon"><ion-icon name="document-text-outline"></ion-icon></div>
-                <div>
-                    <p class="consulta-modal-item-label">Observações</p>
-                    <p id="consulta-modal-observacao">Primeira consulta</p>
+                <div class="consulta-modal-item-details">
+                    <span class="consulta-modal-item-label">Observações</span>
+                    <span id="consulta-modal-observacao">Primeira consulta</span>
                 </div>
             </div>
 
             <div class="consulta-modal-actions">
-                <button class="btnAcao btnReagendar">Reagendar</button>
+                <button class="btnAcao btnEditar">Editar</button>
+                <button class="btnAcao btnReagendar" style="display:none;">Reagendar</button>
                 <button class="btnAcao btnRealizada">Realizada</button>
                 <button class="btnAcao btnCancelada">Cancelada</button>
             </div>
@@ -221,11 +219,8 @@
     <div id="editar-modal" class="modal" style="display:none;">
         <div class="modal-content editar-modal-content">
             <span class="close" id="close-editar-modal">&times;</span>
-            <h2>Editar Consulta</h2>
+            <h2>Editar Agenda</h2>
             <hr>
-
-            <label class="editar-label" for="editar-paciente">Paciente *</label>
-            <input id="editar-paciente" type="text" class="editar-input" />
 
             <label class="editar-label" for="editar-data">Data da Consulta *</label>
             <input id="editar-data" type="date" class="editar-input" />
@@ -254,6 +249,18 @@
             <div class="confirm-buttons">
                 <button class="btnVoltar" id="btn-voltar-confirm" type="button">Voltar</button>
                 <button class="btnCancelEdit" id="btn-confirm-action" type="button">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="confirm-done-modal" class="modal" style="display:none;">
+        <div class="modal-content confirm-modal-content">
+            <span class="close" id="close-confirm-done-modal">&times;</span>
+            <h2>Confirmação</h2>
+            <p>Confirmar consulta realizada?</p>
+            <div class="confirm-buttons">
+                <button class="btnVoltar" id="btn-voltar-confirm-done" type="button">Voltar</button>
+                <button class="btnConfirm" id="btn-confirm-done-action" type="button">Confirmar</button>
             </div>
         </div>
     </div>

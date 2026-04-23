@@ -10,23 +10,23 @@ document.getElementById("criarConta").addEventListener("click", function () {
 });
 
 function showModal(message) {
-  document.getElementById('modal-message').textContent = message;
-  document.getElementById('modal').style.display = 'block';
+  document.getElementById("modal-message").textContent = message;
+  document.getElementById("modal").style.display = "block";
   // Fechar automaticamente em 3 segundos
   setTimeout(() => {
-    document.getElementById('modal').style.display = 'none';
+    document.getElementById("modal").style.display = "none";
   }, 3000);
 }
 
 // Fechar modal
-document.querySelector('.close').onclick = function() {
-  document.getElementById('modal').style.display = 'none';
-}
-window.onclick = function(event) {
-  if (event.target == document.getElementById('modal')) {
-    document.getElementById('modal').style.display = 'none';
+document.querySelector(".close").onclick = function () {
+  document.getElementById("modal").style.display = "none";
+};
+window.onclick = function (event) {
+  if (event.target == document.getElementById("modal")) {
+    document.getElementById("modal").style.display = "none";
   }
-}
+};
 
 // Quando a página abre, valida se tem dados salvos
 // window.addEventListener("DOMContentLoaded", function () {
@@ -108,13 +108,19 @@ async function criarConta() {
   formData.append("username", localStorage.getItem("username"));
   formData.append("email", localStorage.getItem("email"));
   formData.append("senha", localStorage.getItem("senha"));
-  formData.append("ativo_para_cadastros", localStorage.getItem("cadastroEpsi") === "sim");
-  formData.append("formacao_academica", localStorage.getItem("formacao")?.toUpperCase());
-  formData.append("termos_aceitos", termos);
+  formData.append(
+    "cadastroEpsi",
+    localStorage.getItem("cadastroEpsi") === "1" ? 1 : 0,
+  );
+  formData.append("formacao", localStorage.getItem("formacao")?.toUpperCase());
+  formData.append("termos_aceitos", termos ? 1 : 0);
 
   // Adicionar foto se existir
-  if (window.novaFoto) {
-    formData.append("foto_perfil", window.novaFoto);
+  const fotoBase64 = localStorage.getItem("foto");
+
+  if (fotoBase64) {
+    const blob = await fetch(fotoBase64).then((r) => r.blob());
+    formData.append("foto", blob, "foto.png");
   }
 
   console.log(formData);
