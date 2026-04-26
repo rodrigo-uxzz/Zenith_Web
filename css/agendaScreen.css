@@ -1,3 +1,21 @@
+/* Botão Sessões estilizado */
+.btnSessoes {
+    background: #e6ddff;
+    color: #a48be6;
+    border: 2px solid #a48be6;
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: 'Montserrat', Arial, sans-serif;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+
+.btnSessoes:hover {
+    background: #d1c4e9;
+    color: #7c5fc0;
+}
 /* RESET */
 
 * {
@@ -308,6 +326,8 @@ main.agendaContainer {
 }
 
 .consultaRealizada strong {
+    display: block;
+    font-size: 18px;
     color: #28a745;
 }
 
@@ -333,6 +353,7 @@ main.agendaContainer {
 
 .status-realizada {
     background: #28a745;
+    padding: 8px 20px;
 }
 .botaoConsulta {
     border: none;

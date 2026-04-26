@@ -93,8 +93,11 @@ async function atualizarData() {
     document.getElementById("dia2").innerText = textoData2;
 
     const { dados, ok } = await apiRequest(
-      `/consultasDoDia?data=${dataFormatada}`,
+      `/consultasDoDia?data=${dataFormatada}&t=${Date.now()}`,
     );
+
+    console.log("=== DADOS COMPLETOS DA API ===");
+    console.log(JSON.stringify(dados, null, 2));
 
     const container = document.getElementById("listaHorarios");
     container.innerHTML = "";
@@ -107,7 +110,11 @@ async function atualizarData() {
     }
 
     sessoes.forEach((item) => {
-      console.log(item);
+      console.log("=== ITEM COMPLETO ===");
+      console.log(JSON.stringify(item, null, 2));
+      console.log("Status sessão:", item.status_sessao);
+      console.log("Sessão:", item.sessao);
+      console.log("Sessão status:", item.sessao?.status);
 
       const linha = document.createElement("div");
       linha.classList.add("linhaHorario");
@@ -128,18 +135,23 @@ async function atualizarData() {
           conteudo.classList.add("horarioAlmoco");
           conteudo.innerText = "📌 " + (item.evento?.nome || "Evento");
         }
-      } else if (item.status_sessao !== "disponivel" && item.sessao) {
+      } else if (item.sessao && item.sessao.id_sessao) {
         conteudo = document.createElement("button");
         conteudo.classList.add("consultaCard", "botaoConsulta");
 
+
+        // consulta status
         conteudo.dataset.id = item.sessao?.id_sessao;
+        conteudo.dataset.status = item.sessao?.status || "agendada";
 
         const nome = item.sessao?.paciente?.usuario?.nome || "Paciente";
         const status = item.sessao?.status || "agendada"; // assuming status is here
 
         console.log("Status da sessão:", status);
 
-        conteudo.classList.add(status === "realizada" ? "consultaRealizada" : "consultaCard");
+        // Verificar se é realizada (aceita variações)
+        const isRealizada = status && status.toLowerCase().includes('realiz');
+        conteudo.classList.add(isRealizada ? "consultaRealizada" : "consultaCard");
 
         conteudo.innerHTML = `
           <strong>${nome}</strong>
@@ -175,6 +187,7 @@ const editarObservacoes = document.getElementById("editar-observacoes");
 const btnCancelarEditar = document.getElementById("btn-cancelar-editar");
 const btnSalvarEditar = document.getElementById("btn-salvar-editar");
 const btnConfigHorario = document.getElementById("btn-config-horario");
+const btnSessoes = document.getElementById("btn-sessoes");
 const horarioModal = document.getElementById("horario-modal");
 const closeHorarioModal = document.getElementById("close-horario-modal");
 const btnVoltarHorario = document.getElementById("btn-voltar-horario");
@@ -228,6 +241,10 @@ function showConsultaModal(button) {
   const horario = parseHorario(horarioTexto);
   const data = document.querySelector(".dataAgenda")?.textContent || "";
   const link = `https://zoom.us/`; // Substitua pelo link real se disponível
+
+  // Passar ID e status da sessão para o modal
+  consultaModal.dataset.id = button.dataset.id;
+  consultaModal.dataset.status = button.dataset.status || "agendada";
 
   document.getElementById("consulta-modal-nome").textContent = nome;
   document.getElementById("consulta-modal-data").textContent = data;
@@ -328,6 +345,12 @@ if (btnConfigHorario) {
     closeAllModalsExcept(horarioModal);
     horarioModal.style.display = "flex";
   });
+}
+
+if (btnSessoes) {
+  btnSessoes.addEventListener("click", function () {
+    window.location.href = "././sessoes.html";
+  })
 }
 
 if (closeHorarioModal) {
@@ -503,8 +526,12 @@ if (btnConfirmDoneAction) {
       return;
     }
 
+    console.log("Marcando sessão como realizada, ID:", id);
+
     try {
       const { ok, dados } = await apiRequest(`/sessaoRealizada/${id}`, "POST");
+
+      console.log("Resposta da API:", ok, dados);
 
       if (!ok) {
         showStatusModal("Erro", dados?.error || "Erro na operação");
@@ -518,10 +545,35 @@ if (btnConfirmDoneAction) {
         "A consulta foi marcada como realizada.",
       );
 
-      atualizarData();
+      // Forçar atualização visual imediata
+      atualizarDataForceRealizada(id);
     } catch (error) {
       console.error(error);
       showStatusModal("Erro", "Erro ao comunicar com o servidor");
+    }
+  });
+}
+
+// Função para forçar visualmente como realizada
+function atualizarDataForceRealizada(id) {
+  const botoes = document.querySelectorAll('.botaoConsulta');
+  botoes.forEach(botao => {
+    if (botao.dataset.id == id) {
+      botao.classList.remove('consultaCard');
+      botao.classList.add('consultaRealizada');
+      
+      // Atualizar o badge de status
+      const badge = botao.querySelector('.status-badge');
+      if (badge) {
+        badge.classList.remove('status-agendada');
+        badge.classList.add('status-realizada');
+        badge.textContent = 'realizada';
+      }
+      
+      // Atualizar dataset
+      botao.dataset.status = 'realizada';
+      
+      console.log("Atualização visual forçada para ID:", id);
     }
   });
 }

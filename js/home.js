@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Fechar modal ao clicar em cancelar
+  // Fechar modal
   if (cancelBtn) {
     cancelBtn.addEventListener("click", function () {
       modal.style.display = "none";
@@ -35,7 +35,6 @@ document.addEventListener("DOMContentLoaded", function () {
         console.error("Erro ao fazer logout:", error);
       }
 
-      // Limpar token e redirecionar
       localStorage.removeItem("token");
       window.location.href = "./../pages/loginScreen.html";
     });
@@ -47,35 +46,205 @@ document.addEventListener("DOMContentLoaded", function () {
       modal.style.display = "none";
     }
   });
-});
 
-// consultasHoje function
-document.addEventListener("DOMContentLoaded", function () {
   consultasHoje();
+  carregarNotificacoes();
 });
 
-document.getElementById("verAgenda").addEventListener("click", function () {
-  window.location.href = "./../pages/agendaScreen.html";
-});
+
+// Botão ver agenda
+const verAgenda = document.getElementById("verAgenda");
+
+if (verAgenda) {
+  verAgenda.addEventListener("click", function () {
+    window.location.href = "./../pages/agendaScreen.html";
+  });
+}
+
+
+// ===============================
+// NOTIFICAÇÕES
+// ===============================
+
+async function carregarNotificacoes() {
+  const container = document.getElementById("central-notificacoes");
+
+  if (!container) return;
+
+  container.innerHTML = `
+    <div class="sem-notificacoes">
+      Carregando...
+    </div>
+  `;
+
+  try {
+    const { ok, dados } = await apiRequest("/sessoesPendentes", "GET");
+
+    if (!ok) {
+      throw new Error(dados?.error || "Erro ao buscar notificações");
+    }
+
+    const notificacoes = [
+      ...(dados.pendentes || []),
+      ...(dados.cancelamentos || []),
+      ...(dados.reagendamentos || [])
+    ];
+
+    if (notificacoes.length === 0) {
+      container.innerHTML = `
+        <div class="sem-notificacoes">
+          Nenhuma notificação no momento
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = "";
+
+    notificacoes.forEach((sessao) => {
+      const nome =
+        sessao.paciente?.usuario?.nome || "Paciente";
+
+      const data = sessao.data_sessao || "--/--/----";
+      const hora = sessao.hora_inicio || "--:--";
+      const status = sessao.status_sessao || "";
+
+      let textoTipo = "";
+
+      if (status === "pendente") {
+        textoTipo = "solicitou consulta";
+      } else if (status === "cancelamento_solicitado") {
+        textoTipo = "solicitou cancelamento";
+      } else if (status === "reagendamento_solicitado") {
+        textoTipo = "solicitou reagendamento";
+      } else {
+        textoTipo = "possui atualização";
+      }
+
+      const div = document.createElement("div");
+      div.classList.add("notificacao-item");
+
+      div.innerHTML = `
+        <div class="notificacao-conteudo">
+          <strong>${nome} ${textoTipo}</strong>
+          <span class="notificacao-data">
+            ${data} às ${hora}
+          </span>
+        </div>
+
+        <div class="notificacao-acoes">
+          <button 
+            class="btn-aceitar" 
+            data-id="${sessao.id_sessao}">
+            Aceitar
+          </button>
+
+          <button 
+            class="btn-recusar" 
+            data-id="${sessao.id_sessao}">
+            Recusar
+          </button>
+        </div>
+      `;
+
+      container.appendChild(div);
+    });
+
+    // botão aceitar
+    container.querySelectorAll(".btn-aceitar").forEach((btn) => {
+      btn.addEventListener("click", async (e) => {
+        const id = e.target.dataset.id;
+        await aprovarSessao(id);
+      });
+    });
+
+    // botão recusar
+    container.querySelectorAll(".btn-recusar").forEach((btn) => {
+      btn.addEventListener("click", async (e) => {
+        const id = e.target.dataset.id;
+        await recusarSessao(id);
+      });
+    });
+
+  } catch (error) {
+    console.error("Erro ao carregar notificações:", error);
+
+    container.innerHTML = `
+      <div class="sem-notificacoes">
+        Erro ao carregar notificações
+      </div>
+    `;
+  }
+}
+
+
+// Aprovar sessão
+async function aprovarSessao(id) {
+  try {
+    const { ok, dados } = await apiRequest(
+      `/aprovarSessao/${id}`,
+      "POST"
+    );
+
+    if (ok) {
+      alert("Solicitação aprovada com sucesso!");
+      carregarNotificacoes();
+    } else {
+      alert(dados?.error || "Erro ao aprovar solicitação");
+    }
+
+  } catch (error) {
+    console.error(error);
+    alert("Erro ao aprovar solicitação");
+  }
+}
+
+
+// Recusar sessão
+async function recusarSessao(id) {
+  try {
+    const { ok, dados } = await apiRequest(
+      `/recusarSessao/${id}`,
+      "POST"
+    );
+
+    if (ok) {
+      alert("Solicitação recusada com sucesso!");
+      carregarNotificacoes();
+    } else {
+      alert(dados?.error || "Erro ao recusar solicitação");
+    }
+
+  } catch (error) {
+    console.error(error);
+    alert("Erro ao recusar solicitação");
+  }
+}
+
+
+// ===============================
+// CONSULTAS DE HOJE
+// ===============================
 
 async function consultasHoje() {
-  let dataAtual = new Date();
-
+  const dataAtual = new Date();
   const dataFormatada = dataAtual.toISOString().split("T")[0];
 
-  const { dados, ok } = await apiRequest(
-    `/consultasDoDia?data=${dataFormatada}`,
-  );
+  try {
+    const { dados } = await apiRequest(
+      `/consultasDoDia?data=${dataFormatada}`,
+      "GET"
+    );
 
-  const hoje = new Date();
-
-  let count = 0;
-
-  if (dataAtual.toDateString() === hoje.toDateString()) {
     const sessoes = dados.sessoes || [];
 
-    count = sessoes.filter((s) => s.status_sessao !== "disponivel").length;
-  }
+    const count = sessoes.filter(
+      (s) => s.status_sessao !== "disponivel"
+    ).length;
 
-  document.getElementById("consultasHoje").innerText = count;
+    document.getElementById("consultasHoje").innerText = count;
+
+  } catch (error) {
+    console.error("Erro ao carregar consultas:", error);
+  }
 }
