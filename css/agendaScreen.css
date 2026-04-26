@@ -326,6 +326,8 @@ main.agendaContainer {
 }
 
 .consultaRealizada strong {
+    display: block;
+    font-size: 18px;
     color: #28a745;
 }
 
@@ -351,6 +353,7 @@ main.agendaContainer {
 
 .status-realizada {
     background: #28a745;
+    padding: 8px 20px;
 }
 .botaoConsulta {
     border: none;

@@ -106,7 +106,7 @@ async function carregarHistoricoSessoes() {
     const hoje = new Date();
     const dataFormatada = hoje.toLocaleDateString("en-CA");
     
-    const { ok, dados } = await apiRequest(`/consultasDoDia?data=${dataFormatada}`, "GET");
+    const { ok, dados } = await apiRequest(`/sessoesPendentes?data=${dataFormatada}`, "GET");
     
     if (!ok) {
       throw new Error(dados?.error || "Erro na API");
