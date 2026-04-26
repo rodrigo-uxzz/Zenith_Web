@@ -78,7 +78,7 @@ async function carregarPerfil() {
     if (foto) {
       fotoPerfil.src = "http://127.0.0.1:8000/storage/" + foto;
     } else {
-      fotoPerfil.src = "./img/avatarZ.png";
+      fotoPerfil.src = "./../img/avatarZ.png";
     }
 
     if (dados.psicologo) {
@@ -176,23 +176,51 @@ document.getElementById("deletar").addEventListener("click", async function () {
   }
 });
 
-document
-  .getElementById("sair")
-  .addEventListener("click", async function (event) {
-    event.preventDefault();
+// Modal de logout
+document.addEventListener("DOMContentLoaded", function () {
+  const modal = document.getElementById("modal-logout");
+  const openModalBtn = document.getElementById("open-Modal-logout");
+  const cancelBtn = document.getElementById("btn-cancel-logout");
+  const confirmBtn = document.getElementById("btn-confirm-logout");
 
-    if (!confirm("Tem certeza que deseja sair?")) return;
+  // Abrir modal
+  if (openModalBtn) {
+    openModalBtn.addEventListener("click", function (e) {
+      e.preventDefault();
+      modal.style.display = "flex";
+    });
+  }
 
-    try {
-      const { ok, dados } = await apiRequest("/logout", "POST");
+  // Fechar modal ao clicar em cancelar
+  if (cancelBtn) {
+    cancelBtn.addEventListener("click", function () {
+      modal.style.display = "none";
+    });
+  }
 
-      if (!ok) {
-        console.warn("Erro ao deslogar api", dados);
+  // Confirmar logout
+  if (confirmBtn) {
+    confirmBtn.addEventListener("click", async function () {
+      try {
+        const { ok, dados } = await apiRequest("/logout", "POST");
+
+        if (!ok) {
+          console.warn("Erro ao deslogar da API", dados);
+        }
+      } catch (error) {
+        console.error("Erro ao fazer logout:", error);
       }
-    } catch (error) {
-      console.error(error);
-    }
 
-    localStorage.removeItem("token");
-    window.location.href = "loginScreen.html";
+      // Limpar token e redirecionar
+      localStorage.removeItem("token");
+      window.location.href = "./../pages/loginScreen.html";
+    });
+  }
+
+  // Fechar modal ao clicar fora
+  window.addEventListener("click", function (event) {
+    if (event.target === modal) {
+      modal.style.display = "none";
+    }
   });
+});

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zenith</title>
+    <link rel="icon" type="image/png" sizes="64x64" href="../img/logoZ.png">
+    <link rel="stylesheet" href="../css/homeScreen.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=door_open" />
+    <script>
+        const token = localStorage.getItem("token");
+        
+        if(!token){
+            window.location.href = "loginScreen.html";  
+        }
+    </script>
+</head>
+<body>
+    <div class="sidebar">
+        <ul>
+            <li>
+                <a href="#">
+                    <span class="icone"><img src="../img/logo.png" class="logo" alt="logo do site"></span>
+                    <span class="titulo">ZENITH</span>
+                </a>
+            </li>
+            <li>
+                <a href="./homeScreen.html">
+                    <span class="icone"><ion-icon name="home-outline"></ion-icon></span>
+                    <span class="titulo">Home</span>
+                </a>
+            </li>
+            <li>
+                <a href="./agendaScreen.html">
+                    <span class="icone"><ion-icon name="calendar-outline"></ion-icon></span>
+                    <span class="titulo">Agenda</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <span class="icone"><ion-icon name="people-outline"></ion-icon></span>
+                    <span class="titulo">Pacientes</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <span class="icone"><ion-icon name="wallet-outline"></ion-icon></span>
+                    <span class="titulo">Financeiro</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <span class="icone"><ion-icon name="chatbubbles-outline"></ion-icon></span>
+                    <span class="titulo">Chat</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <span class="icone"><ion-icon name="settings-outline"></ion-icon></span>
+                    <span class="titulo">Configurações</span>
+                </a>
+            </li>
+            <li>
+                <a href="./perfilScreen.html">
+                    <span class="icone"><ion-icon name="person-outline"></ion-icon></span>
+                    <span class="titulo">Perfil</span>
+                </a>
+            </li>
+            <li class="conta">
+                <!--<a href="#">
+                    <span class="icone">
+                        <div class="imgCaixa">
+                             <img src="img/user.svg"> 
+                             A parte q o Roberto já fez
+                        </div>
+                    </span>
+                    <span class="titulo">Moana Dark</span>
+                </a>-->
+            </li>
+            <li>
+                <a href="#" id="open-Modal-logout">
+                    <span class="icone"><ion-icon name="log-out-outline"></ion-icon></span>
+                    <span class="titulo">Logout</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Modal de Logout -->
+    <div id="modal-logout" class="modal" style="display:none;">
+      <div class="modal-content">
+        <h2>Confirmar Logout</h2>
+        <p>Tem certeza de que deseja sair?</p>
+        <div class="logout-buttons">
+          <button class="btnCancel" id="btn-cancel-logout" type="button">Cancelar</button>
+          <button class="btnLogout" id="btn-confirm-logout" type="button">Sair</button>
+        </div>
+      </div>
+    </div>
+
+   <main class="container">
+
+    <!-- CARDS SUPERIORES -->
+    <section class="cards-resumo">
+
+        <div class="card">
+            <div class="card-icon">
+                <span class="icone"><ion-icon name="people-outline"></ion-icon></span>
+            </div>
+            <h3>Total de Pacientes</h3>
+            <p class="numero">41</p>
+        </div>
+
+        <div class="card">
+            <div class="card-icon">
+                <ion-icon name="calendar-clear-outline"></ion-icon>
+            </div>
+            <h3>Consultas no Mês</h3>
+            <p class="numero">132</p>
+        </div>
+
+        <div class="card">
+            <div class="card-icon">
+                <ion-icon name="cash-outline"></ion-icon>
+            </div>
+            <h3>Faturamento</h3>
+            <p class="numero">R$3000</p>
+        </div>
+
+        <div class="card">
+            <div class="card-icon">
+                <ion-icon name="time-outline"></ion-icon>
+            </div>
+            <h3>Consultas Hoje</h3>
+            <p class="numero" id="consultasHoje"></p>
+        </div>
+
+    </section>
+
+    <!-- ÁREA CENTRAL -->
+    <section class="grid-principal">
+
+        <!-- Próximas consultas -->
+        <div class="painel">
+            <h2>Próximas Consultas</h2>
+
+            <div class="consulta">
+                <div class="iconConsulta">
+                    <span class="icone"><ion-icon name="person-outline"></ion-icon></span>
+                </div>
+                <div>
+                    <strong>Ana Carolina Silva</strong>
+                    <span class="hora">09:00</span>
+                </div>
+                <button class="btn">Entrar
+                    <img src="../img/open.svg" alt="Ícone Entrar" class="iconeC">
+                </button>
+            </div>
+
+            <div class="consulta">
+                <div class="iconConsulta">
+                    <span class="icone"><ion-icon name="person-outline"></ion-icon></span>
+                </div>
+                <div>
+                    <strong>Carlos Silva</strong>
+                    <span class="hora">11:00</span>
+                </div>
+                <button class="btn secundario">Aguarde</button>
+            </div>
+
+            <div class="consulta">
+                <div class="iconConsulta">
+                    <span class="icone"><ion-icon name="person-outline"></ion-icon></span>
+                </div>
+                <div>
+                    <strong>Mariana Costa</strong>
+                    <span class="hora">14:00</span>
+                </div>
+                <button class="btn secundario">Aguarde</button>
+            </div>
+
+        </div>
+
+        <!-- Atalhos -->
+        <div class="painelCard atalhosRapidos">
+
+            <h2 class="tituloPainel">Atalhos Rápidos</h2>
+
+            <div class="listaAtalhos">
+            
+                <button class="botaoAtalho">
+                    <img src="../img/personAdd.svg" alt="Ícone Novo Paciente" class="iconAtalho">
+                    <p class="textoAtalho">Novo Paciente</p>
+                </button>
+            
+                <button class="botaoAtalho">
+                    <img src="../img/editNote.svg" alt="Ícone Nova Consulta" class="iconAtalho">
+                    <p class="textoAtalho">Nova Consulta</p>
+                </button>
+            
+                <button class="botaoAtalho" id="verAgenda">
+                    <img src="../img/calendar.svg" alt="Ícone Ver Agenda" class="iconAtalho">
+                    <p class="textoAtalho">Ver Agenda</p>
+                </button>
+            
+                <button class="botaoAtalho">
+                    <img src="../img/prontuario.svg" alt="Ícone Ver Prontuários" class="iconAtalho">
+                    <p class="textoAtalho">Ver Prontuários</p>
+                </button>
+            
+            </div>
+        
+        </div>
+
+    </section>
+
+    <!-- PARTE INFERIOR -->
+    <section class="grid-inferior">
+
+        <div class="painel">
+            <h2>Consultas por Semana</h2>
+            <div class="grafico-fake"></div>
+        </div>
+
+        <div class="painel">
+            <h2>Faturamento Mensal</h2>
+            <div class="grafico-fake"></div>
+        </div>
+
+        <div class="painel">
+            <h2>Central de Notificações</h2>
+
+            <div id="central-notificacoes">
+                <div class="sem-notificacoes">Nenhuma notificação no momento</div>
+            </div>
+        </div>
+
+    </section>
+
+</main>
+    
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    
+
+    <footer>
+        <!-- <p>&copy; 2026 Zenith. Todos os direitos reservados.</p> -->
+    </footer>
+
+    <script type="module" src="./../js/home.js"></script>    
+</body>
+</html>
