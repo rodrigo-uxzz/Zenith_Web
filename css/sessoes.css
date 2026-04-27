@@ -384,6 +384,16 @@ main.sessoesContainer {
     color: #fff;
 }
 
+.iconConsulta {
+    margin-top: 4px;
+    font-size: 25px;
+    color: #7b5cff;
+}
+
+.card-icon {
+    margin-bottom: 1px;
+}
+
 /* FILTROS DE STATUS */
 .filtros-status {
     display: flex;
@@ -430,10 +440,10 @@ main.sessoesContainer {
 }
 
 .card-sessao-icone {
-    width: 50px;
-    height: 50px;
-    background: #f5f0ff;
-    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    background: oklab(96.33500000000001% 0.01065 -0.01773);
+    border-radius: 15px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -448,7 +458,7 @@ main.sessoesContainer {
 .card-sessao-nome {
     font-weight: 600;
     color: #290041;
-    font-size: 16px;
+    font-size: 20px;
     margin-bottom: 6px;
 }
 
@@ -456,7 +466,7 @@ main.sessoesContainer {
     display: flex;
     gap: 15px;
     margin-bottom: 6px;
-    font-size: 13px;
+    font-size: 16px;
     color: #555;
 }
 

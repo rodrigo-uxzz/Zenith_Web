@@ -189,10 +189,18 @@
             </div>
 
             <div class="consulta-modal-actions">
-                <button class="btnAcao btnEditar">Editar</button>
-                <button class="btnAcao btnReagendar" style="display:none;">Reagendar</button>
-                <button class="btnAcao btnRealizada">Realizada</button>
-                <button class="btnAcao btnCancelada">Cancelada</button>
+                <!-- Botões para status pendente -->
+                <div class="acao-pendente" style="display: none;">
+                    <button class="btnAcao btn-aceitar-modal" id="btn-aceitar-consulta">Aceitar</button>
+                    <button class="btnAcao btn-recusar-modal" id="btn-recusar-consulta">Recusar</button>
+                </div>
+                <!-- Botões para status agendada -->
+                <div class="acao-agendada" style="display: none;">
+                    <button class="btnAcao btnEditar">Editar</button>
+                    <button class="btnAcao btnReagendar" style="display:none;">Reagendar</button>
+                    <button class="btnAcao btnRealizada">Realizada</button>
+                    <button class="btnAcao btnCancelada">Cancelada</button>
+                </div>
             </div>
         </div>
     </div>
@@ -355,6 +363,11 @@
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     <script type="module" src="../js/agenda.js"></script>
+
+    <!-- Toast de Alerta -->
+    <div id="toast" class="toast">
+        <span id="toast-message"></span>
+    </div>
 
 </body>
 </html>

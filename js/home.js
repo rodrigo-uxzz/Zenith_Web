@@ -1,5 +1,18 @@
 import { apiRequest } from "./api.js";
 
+// Função para mostrar toast de alerta
+function showToast(message) {
+  const toast = document.getElementById("toast");
+  const toastMessage = document.getElementById("toast-message");
+  if (toast && toastMessage) {
+    toastMessage.textContent = message;
+    toast.classList.add("show");
+    setTimeout(() => {
+      toast.classList.remove("show");
+    }, 3000);
+  }
+}
+
 // Modal de logout
 document.addEventListener("DOMContentLoaded", function () {
   const modal = document.getElementById("modal-logout");
@@ -187,15 +200,15 @@ async function aprovarSessao(id) {
     );
 
     if (ok) {
-      alert("Solicitação aprovada com sucesso!");
+      showToast("Solicitação aprovada com sucesso!");
       carregarNotificacoes();
     } else {
-      alert(dados?.error || "Erro ao aprovar solicitação");
+      showToast(dados?.error || "Erro ao aprovar solicitação");
     }
 
   } catch (error) {
     console.error(error);
-    alert("Erro ao aprovar solicitação");
+    showToast("Erro ao aprovar solicitação");
   }
 }
 
@@ -209,15 +222,15 @@ async function recusarSessao(id) {
     );
 
     if (ok) {
-      alert("Solicitação recusada com sucesso!");
+      showToast("Solicitação recusada com sucesso!");
       carregarNotificacoes();
     } else {
-      alert(dados?.error || "Erro ao recusar solicitação");
+      showToast(dados?.error || "Erro ao recusar solicitação");
     }
 
   } catch (error) {
     console.error(error);
-    alert("Erro ao recusar solicitação");
+    showToast("Erro ao recusar solicitação");
   }
 }
 

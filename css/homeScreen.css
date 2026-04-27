@@ -6,6 +6,29 @@
     font-family: 'Poppins', sans-serif;
 }
 
+/* Toast de Alerta */
+.toast {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #ff4d4d;
+    color: white;
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    font-size: 16px;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s, visibility 0.5s;
+}
+
+.toast.show {
+    opacity: 1;
+    visibility: visible;
+}
+
 body {
     min-height: 100vh;
     background-color: #A383FB40;
@@ -418,7 +441,7 @@ strong{
 
 .grid-principal {
     display: grid;
-    grid-template-columns: 2fr 1fr;
+    grid-template-columns: 1.3fr 1fr;
     gap: 20px;
 }
 
@@ -434,6 +457,26 @@ strong{
 .painel h2 {
     margin-bottom: 15px;
     color: #5b3cc4;
+}
+
+/* CENTRAL DE NOTIFICAÇÕES COM SCROLL */
+#central-notificacoes {
+    max-height: 300px;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+#central-notificacoes::-webkit-scrollbar {
+    width: 6px;
+}
+
+#central-notificacoes::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+#central-notificacoes::-webkit-scrollbar-thumb {
+    background: rgba(95, 63, 209, 0.3);
+    border-radius: 999px;
 }
 
 /* CONSULTAS */

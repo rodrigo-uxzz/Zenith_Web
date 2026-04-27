@@ -1,11 +1,31 @@
 import { apiRequest } from "./api.js";
 
+// Botões do modal de pendente (definidos fora para uso global)
+let btnAceitarConsulta, btnRecusarConsulta;
+
+// Função para mostrar toast de alerta
+function showToast(message) {
+  const toast = document.getElementById("toast");
+  const toastMessage = document.getElementById("toast-message");
+  if (toast && toastMessage) {
+    toastMessage.textContent = message;
+    toast.classList.add("show");
+    setTimeout(() => {
+      toast.classList.remove("show");
+    }, 3000);
+  }
+}
+
 // Modal de logout
 document.addEventListener("DOMContentLoaded", function () {
   const modal = document.getElementById("modal-logout");
   const openModalBtn = document.getElementById("open-Modal-logout");
   const cancelBtn = document.getElementById("btn-cancel-logout");
   const confirmBtn = document.getElementById("btn-confirm-logout");
+
+  // Inicializar botões do modal
+  btnAceitarConsulta = document.getElementById("btn-aceitar-consulta");
+  btnRecusarConsulta = document.getElementById("btn-recusar-consulta");
 
   // Abrir modal
   if (openModalBtn) {
@@ -47,6 +67,74 @@ document.addEventListener("DOMContentLoaded", function () {
       modal.style.display = "none";
     }
   });
+
+  // Delegação de eventos para botões criados dinamicamente
+  const listaHorarios = document.getElementById("listaHorarios");
+  if (listaHorarios) {
+    listaHorarios.addEventListener("click", function(e) {
+      const button = e.target.closest(".botaoConsulta");
+      if (button) {
+        showConsultaModal(button);
+      }
+    });
+  }
+
+  // Event listeners para botões de aceitar e recusar
+  if (btnAceitarConsulta) {
+    btnAceitarConsulta.addEventListener("click", async function () {
+      const idSessao = consultaModal.dataset.id;
+      if (!idSessao) {
+        showToast("ID da sessão não encontrado");
+        return;
+      }
+      
+      try {
+        const { ok, dados } = await apiRequest(
+          `/aprovarSessao/${idSessao}`,
+          "POST"
+        );
+
+        if (ok) {
+          showToast("Solicitação aprovada com sucesso!");
+          consultaModal.style.display = "none";
+          atualizarData();
+        } else {
+          showToast(dados?.error || "Erro ao aprovar solicitação");
+        }
+      } catch (error) {
+        console.error(error);
+        showToast("Erro ao aprovar solicitação");
+      }
+    });
+  }
+
+  if (btnRecusarConsulta) {
+    btnRecusarConsulta.addEventListener("click", async function () {
+      const idSessao = consultaModal.dataset.id;
+      if (!idSessao) {
+        showToast("ID da sessão não encontrado");
+        return;
+      }
+      
+      try {
+        const { ok, dados } = await apiRequest(
+          `/recusarSessao/${idSessao}`,
+          "POST"
+        );
+
+        if (ok) {
+          showToast("Solicitação recusada com sucesso!");
+          consultaModal.style.display = "none";
+          atualizarData();
+        } else {
+          showToast(dados?.error || "Erro ao recusar solicitação");
+        }
+      } catch (error) {
+        console.error(error);
+        showToast("Erro ao recusar solicitação");
+      }
+    });
+  }
 });
 
 let dataAtual = new Date();
@@ -140,23 +228,72 @@ async function atualizarData() {
         conteudo.classList.add("consultaCard", "botaoConsulta");
 
 
-        // consulta status
+        // consulta status - com tratamento de erro
         conteudo.dataset.id = item.sessao?.id_sessao;
-        conteudo.dataset.status = item.sessao?.status || "agendada";
+        
+        // Tratamento de erro robusto para o status
+        let status = item.sessao?.status || item.sessao?.status_sessao || "agendada";
+        
+        // Normalizar status para evitar problemas
+        status = status.toLowerCase().trim();
+        
+        // Verificar se o status é válido
+        const statusValidos = ['agendada', 'pendente', 'realizada', 'cancelada', 'reagendada', 'remarcada'];
+        const isStatusValido = statusValidos.some(s => status.includes(s));
+        
+        if (!isStatusValido && item.sessao?.status) {
+          console.warn("Status inválido recebido da API:", item.sessao.status);
+        }
+        
+        // Se status for vazio ou inválido, usar agendada como padrão
+        if (!status || status === 'null' || status === 'undefined') {
+          status = "agendada";
+        }
+        
+        conteudo.dataset.status = status;
 
         const nome = item.sessao?.paciente?.usuario?.nome || "Paciente";
-        const status = item.sessao?.status || "agendada"; // assuming status is here
 
         console.log("Status da sessão:", status);
 
         // Verificar se é realizada (aceita variações)
-        const isRealizada = status && status.toLowerCase().includes('realiz');
-        conteudo.classList.add(isRealizada ? "consultaRealizada" : "consultaCard");
+        const isRealizada = status.includes('realiz');
+        // Verificar se é pendente
+        const isPendente = status.includes('pendente');
+        // Verificar se é cancelamento solicitado (pendente de aprovação)
+        const isCancelamentoSolicitado = status.includes('cancelamento_solicitado') || status === 'cancelamento_solicitado';
+        // Verificar se é cancelada (já aprovada)
+        const isCancelada = status.includes('cancel') && !isCancelamentoSolicitado;
+        // Verificar se é reagendamento (pendente de aprovação)
+        const isReagendada = status.includes('reagend') || status.includes('remarc');
+        
+        // Aplicar classe conforme o status
+        conteudo.classList.remove("consultaCard");
+        if (isRealizada) {
+          conteudo.classList.add("consultaRealizada");
+        } else if (isPendente) {
+          conteudo.classList.add("consultaPendente");
+        } else if (isCancelamentoSolicitado) {
+          conteudo.classList.add("consultaPendente"); // Amarelo como pendente
+        
+        } else if (isCancelada) {
+          conteudo.classList.add("consultaCard");
+        } else if (isReagendada) {
+          conteudo.classList.add("consultaPendente"); // Azul como reagendada 
+        } else {
+          conteudo.classList.add("consultaCard");
+        }
+
+        // Formatar texto do status para exibição
+        let statusTexto = status.charAt(0).toUpperCase() + status.slice(1);
+        if (status.includes('cancelamento_solicitado')) statusTexto = 'Cancelamento Solicitado';
+        else if (status.includes('cancel')) statusTexto = 'Cancelada';
+        else if (status.includes('reagend') || status.includes('remarc')) statusTexto = 'Reagendada';
 
         conteudo.innerHTML = `
           <strong>${nome}</strong>
           <span>${item.hora_inicio.slice(0, 2) + "h"}</span>
-          <span class="status-badge status-${status}">${status}</span>
+          <span class="status-badge status-${status}">${statusTexto}</span>
         `;
       } else {
         conteudo = document.createElement("div");
@@ -254,6 +391,47 @@ function showConsultaModal(button) {
   consultaLink.textContent = "Abrir link externo";
   document.getElementById("consulta-modal-observacao").textContent =
     "Primeira consulta";
+
+  // Ajustar botões conforme o status
+  const status = (button.dataset.status || "agendada").toLowerCase();
+  const actionsContainer = document.querySelector(".consulta-modal-actions");
+  
+  if (actionsContainer) {
+    const acaoPendente = actionsContainer.querySelector(".acao-pendente");
+    const acaoAgendada = actionsContainer.querySelector(".acao-agendada");
+    const btnEditar = actionsContainer.querySelector(".btnEditar");
+    const btnReagendar = actionsContainer.querySelector(".btnReagendar");
+    const btnRealizada = actionsContainer.querySelector(".btnRealizada");
+    const btnCancelada = actionsContainer.querySelector(".btnCancelada");
+    
+    // Resetar visibilidade
+    if (acaoPendente) acaoPendente.style.display = "none";
+    if (acaoAgendada) acaoAgendada.style.display = "none";
+    if (btnEditar) btnEditar.style.display = "none";
+    if (btnReagendar) btnReagendar.style.display = "none";
+    if (btnRealizada) btnRealizada.style.display = "none";
+    if (btnCancelada) btnCancelada.style.display = "none";
+    
+    // Verificar status
+    const isPendente = status.includes("pendente");
+    const isCancelamentoSolicitado = status.includes("cancelamento_solicitado");
+    const isRealizada = status.includes("realiz");
+    
+    if (isPendente || isCancelamentoSolicitado) {
+      // Sessão pendente ou cancelamento solicitado: mostrar botões de aceitar e recusar
+      if (acaoPendente) acaoPendente.style.display = "flex";
+    } else if (isRealizada) {
+      // Sessão realizada: apenas visualização (ocultar todos os botões de ação)
+      console.log("Consulta realizada - modo visualização");
+    } else {
+      // Agendada: mostrar botões Editar, Reagendar, Realizada, Cancelada
+      if (acaoAgendada) acaoAgendada.style.display = "flex";
+      if (btnEditar) btnEditar.style.display = "block";
+      if (btnReagendar) btnReagendar.style.display = "block";
+      if (btnRealizada) btnRealizada.style.display = "block";
+      if (btnCancelada) btnCancelada.style.display = "block";
+    }
+  }
 
   consultaModal.style.display = "flex";
 }
