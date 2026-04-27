@@ -102,16 +102,14 @@ async function carregarNotificacoes() {
       ...(dados.cancelamentos || []),
       ...(dados.reagendamentos || [])
     ];
-
-    if (notificacoes.length === 0) {
-      container.innerHTML = `
-        <div class="sem-notificacoes">
-          Nenhuma notificação no momento
-        </div>
-      `;
-      return;
-    }
-
+    
+    notificacoes.sort((a, b) => {
+      const dataA = new Date(`${a.data_sessao} ${a.hora_inicio}`);
+      const dataB = new Date(`${b.data_sessao} ${b.hora_inicio}`);
+    
+      return dataB - dataA;
+    });
+    
     container.innerHTML = "";
 
     notificacoes.forEach((sessao) => {

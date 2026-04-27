@@ -274,12 +274,12 @@ async function atualizarData() {
         } else if (isPendente) {
           conteudo.classList.add("consultaPendente");
         } else if (isCancelamentoSolicitado) {
-          conteudo.classList.add("consultaPendente"); // Amarelo como pendente
-        
+          conteudo.classList.add("consultaCancelamentoSolicitado");
+                
         } else if (isCancelada) {
-          conteudo.classList.add("consultaCard");
+          conteudo.classList.add("consultaCancelada");
         } else if (isReagendada) {
-          conteudo.classList.add("consultaPendente"); // Azul como reagendada 
+          conteudo.classList.add("consultaReagendamentoSolicitado");
         } else {
           conteudo.classList.add("consultaCard");
         }
@@ -288,13 +288,32 @@ async function atualizarData() {
         let statusTexto = status.charAt(0).toUpperCase() + status.slice(1);
         if (status.includes('cancelamento_solicitado')) statusTexto = 'Cancelamento Solicitado';
         else if (status.includes('cancel')) statusTexto = 'Cancelada';
-        else if (status.includes('reagend') || status.includes('remarc')) statusTexto = 'Reagendada';
+        else if (status.includes('reagend') || status.includes('remarc'))
+          statusTexto = 'Reagendamento Solicitado';
+        
+        conteudo.style.position = "relative";
 
         conteudo.innerHTML = `
-          <strong>${nome}</strong>
-          <span>${item.hora_inicio.slice(0, 2) + "h"}</span>
-          <span class="status-badge status-${status}">${statusTexto}</span>
+          <div style="display: flex; flex-direction: column; gap: 4px;">
+            <strong>${nome}</strong>
+            <span>${item.hora_inicio.slice(0, 2) + "h"}</span>
+          </div>
+
+          <span 
+            class="status-badge status-${status}"
+            style="
+              position: absolute;
+              right: 16px;
+              top: 50%;
+              transform: translateY(-50%);
+              margin: 0;
+              white-space: nowrap;
+            "
+          >
+            ${statusTexto}
+          </span>
         `;
+
       } else {
         conteudo = document.createElement("div");
         conteudo.classList.add("horarioLivre");
@@ -317,8 +336,6 @@ const closeConsultaModal = document.getElementById("close-consulta-modal");
 const btnEditar = document.querySelector(".btnEditar");
 const editarModal = document.getElementById("editar-modal");
 const closeEditarModal = document.getElementById("close-editar-modal");
-const editarData = document.getElementById("editar-data");
-const editarHorario = document.getElementById("editar-horario");
 const editarLink = document.getElementById("editar-link");
 const editarObservacoes = document.getElementById("editar-observacoes");
 const btnCancelarEditar = document.getElementById("btn-cancelar-editar");
@@ -392,68 +409,53 @@ function showConsultaModal(button) {
   document.getElementById("consulta-modal-observacao").textContent =
     "Primeira consulta";
 
-  // Ajustar botões conforme o status
-  const status = (button.dataset.status || "agendada").toLowerCase();
-  const actionsContainer = document.querySelector(".consulta-modal-actions");
-  
-  if (actionsContainer) {
-    const acaoPendente = actionsContainer.querySelector(".acao-pendente");
-    const acaoAgendada = actionsContainer.querySelector(".acao-agendada");
-    const btnEditar = actionsContainer.querySelector(".btnEditar");
-    const btnReagendar = actionsContainer.querySelector(".btnReagendar");
-    const btnRealizada = actionsContainer.querySelector(".btnRealizada");
-    const btnCancelada = actionsContainer.querySelector(".btnCancelada");
+  // Ajustar botões conforme o status 
+    const status = (button.dataset.status || "agendada").toLowerCase();
+    const actionsContainer = document.querySelector(".consulta-modal-actions");
+
+    if (actionsContainer) {
+      const acaoPendente = actionsContainer.querySelector(".acao-pendente");
+      const acaoAgendada = actionsContainer.querySelector(".acao-agendada");
+      const btnEditar = actionsContainer.querySelector(".btnEditar");
+      const btnReagendar = actionsContainer.querySelector(".btnReagendar");
+      const btnRealizada = actionsContainer.querySelector(".btnRealizada");
+      const btnCancelada = actionsContainer.querySelector(".btnCancelada");
     
-    // Resetar visibilidade
-    if (acaoPendente) acaoPendente.style.display = "none";
-    if (acaoAgendada) acaoAgendada.style.display = "none";
-    if (btnEditar) btnEditar.style.display = "none";
-    if (btnReagendar) btnReagendar.style.display = "none";
-    if (btnRealizada) btnRealizada.style.display = "none";
-    if (btnCancelada) btnCancelada.style.display = "none";
-    
-    // Verificar status
-    const isPendente = status.includes("pendente");
-    const isCancelamentoSolicitado = status.includes("cancelamento_solicitado");
-    const isRealizada = status.includes("realiz");
-    
-    if (isPendente || isCancelamentoSolicitado) {
-      // Sessão pendente ou cancelamento solicitado: mostrar botões de aceitar e recusar
-      if (acaoPendente) acaoPendente.style.display = "flex";
-    } else if (isRealizada) {
-      // Sessão realizada: apenas visualização (ocultar todos os botões de ação)
-      console.log("Consulta realizada - modo visualização");
-    } else {
-      // Agendada: mostrar botões Editar, Reagendar, Realizada, Cancelada
-      if (acaoAgendada) acaoAgendada.style.display = "flex";
-      if (btnEditar) btnEditar.style.display = "block";
-      if (btnReagendar) btnReagendar.style.display = "block";
-      if (btnRealizada) btnRealizada.style.display = "block";
-      if (btnCancelada) btnCancelada.style.display = "block";
-    }
-  }
+      // ESCONDE TUDO PRIMEIRO
+      if (acaoPendente) acaoPendente.style.display = "none";
+      if (acaoAgendada) acaoAgendada.style.display = "none";
+      if (btnEditar) btnEditar.style.display = "none";
+      if (btnReagendar) btnReagendar.style.display = "none";
+      if (btnRealizada) btnRealizada.style.display = "none";
+      if (btnCancelada) btnCancelada.style.display = "none";
+
+      // REGRA SIMPLES: SÓ AGENDADA EDITA
+      if (status === "agendada") {
+        if (acaoAgendada) acaoAgendada.style.display = "flex";
+      
+        if (btnReagendar) btnReagendar.style.display = "block";
+        if (btnRealizada) btnRealizada.style.display = "block";
+        if (btnCancelada) btnCancelada.style.display = "block";
+      
+        if (btnEditar) btnEditar.style.display = "block";
+      }
 
   consultaModal.style.display = "flex";
+  }
 }
 
 function showEditarModal() {
-  const data = document.getElementById("consulta-modal-data").textContent;
-  const horario =
-    document
-      .getElementById("consulta-modal-horario")
-      .textContent.split(" - ")[0] || "";
   const link = document.getElementById("consulta-modal-link").href || "";
   const observacoes =
     document.getElementById("consulta-modal-observacao").textContent || "";
 
-  editarData.value = formatDateInput(data);
-  editarHorario.value = horario;
   editarLink.value = link === "#" ? "" : link;
   editarObservacoes.value = observacoes;
 
   consultaModal.style.display = "none";
   editarModal.style.display = "flex";
 }
+
 
 function formatDateInput(dataTexto) {
   const partes = dataTexto.split(",");
@@ -808,20 +810,16 @@ if (btnSalvarReagendar) {
 
 if (btnSalvarEditar) {
   btnSalvarEditar.addEventListener("click", function () {
-    const data = formatDateDisplay(editarData.value);
-    const horario = editarHorario.value;
     const link = editarLink.value.trim() || "#";
     const observacoes = editarObservacoes.value.trim();
 
-    document.getElementById("consulta-modal-data").textContent = data;
-    document.getElementById("consulta-modal-horario").textContent =
-      `${horario} - ${formatHorarioEnd(horario)}`;
     const consultaLink = document.getElementById("consulta-modal-link");
     consultaLink.href = link;
     consultaLink.textContent =
-      link && link !== "#" ? "Abrir link externo" : "Sem link";
+      link !== "#" ? "Abrir link externo" : "Sem link";
+
     document.getElementById("consulta-modal-observacao").textContent =
-      observacoes;
+      observacoes || "Sem observações";
 
     editarModal.style.display = "none";
     consultaModal.style.display = "flex";

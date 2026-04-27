@@ -83,22 +83,29 @@ function configurarBusca() {
 }
 
 function configurarFiltros() {
-  const botoesFiltro = document.querySelectorAll(".btnFiltro");
+  const botoesFiltro = document.querySelectorAll(".filtros-status .btnFiltro");
 
   botoesFiltro.forEach((botao) => {
     botao.addEventListener("click", function () {
+      // remove classe ativa de todos
       botoesFiltro.forEach((btn) => {
         btn.classList.remove("filtro-ativo");
       });
 
+      // adiciona no clicado
       this.classList.add("filtro-ativo");
 
-      filtroAtual = this.dataset.filtro || "todas";
+      // IMPORTANTE:
+      // seu HTML precisa ter data-filtro
+      filtroAtual = this.getAttribute("data-filtro");
+
+      console.log("Filtro selecionado:", filtroAtual);
 
       filtrarSessoes();
     });
   });
 }
+
 
 /* =========================
    CARREGAR HISTÓRICO
@@ -339,7 +346,12 @@ function criarCardSessao(sessao) {
       </div>
 
       <div class="card-sessao-detalhes">
-        <span>📅 ${dataFormatada}</span>
+        <span>
+          <div class="card-icon">
+                  <ion-icon name="calendar-clear-outline"></ion-icon>
+                  ${dataFormatada}
+          </div>
+        </span>
         <span>
             <div class="card-icon">
                 <ion-icon name="time-outline"></ion-icon>

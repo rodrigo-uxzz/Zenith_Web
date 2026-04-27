@@ -154,6 +154,10 @@
 
             <div class="consulta-modal-header">
                 <span id="consulta-modal-nome"></span>
+                        
+                <button class="btnEditar" title="Editar">
+                    <ion-icon name="pencil-outline"></ion-icon>
+                </button>
             </div>
 
             <div class="consulta-modal-item">
@@ -196,7 +200,7 @@
                 </div>
                 <!-- Botões para status agendada -->
                 <div class="acao-agendada" style="display: none;">
-                    <button class="btnAcao btnEditar">Editar</button>
+                    
                     <button class="btnAcao btnReagendar" style="display:none;">Reagendar</button>
                     <button class="btnAcao btnRealizada">Realizada</button>
                     <button class="btnAcao btnCancelada">Cancelada</button>
@@ -226,28 +230,26 @@
     </div>
 
     <div id="editar-modal" class="modal" style="display:none;">
-        <div class="modal-content editar-modal-content">
-            <span class="close" id="close-editar-modal">&times;</span>
-            <h2>Editar Agenda</h2>
-            <hr>
+       <div class="modal-content editar-modal-content">
+           <span class="close" id="close-editar-modal">&times;</span>
+           <h2>Editar Agenda</h2>
+           <hr>
 
-            <label class="editar-label" for="editar-data">Data da Consulta *</label>
-            <input id="editar-data" type="date" class="editar-input" />
+           <label class="editar-label" for="editar-link">Link da Consulta</label>
+           <input id="editar-link" type="text" class="editar-input" />
 
-            <label class="editar-label" for="editar-horario">Horário *</label>
-            <input id="editar-horario" type="time" class="editar-input" />
+           <label class="editar-label" for="editar-observacoes">Observações (opcional)</label>
+           <textarea id="editar-observacoes" class="editar-textarea"></textarea>
 
-            <label class="editar-label" for="editar-link">Link da Consulta</label>
-            <input id="editar-link" type="text" class="editar-input" />
-
-            <label class="editar-label" for="editar-observacoes">Observações (opcional)</label>
-            <textarea id="editar-observacoes" class="editar-textarea"></textarea>
-
-            <div class="editar-buttons">
-                <button class="btnCancelEdit" id="btn-cancelar-editar" type="button">Cancelar</button>
-                <button class="btnSalvar" id="btn-salvar-editar" type="button">Salvar</button>
-            </div>
-        </div>
+           <div class="editar-buttons">
+               <button class="btnCancelEdit" id="btn-cancelar-editar" type="button">
+                   Cancelar
+               </button>
+               <button class="btnSalvar" id="btn-salvar-editar" type="button">
+                   Salvar
+               </button>
+           </div>
+       </div>
     </div>
 
     <div id="confirm-modal" class="modal" style="display:none;">
@@ -327,6 +329,24 @@
                         <input type="time" value="18:00" />
                     </div>
                 </label>
+                <label class="horario-row">
+                    <span class="diaLabel"><input type="checkbox" class="dot"> Sábado</span>
+                    <div class="horario-row-inputs">
+                        <input type="time" value="08:00" />
+                        <span>até</span>
+                        <input type="time" value="18:00" />
+                    </div>
+                </label>
+
+                <label class="horario-row">
+                    <span class="diaLabel"><input type="checkbox" class="dot"> Domingo</span>
+                    <div class="horario-row-inputs">
+                        <input type="time" value="08:00" />
+                        <span>até</span>
+                        <input type="time" value="18:00" />
+                    </div>
+                </label>
+
             </div>
 
             <div class="horario-almoco">

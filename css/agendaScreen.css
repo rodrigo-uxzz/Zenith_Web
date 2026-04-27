@@ -23,8 +23,8 @@
     top: 20px;
     left: 50%;
     transform: translateX(-50%);
-    background-color: #ff4d4d;
-    color: white;
+    background-color: white;
+    color: #333;
     padding: 15px 20px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
@@ -376,11 +376,30 @@ main.agendaContainer {
     border: 2px solid #ffc107;
 }
 
-.consultaPendente strong {
-    display: block;
-    font-size: 18px;
-    color: #856404;
+/* nova consulta pendente */
+.consultaPendente {
+    background: #fff8e1;
+    border-left: 5px solid #f4b400;
 }
+
+/* cancelamento solicitado */
+.consultaCancelamentoSolicitado {
+    background: #ffeaea;
+    border-left: 5px solid #dc3545;
+}
+
+/* reagendamento solicitado */
+.consultaReagendamentoSolicitado {
+    background: #e8f0ff;
+    border-left: 5px solid #3b82f6;
+}
+
+/* cancelada definitiva */
+.consultaCancelada {
+    background: #f5f5f5;
+    border-left: 5px solid #888;
+}
+
 
 .consultaCard span {
     font-size: 15px;
@@ -515,23 +534,50 @@ main.agendaContainer {
     color: #3f2fa3;
     font-size: 22px;
 }
-
 .consulta-modal-header {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
+    margin-top: 10px;
+    width: 100%;
 }
 
 #consulta-modal-nome {
-    display: block;
     font-size: 20px;
     font-weight: 600;
     color: #3f2fa3;
+
+    flex: 1;
+    text-align: left; /* deixa o nome na esquerda */
 }
 
 .btnEditar {
-   background-color: #7b5cff;
+    width: 42px;
+    height: 42px;
+    min-width: 42px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: #f1ebff;
+    border: 1px solid #dcd2ff;
+    border-radius: 10px;
+
+    cursor: pointer;
+    transition: 0.2s ease;
+    padding: 0;
+}
+
+.btnEditar ion-icon {
+    font-size: 18px;
+    color: #5b3cc4;
+}
+
+.btnEditar:hover {
+    background: #e6ddff;
+    transform: translateY(-1px);
 }
 
 .consulta-modal-item {
