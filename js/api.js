@@ -5,7 +5,11 @@ export async function apiRequest(endPoint, method = "GET", dados = null) {
 
   const options = {
     method: method,
-    headers: {},
+    headers: {
+      "Cache-Control": "no-cache, no-store, must-revalidate",
+      "Pragma": "no-cache",
+      "Expires": "0",
+    },
   };
 
   if (token) {

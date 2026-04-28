@@ -24,7 +24,7 @@ main {
     justify-content: center;
     box-sizing: border-box;
     max-width: 1200px;
-    padding: 10px 20rem;
+    padding: 10px 0rem;
     margin: auto;
 }
 
@@ -35,10 +35,10 @@ section {
     align-items: center;
     justify-content: center;
     width: 100%;
-    max-width: 1000px;
+    max-width: 1500px;
     gap: 0.75rem;
     background-color: #fff;
-    padding: 1rem 2rem 2.5rem;
+    padding: 5rem 12rem ;
     border-radius: 15px;
     box-shadow: #00000060 0px 4px 8px;
     height: auto;
@@ -70,8 +70,8 @@ article {
 }
 
 .upload-container {
-  width: 120px;
-  height: 120px;
+  width: 150px;
+  height: 150px;
   border: 2px dashed #A383FB;
   border-radius: 50%;
   display: flex;
@@ -97,7 +97,7 @@ article {
 .upload-btn {
   display: block;
   margin: 0 auto;
-  padding: 8px 16px;
+  padding: 10px 20px;
   background-color: #a383fb;
   color: white;
   border: 1px solid #A383FB;

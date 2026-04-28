@@ -1,11 +1,31 @@
 import { apiRequest } from "./api.js";
 
+// Botões do modal de pendente (definidos fora para uso global)
+let btnAceitarConsulta, btnRecusarConsulta;
+
+// Função para mostrar toast de alerta
+function showToast(message) {
+  const toast = document.getElementById("toast");
+  const toastMessage = document.getElementById("toast-message");
+  if (toast && toastMessage) {
+    toastMessage.textContent = message;
+    toast.classList.add("show");
+    setTimeout(() => {
+      toast.classList.remove("show");
+    }, 3000);
+  }
+}
+
 // Modal de logout
 document.addEventListener("DOMContentLoaded", function () {
   const modal = document.getElementById("modal-logout");
   const openModalBtn = document.getElementById("open-Modal-logout");
   const cancelBtn = document.getElementById("btn-cancel-logout");
   const confirmBtn = document.getElementById("btn-confirm-logout");
+
+  // Inicializar botões do modal
+  btnAceitarConsulta = document.getElementById("btn-aceitar-consulta");
+  btnRecusarConsulta = document.getElementById("btn-recusar-consulta");
 
   // Abrir modal
   if (openModalBtn) {
@@ -47,6 +67,74 @@ document.addEventListener("DOMContentLoaded", function () {
       modal.style.display = "none";
     }
   });
+
+  // Delegação de eventos para botões criados dinamicamente
+  const listaHorarios = document.getElementById("listaHorarios");
+  if (listaHorarios) {
+    listaHorarios.addEventListener("click", function (e) {
+      const button = e.target.closest(".botaoConsulta");
+      if (button) {
+        showConsultaModal(button);
+      }
+    });
+  }
+
+  // Event listeners para botões de aceitar e recusar
+  if (btnAceitarConsulta) {
+    btnAceitarConsulta.addEventListener("click", async function () {
+      const idSessao = consultaModal.dataset.id;
+      if (!idSessao) {
+        showToast("ID da sessão não encontrado");
+        return;
+      }
+
+      try {
+        const { ok, dados } = await apiRequest(
+          `/aprovarSessao/${idSessao}`,
+          "POST",
+        );
+
+        if (ok) {
+          showToast("Solicitação aprovada com sucesso!");
+          consultaModal.style.display = "none";
+          atualizarData();
+        } else {
+          showToast(dados?.error || "Erro ao aprovar solicitação");
+        }
+      } catch (error) {
+        console.error(error);
+        showToast("Erro ao aprovar solicitação");
+      }
+    });
+  }
+
+  if (btnRecusarConsulta) {
+    btnRecusarConsulta.addEventListener("click", async function () {
+      const idSessao = consultaModal.dataset.id;
+      if (!idSessao) {
+        showToast("ID da sessão não encontrado");
+        return;
+      }
+
+      try {
+        const { ok, dados } = await apiRequest(
+          `/recusarSessao/${idSessao}`,
+          "POST",
+        );
+
+        if (ok) {
+          showToast("Solicitação recusada com sucesso!");
+          consultaModal.style.display = "none";
+          atualizarData();
+        } else {
+          showToast(dados?.error || "Erro ao recusar solicitação");
+        }
+      } catch (error) {
+        console.error(error);
+        showToast("Erro ao recusar solicitação");
+      }
+    });
+  }
 });
 
 let dataAtual = new Date();
@@ -93,8 +181,11 @@ async function atualizarData() {
     document.getElementById("dia2").innerText = textoData2;
 
     const { dados, ok } = await apiRequest(
-      `/consultasDoDia?data=${dataFormatada}`,
+      `/consultasDoDia?data=${dataFormatada}&t=${Date.now()}`,
     );
+
+    console.log("=== DADOS COMPLETOS DA API ===");
+    console.log(JSON.stringify(dados, null, 2));
 
     const container = document.getElementById("listaHorarios");
     container.innerHTML = "";
@@ -107,7 +198,11 @@ async function atualizarData() {
     }
 
     sessoes.forEach((item) => {
-      console.log(item);
+      console.log("=== ITEM COMPLETO ===");
+      console.log(JSON.stringify(item, null, 2));
+      console.log("Status sessão:", item.status_sessao);
+      console.log("Sessão:", item.sessao);
+      console.log("Sessão status:", item.sessao?.status);
 
       const linha = document.createElement("div");
       linha.classList.add("linhaHorario");
@@ -128,17 +223,106 @@ async function atualizarData() {
           conteudo.classList.add("horarioAlmoco");
           conteudo.innerText = "📌 " + (item.evento?.nome || "Evento");
         }
-      } else if (item.status_sessao !== "disponivel" && item.sessao) {
+      } else if (item.sessao && item.sessao.id_sessao) {
         conteudo = document.createElement("button");
         conteudo.classList.add("consultaCard", "botaoConsulta");
 
+        // consulta status - com tratamento de erro
         conteudo.dataset.id = item.sessao?.id_sessao;
+
+        // Tratamento de erro robusto para o status
+        let status =
+          item.sessao?.status || item.sessao?.status_sessao || "agendada";
+
+        // Normalizar status para evitar problemas
+        status = status.toLowerCase().trim();
+
+        // Verificar se o status é válido
+        const statusValidos = [
+          "agendada",
+          "pendente",
+          "realizada",
+          "cancelada",
+          "reagendada",
+          "remarcada",
+        ];
+        const isStatusValido = statusValidos.some((s) => status.includes(s));
+
+        if (!isStatusValido && item.sessao?.status) {
+          console.warn("Status inválido recebido da API:", item.sessao.status);
+        }
+
+        // Se status for vazio ou inválido, usar agendada como padrão
+        if (!status || status === "null" || status === "undefined") {
+          status = "agendada";
+        }
+
+        conteudo.dataset.status = status;
 
         const nome = item.sessao?.paciente?.usuario?.nome || "Paciente";
 
+        console.log("Status da sessão:", status);
+
+        // Verificar se é realizada (aceita variações)
+        const isRealizada = status.includes("realiz");
+        // Verificar se é pendente
+        const isPendente = status.includes("pendente");
+        // Verificar se é cancelamento solicitado (pendente de aprovação)
+        const isCancelamentoSolicitado =
+          status.includes("cancelamento_solicitado") ||
+          status === "cancelamento_solicitado";
+        // Verificar se é cancelada (já aprovada)
+        const isCancelada =
+          status.includes("cancel") && !isCancelamentoSolicitado;
+        // Verificar se é reagendamento (pendente de aprovação)
+        const isReagendada =
+          status.includes("reagend") || status.includes("remarc");
+
+        // Aplicar classe conforme o status
+        conteudo.classList.remove("consultaCard");
+        if (isRealizada) {
+          conteudo.classList.add("consultaRealizada");
+        } else if (isPendente) {
+          conteudo.classList.add("consultaPendente");
+        } else if (isCancelamentoSolicitado) {
+          conteudo.classList.add("consultaCancelamentoSolicitado");
+        } else if (isCancelada) {
+          conteudo.classList.add("consultaCancelada");
+        } else if (isReagendada) {
+          conteudo.classList.add("consultaReagendamentoSolicitado");
+        } else {
+          conteudo.classList.add("consultaCard");
+        }
+
+        // Formatar texto do status para exibição
+        let statusTexto = status.charAt(0).toUpperCase() + status.slice(1);
+        if (status.includes("cancelamento_solicitado"))
+          statusTexto = "Cancelamento Solicitado";
+        else if (status.includes("cancel")) statusTexto = "Cancelada";
+        else if (status.includes("reagend") || status.includes("remarc"))
+          statusTexto = "Reagendamento Solicitado";
+
+        conteudo.style.position = "relative";
+
         conteudo.innerHTML = `
-          <strong>${nome}</strong>
-          <span>${item.hora_inicio.slice(0, 2) + "h"}</span>
+          <div style="display: flex; flex-direction: column; gap: 4px;">
+            <strong>${nome}</strong>
+            <span>${item.hora_inicio.slice(0, 2) + "h"}</span>
+          </div>
+
+          <span 
+            class="status-badge status-${status}"
+            style="
+              position: absolute;
+              right: 16px;
+              top: 50%;
+              transform: translateY(-50%);
+              margin: 0;
+              white-space: nowrap;
+            "
+          >
+            ${statusTexto}
+          </span>
         `;
       } else {
         conteudo = document.createElement("div");
@@ -156,20 +340,26 @@ async function atualizarData() {
   }
 }
 
+const cancelarModal = document.getElementById("cancelar-modal");
+const closeCancelarModal = document.getElementById("close-cancelar-modal");
+const btnVoltarCancelar = document.getElementById("btn-voltar-cancelar");
+const btnConfirmarCancelamento = document.getElementById(
+  "btn-confirmar-cancelamento",
+);
+const motivoCancelamento = document.getElementById("motivo-cancelamento");
+
 const consultaButtons = document.querySelectorAll(".botaoConsulta");
 const consultaModal = document.getElementById("consulta-modal");
 const closeConsultaModal = document.getElementById("close-consulta-modal");
 const btnEditar = document.querySelector(".btnEditar");
 const editarModal = document.getElementById("editar-modal");
 const closeEditarModal = document.getElementById("close-editar-modal");
-const editarPaciente = document.getElementById("editar-paciente");
-const editarData = document.getElementById("editar-data");
-const editarHorario = document.getElementById("editar-horario");
 const editarLink = document.getElementById("editar-link");
 const editarObservacoes = document.getElementById("editar-observacoes");
 const btnCancelarEditar = document.getElementById("btn-cancelar-editar");
 const btnSalvarEditar = document.getElementById("btn-salvar-editar");
 const btnConfigHorario = document.getElementById("btn-config-horario");
+const btnSessoes = document.getElementById("btn-sessoes");
 const horarioModal = document.getElementById("horario-modal");
 const closeHorarioModal = document.getElementById("close-horario-modal");
 const btnVoltarHorario = document.getElementById("btn-voltar-horario");
@@ -178,6 +368,12 @@ const confirmModal = document.getElementById("confirm-modal");
 const closeConfirmModal = document.getElementById("close-confirm-modal");
 const btnVoltarConfirm = document.getElementById("btn-voltar-confirm");
 const btnConfirmAction = document.getElementById("btn-confirm-action");
+const confirmDoneModal = document.getElementById("confirm-done-modal");
+const closeConfirmDoneModal = document.getElementById(
+  "close-confirm-done-modal",
+);
+const btnVoltarConfirmDone = document.getElementById("btn-voltar-confirm-done");
+const btnConfirmDoneAction = document.getElementById("btn-confirm-done-action");
 const btnRealizada = document.querySelector(".btnRealizada");
 const statusModal = document.getElementById("status-modal");
 const closeStatusModal = document.getElementById("close-status-modal");
@@ -196,6 +392,7 @@ function closeAllModalsExcept(activeModal) {
     editarModal,
     horarioModal,
     confirmModal,
+    confirmDoneModal,
     statusModal,
   ].forEach(function (modal) {
     if (modal && modal !== activeModal) {
@@ -219,6 +416,10 @@ function showConsultaModal(button) {
   const data = document.querySelector(".dataAgenda")?.textContent || "";
   const link = `https://zoom.us/`; // Substitua pelo link real se disponível
 
+  // Passar ID e status da sessão para o modal
+  consultaModal.dataset.id = button.dataset.id;
+  consultaModal.dataset.status = button.dataset.status || "agendada";
+
   document.getElementById("consulta-modal-nome").textContent = nome;
   document.getElementById("consulta-modal-data").textContent = data;
   document.getElementById("consulta-modal-horario").textContent = horario;
@@ -228,23 +429,46 @@ function showConsultaModal(button) {
   document.getElementById("consulta-modal-observacao").textContent =
     "Primeira consulta";
 
-  consultaModal.style.display = "flex";
+  // Ajustar botões conforme o status
+  const status = (button.dataset.status || "agendada").toLowerCase();
+  const actionsContainer = document.querySelector(".consulta-modal-actions");
+
+  if (actionsContainer) {
+    const acaoPendente = actionsContainer.querySelector(".acao-pendente");
+    const acaoAgendada = actionsContainer.querySelector(".acao-agendada");
+    const btnEditar = actionsContainer.querySelector(".btnEditar");
+    const btnReagendar = actionsContainer.querySelector(".btnReagendar");
+    const btnRealizada = actionsContainer.querySelector(".btnRealizada");
+    const btnCancelada = actionsContainer.querySelector(".btnCancelada");
+
+    // ESCONDE TUDO PRIMEIRO
+    if (acaoPendente) acaoPendente.style.display = "none";
+    if (acaoAgendada) acaoAgendada.style.display = "none";
+    if (btnEditar) btnEditar.style.display = "none";
+    if (btnReagendar) btnReagendar.style.display = "none";
+    if (btnRealizada) btnRealizada.style.display = "none";
+    if (btnCancelada) btnCancelada.style.display = "none";
+
+    // REGRA SIMPLES: SÓ AGENDADA EDITA
+    if (status === "agendada") {
+      if (acaoAgendada) acaoAgendada.style.display = "flex";
+      
+      if (btnReagendar) btnReagendar.style.display = "block";
+      if (btnRealizada) btnRealizada.style.display = "block";
+      if (btnCancelada) btnCancelada.style.display = "block";
+
+      if (btnEditar) btnEditar.style.display = "block";
+    }
+
+    consultaModal.style.display = "flex";
+  }
 }
 
 function showEditarModal() {
-  const nome = document.getElementById("consulta-modal-nome").textContent;
-  const data = document.getElementById("consulta-modal-data").textContent;
-  const horario =
-    document
-      .getElementById("consulta-modal-horario")
-      .textContent.split(" - ")[0] || "";
   const link = document.getElementById("consulta-modal-link").href || "";
   const observacoes =
     document.getElementById("consulta-modal-observacao").textContent || "";
 
-  editarPaciente.value = nome;
-  editarData.value = formatDateInput(data);
-  editarHorario.value = horario;
   editarLink.value = link === "#" ? "" : link;
   editarObservacoes.value = observacoes;
 
@@ -322,6 +546,12 @@ if (btnConfigHorario) {
   });
 }
 
+if (btnSessoes) {
+  btnSessoes.addEventListener("click", function () {
+    window.location.href = "././sessoes.html";
+  });
+}
+
 if (closeHorarioModal) {
   closeHorarioModal.addEventListener("click", function () {
     horarioModal.style.display = "none";
@@ -358,6 +588,10 @@ window.addEventListener("click", function (event) {
   if (event.target === statusModal) {
     statusModal.style.display = "none";
   }
+
+  if (event.target === cancelarModal) {
+    cancelarModal.style.display = "none";
+  }
 });
 
 const reagendarModal = document.getElementById("reagendar-modal");
@@ -371,46 +605,50 @@ const reagendarTime = document.getElementById("reagendar-time");
 const btnReagendar = document.querySelector(".btnReagendar");
 if (btnReagendar) {
   btnReagendar.addEventListener("click", function () {
-    const dataAtual = document.getElementById(
-      "consulta-modal-data",
-    ).textContent;
-    const horarioAtual = document.getElementById(
-      "consulta-modal-horario",
-    ).textContent;
-    if (reagendarDate) {
-      // converte a data exibida no modal para o formato yyyy-MM-dd se possível
-      const partes = dataAtual.split(",");
-      if (partes.length > 1) {
-        const inventarioData = partes[1].trim().split(" de ");
-        if (inventarioData.length === 3) {
-          const [dia, mes, ano] = inventarioData;
-          const meses = {
-            janeiro: "01",
-            fevereiro: "02",
-            março: "03",
-            abril: "04",
-            maio: "05",
-            junho: "06",
-            julho: "07",
-            agosto: "08",
-            setembro: "09",
-            outubro: "10",
-            novembro: "11",
-            dezembro: "12",
-          };
-          const mesNumero = meses[mes.toLowerCase()];
-          if (mesNumero) {
-            reagendarDate.value = `${ano}-${mesNumero}-${dia.padStart(2, "0")}`;
+    if (consultaModal.dataset.status === "realizada") {
+      showEditarModal();
+    } else {
+      const dataAtual = document.getElementById(
+        "consulta-modal-data",
+      ).textContent;
+      const horarioAtual = document.getElementById(
+        "consulta-modal-horario",
+      ).textContent;
+      if (reagendarDate) {
+        // converte a data exibida no modal para o formato yyyy-MM-dd se possível
+        const partes = dataAtual.split(",");
+        if (partes.length > 1) {
+          const inventarioData = partes[1].trim().split(" de ");
+          if (inventarioData.length === 3) {
+            const [dia, mes, ano] = inventarioData;
+            const meses = {
+              janeiro: "01",
+              fevereiro: "02",
+              março: "03",
+              abril: "04",
+              maio: "05",
+              junho: "06",
+              julho: "07",
+              agosto: "08",
+              setembro: "09",
+              outubro: "10",
+              novembro: "11",
+              dezembro: "12",
+            };
+            const mesNumero = meses[mes.toLowerCase()];
+            if (mesNumero) {
+              reagendarDate.value = `${ano}-${mesNumero}-${dia.padStart(2, "0")}`;
+            }
           }
         }
       }
+      if (reagendarTime) {
+        const horario = horarioAtual.split(" - ")[0];
+        reagendarTime.value = horario;
+      }
+      consultaModal.style.display = "none";
+      reagendarModal.style.display = "flex";
     }
-    if (reagendarTime) {
-      const horario = horarioAtual.split(" - ")[0];
-      reagendarTime.value = horario;
-    }
-    consultaModal.style.display = "none";
-    reagendarModal.style.display = "flex";
   });
 }
 
@@ -437,26 +675,31 @@ let confirmType = "cancel";
 
 function showConfirmModal(type) {
   confirmType = type;
-  const title = document.querySelector("#confirm-modal h2");
-  const text = document.querySelector("#confirm-modal p");
-  btnConfirmAction.classList.remove("btnCancelEdit", "btnConfirm", "btnSalvar");
   if (type === "cancel") {
-    title.textContent = "Confirmação";
-    text.textContent = "Confirmar consulta cancelada?";
-    btnConfirmAction.textContent = "Cancelar";
-    btnConfirmAction.classList.add("btnCancelEdit");
+    confirmModal.style.display = "flex";
   } else if (type === "done") {
-    title.textContent = "Confirmação";
-    text.textContent = "Confirmar consulta realizada?";
-    btnConfirmAction.textContent = "Confirmar";
-    btnConfirmAction.classList.add("btnConfirm");
+    confirmDoneModal.style.display = "flex";
   }
-  confirmModal.style.display = "flex";
 }
 
 if (btnCancelar) {
   btnCancelar.addEventListener("click", function () {
-    showConfirmModal("cancel");
+    motivoCancelamento.value = "";
+    consultaModal.style.display = "none";
+    cancelarModal.style.display = "flex";
+  });
+}
+
+if (closeCancelarModal) {
+  closeCancelarModal.addEventListener("click", () => {
+    cancelarModal.style.display = "none";
+  });
+}
+
+if (btnVoltarCancelar) {
+  btnVoltarCancelar.addEventListener("click", () => {
+    cancelarModal.style.display = "none";
+    consultaModal.style.display = "flex";
   });
 }
 
@@ -478,9 +721,21 @@ if (btnVoltarConfirm) {
   });
 }
 
-if (btnConfirmAction) {
-  btnConfirmAction.addEventListener("click", async function () {
-    confirmModal.style.display = "none";
+if (closeConfirmDoneModal) {
+  closeConfirmDoneModal.addEventListener("click", function () {
+    confirmDoneModal.style.display = "none";
+  });
+}
+
+if (btnVoltarConfirmDone) {
+  btnVoltarConfirmDone.addEventListener("click", function () {
+    confirmDoneModal.style.display = "none";
+  });
+}
+
+if (btnConfirmDoneAction) {
+  btnConfirmDoneAction.addEventListener("click", async function () {
+    confirmDoneModal.style.display = "none";
 
     const id = consultaModal.dataset.id;
 
@@ -489,14 +744,12 @@ if (btnConfirmAction) {
       return;
     }
 
-    try {
-      let ok, dados;
+    console.log("Marcando sessão como realizada, ID:", id);
 
-      if (confirmType === "cancel") {
-        ({ ok, dados } = await apiRequest(`/cancelarSessao/${id}`, "POST"));
-      } else if (confirmType === "done") {
-        ({ ok, dados } = await apiRequest(`/sessaoRealizada/${id}`, "POST"));
-      }
+    try {
+      const { ok, dados } = await apiRequest(`/sessaoRealizada/${id}`, "POST");
+
+      console.log("Resposta da API:", ok, dados);
 
       if (!ok) {
         showStatusModal("Erro", dados?.error || "Erro na operação");
@@ -505,17 +758,67 @@ if (btnConfirmAction) {
 
       consultaModal.style.display = "none";
 
-      if (confirmType === "cancel") {
-        showStatusModal(
-          "Consulta cancelada",
-          "A consulta foi cancelada com sucesso.",
-        );
-      } else {
-        showStatusModal(
-          "Consulta realizada",
-          "A consulta foi marcada como realizada.",
-        );
+      showStatusModal(
+        "Consulta realizada",
+        "A consulta foi marcada como realizada.",
+      );
+
+      // Forçar atualização visual imediata
+      atualizarDataForceRealizada(id);
+    } catch (error) {
+      console.error(error);
+      showStatusModal("Erro", "Erro ao comunicar com o servidor");
+    }
+  });
+}
+
+// Função para forçar visualmente como realizada
+function atualizarDataForceRealizada(id) {
+  const botoes = document.querySelectorAll(".botaoConsulta");
+  botoes.forEach((botao) => {
+    if (botao.dataset.id == id) {
+      botao.classList.remove("consultaCard");
+      botao.classList.add("consultaRealizada");
+
+      // Atualizar o badge de status
+      const badge = botao.querySelector(".status-badge");
+      if (badge) {
+        badge.classList.remove("status-agendada");
+        badge.classList.add("status-realizada");
+        badge.textContent = "realizada";
       }
+
+      // Atualizar dataset
+      botao.dataset.status = "realizada";
+
+      console.log("Atualização visual forçada para ID:", id);
+    }
+  });
+}
+
+if (btnConfirmarCancelamento) {
+  btnConfirmarCancelamento.addEventListener("click", async function () {
+    const id = consultaModal.dataset.id;
+    const motivo = motivoCancelamento.value.trim();
+
+    if (!motivo) {
+      showToast("Informe o motivo do cancelamento");
+      return;
+    }
+
+    try {
+      const { ok, dados } = await apiRequest(`/cancelarSessao/${id}`, "POST", {
+        motivo: motivo,
+      });
+
+      if (!ok) {
+        showStatusModal("Erro", dados?.error || "Erro ao cancelar");
+        return;
+      }
+
+      cancelarModal.style.display = "none";
+
+      showStatusModal("Sessao cancelada!.");
 
       atualizarData();
     } catch (error) {
@@ -532,33 +835,53 @@ if (statusModalOk) {
 }
 
 if (btnSalvarReagendar) {
-  btnSalvarReagendar.addEventListener("click", function () {
-    reagendarModal.style.display = "none";
-    showStatusModal(
-      "Consulta reagendada",
-      "A consulta foi reagendada com sucesso.",
-    );
+  btnSalvarReagendar.addEventListener("click", async function () {
+    const id = consultaModal.dataset.id;
+    const data = reagendarDate.value;
+    const hora = reagendarTime.value;
+
+    if (!data || !hora) {
+      showToast("Preencha data e horário");
+      return;
+    }
+
+    try {
+      const { ok, dados } = await apiRequest(`/reagendarSessao/${id}`, "POST", {
+        nova_data: data,
+        nova_hora: hora,
+      });
+
+      if (!ok) {
+        showStatusModal("Erro", dados?.error || "Erro ao reagendar");
+        return;
+      }
+
+      reagendarModal.style.display = "none";
+
+      showStatusModal(
+        "Consulta reagendada",
+        "A consulta foi reagendada com sucesso.",
+      );
+
+      atualizarData();
+    } catch (error) {
+      console.error(error);
+      showStatusModal("Erro", "Erro ao comunicar com o servidor");
+    }
   });
 }
 
 if (btnSalvarEditar) {
   btnSalvarEditar.addEventListener("click", function () {
-    const nome = editarPaciente.value.trim() || "Consulta";
-    const data = formatDateDisplay(editarData.value);
-    const horario = editarHorario.value;
     const link = editarLink.value.trim() || "#";
     const observacoes = editarObservacoes.value.trim();
 
-    document.getElementById("consulta-modal-nome").textContent = nome;
-    document.getElementById("consulta-modal-data").textContent = data;
-    document.getElementById("consulta-modal-horario").textContent =
-      `${horario} - ${formatHorarioEnd(horario)}`;
     const consultaLink = document.getElementById("consulta-modal-link");
     consultaLink.href = link;
-    consultaLink.textContent =
-      link && link !== "#" ? "Abrir link externo" : "Sem link";
+    consultaLink.textContent = link !== "#" ? "Abrir link externo" : "Sem link";
+
     document.getElementById("consulta-modal-observacao").textContent =
-      observacoes;
+      observacoes || "Sem observações";
 
     editarModal.style.display = "none";
     consultaModal.style.display = "flex";
@@ -648,6 +971,13 @@ document
 
       consultaModal.style.display = "flex";
       console.log(dados);
+
+      consultaModal.dataset.status = sessao.status;
+      if (sessao.status === "realizada") {
+        document.querySelector(".btnReagendar").style.display = "inline-block";
+        document.querySelector(".btnRealizada").style.display = "none";
+      }
+      
     } catch (error) {
       console.error("Erro ao carregar detalhes da consulta:", error);
     }

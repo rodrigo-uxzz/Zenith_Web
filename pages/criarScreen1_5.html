@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/criarScreen1_5.css">
+    <title>Criar conta</title>
+    <link rel="icon" type="image/x-icon" href="../img/logo z.PNG">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <main> <!-- main: 1 -->
+       
+        <section> <!-- section: 2 -->
+            
+            <!-- logo e nome do site -->
+            <article>
+                <figure>
+                    <img src="../img/logo.png" alt="Logo Zenith">
+                </figure>
+                <p>Cadastro de Psicólogo</p>
+
+                <!-- foto de perfil container -->
+                <div class="profile-upload">
+
+                  <div class="upload-container" id="uploadContainer">
+                    <img id="preview" src="" alt="" hidden />
+                    <div class="placeholder" id="placeholder">
+                      <span class="icone"><ion-icon name="person-outline"></ion-icon></span>
+                    </div>
+                  </div>
+              
+                  <button type="button" class="upload-btn" onclick="document.getElementById('fileInput').click()">
+                    <ion-icon name="camera-outline"></ion-icon>Adicionar Foto 
+                  </button>
+              
+                  <input type="file" id="fileInput" accept="image/png, image/jpeg, image/gif" hidden />
+              
+                  <p class="info">
+                    Formatos: JPG, PNG, GIF <br />
+                    Tamanho máximo: 5MB
+                  </p>
+                </div>
+                <!-- fim foto de perfil container -->
+                 
+            </article>
+
+                   <!-- ----separador---- -->
+                    
+                    <div class="botoes-footer">
+                       <button type="button" class="botaoC botao-anterior" id="botaoVoltar">⬅ Anterior</button>
+                       <button type="button" class="botaoC" id="proximaTela">Próximo   ➡</button>
+                    </div>
+
+                    <div class="façaContainer">
+                        <p>Já possui conta? </p><a href="./loginScreen.html" class="faça-login">Faça login</a>
+                    </div>
+                </form>
+                
+            </section>
+        
+        </main>
+        <p class="mds">&copy; 2026 Zenith. Todos os direitos reservados.</p>
+
+        <!-- Modal -->
+        <div id="modal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <p id="modal-message"></p>
+            </div>
+        </div>
+
+        <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+        <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+        <script type="module" src="../js/cadastrar1.js"></script>
+</body>
+</html>
