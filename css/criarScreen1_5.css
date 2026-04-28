@@ -182,6 +182,10 @@ form {
     pointer-events: none; 
 }
 
+.iconConfig {
+    
+}
+
 /* Efeito de cor quando clica no input */
 input:focus {
     border-color: #007bff;

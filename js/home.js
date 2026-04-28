@@ -195,7 +195,10 @@ async function carregarNotificacoes() {
 
         infoExtra = `
     <span class="notificacao-novo-horario">
-      🔄 Solicitado para: ${novaData} às ${novaHora}
+    <span class="icone">
+    <ion-icon name="repeat-outline"></ion-icon>
+    </span>
+      Solicitado para: ${novaData} às ${novaHora}
     </span>
   `;
       }

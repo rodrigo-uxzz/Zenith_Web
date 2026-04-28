@@ -111,27 +111,22 @@ document.addEventListener("DOMContentLoaded", function () {
   if (btnRecusarConsulta) {
     btnRecusarConsulta.addEventListener("click", async function () {
       const idSessao = consultaModal.dataset.id;
+      const statusSessao = consultaModal.dataset.status || "";
       if (!idSessao) {
         showToast("ID da sessão não encontrado");
         return;
       }
 
-      try {
-        const { ok, dados } = await apiRequest(
-          `/recusarSessao/${idSessao}`,
-          "POST",
-        );
-
-        if (ok) {
-          showToast("Solicitação recusada com sucesso!");
-          consultaModal.style.display = "none";
-          atualizarData();
-        } else {
-          showToast(dados?.error || "Erro ao recusar solicitação");
-        }
-      } catch (error) {
-        console.error(error);
-        showToast("Erro ao recusar solicitação");
+      // Sempre abrir modal de cancelamento quando houver botão de recusar
+      consultaModal.style.display = "none";
+      if (cancelarModal) {
+        cancelarModal.dataset.mode = "recusar";
+        motivoCancelamento.value = "";
+        const modalTitle = cancelarModal.querySelector("h2");
+        const modalText = cancelarModal.querySelector("p");
+        if (modalTitle) modalTitle.textContent = "Recusar solicitação";
+        if (modalText) modalText.textContent = "Informe o motivo da recusa:";
+        cancelarModal.style.display = "flex";
       }
     });
   }
@@ -162,7 +157,12 @@ async function atualizarData() {
 
     if (dataAtual.toDateString() === hoje.toDateString()) {
       textoData = "Hoje";
-      textoData2 = "Hoje";
+      textoData2 = dataAtual.toLocaleDateString("pt-BR", {
+        weekday: "long",
+        day: "2-digit",
+        month: "long",
+        year: "numeric",
+      });
     } else {
       textoData = dataAtual.toLocaleDateString("pt-BR", {
         day: "2-digit",
@@ -432,11 +432,12 @@ function showConsultaModal(button) {
   // Ajustar botões conforme o status
   const status = (button.dataset.status || "agendada").toLowerCase();
   const actionsContainer = document.querySelector(".consulta-modal-actions");
+  const modalHeader = document.querySelector(".consulta-modal-header");
 
-  if (actionsContainer) {
+  if (actionsContainer && modalHeader) {
     const acaoPendente = actionsContainer.querySelector(".acao-pendente");
     const acaoAgendada = actionsContainer.querySelector(".acao-agendada");
-    const btnEditar = actionsContainer.querySelector(".btnEditar");
+    const btnEditar = modalHeader.querySelector(".btnEditar");
     const btnReagendar = actionsContainer.querySelector(".btnReagendar");
     const btnRealizada = actionsContainer.querySelector(".btnRealizada");
     const btnCancelada = actionsContainer.querySelector(".btnCancelada");
@@ -449,14 +450,21 @@ function showConsultaModal(button) {
     if (btnRealizada) btnRealizada.style.display = "none";
     if (btnCancelada) btnCancelada.style.display = "none";
 
-    // REGRA SIMPLES: SÓ AGENDADA EDITA
-    if (status === "agendada") {
+    // MOSTRAR BOTÕES CONFORME O STATUS
+    if (
+      status.includes("pendente") ||
+      status.includes("cancelamento_solicitado") ||
+      status.includes("reagendamento_solicitado")
+    ) {
+      if (acaoPendente) acaoPendente.style.display = "flex";
+    } else if (status === "agendada") {
       if (acaoAgendada) acaoAgendada.style.display = "flex";
-      
+
       if (btnReagendar) btnReagendar.style.display = "block";
       if (btnRealizada) btnRealizada.style.display = "block";
       if (btnCancelada) btnCancelada.style.display = "block";
 
+      // APENAS AGENDADA TEM BOTÃO DE EDITAR
       if (btnEditar) btnEditar.style.display = "block";
     }
 
@@ -684,7 +692,12 @@ function showConfirmModal(type) {
 
 if (btnCancelar) {
   btnCancelar.addEventListener("click", function () {
+    cancelarModal.dataset.mode = "cancel";
     motivoCancelamento.value = "";
+    const modalTitle = cancelarModal.querySelector("h2");
+    const modalText = cancelarModal.querySelector("p");
+    if (modalTitle) modalTitle.textContent = "Cancelar consulta";
+    if (modalText) modalText.textContent = "Informe o motivo do cancelamento:";
     consultaModal.style.display = "none";
     cancelarModal.style.display = "flex";
   });
@@ -800,25 +813,43 @@ if (btnConfirmarCancelamento) {
   btnConfirmarCancelamento.addEventListener("click", async function () {
     const id = consultaModal.dataset.id;
     const motivo = motivoCancelamento.value.trim();
+    const modo = cancelarModal.dataset.mode || "cancel";
 
     if (!motivo) {
-      showToast("Informe o motivo do cancelamento");
+      showToast(
+        modo === "recusar"
+          ? "Informe o motivo da recusa"
+          : "Informe o motivo do cancelamento",
+      );
       return;
     }
 
     try {
-      const { ok, dados } = await apiRequest(`/cancelarSessao/${id}`, "POST", {
+      const endpoint =
+        modo === "recusar" ? `/recusarSessao/${id}` : `/cancelarSessao/${id}`;
+      const { ok, dados } = await apiRequest(endpoint, "POST", {
         motivo: motivo,
       });
 
       if (!ok) {
-        showStatusModal("Erro", dados?.error || "Erro ao cancelar");
+        showStatusModal(
+          "Erro",
+          dados?.error ||
+            (modo === "recusar"
+              ? "Erro ao recusar solicitação"
+              : "Erro ao cancelar"),
+        );
         return;
       }
 
       cancelarModal.style.display = "none";
+      cancelarModal.dataset.mode = "cancel";
 
-      showStatusModal("Sessao cancelada!.");
+      showStatusModal(
+        modo === "recusar"
+          ? "Solicitação recusada com sucesso!"
+          : "Sessão cancelada!",
+      );
 
       atualizarData();
     } catch (error) {
@@ -977,7 +1008,6 @@ document
         document.querySelector(".btnReagendar").style.display = "inline-block";
         document.querySelector(".btnRealizada").style.display = "none";
       }
-      
     } catch (error) {
       console.error("Erro ao carregar detalhes da consulta:", error);
     }
@@ -996,8 +1026,11 @@ document
       const inputs = dia.querySelectorAll("input[type='time']");
 
       if (checkbox && checkbox.checked) {
+        // Se for domingo (index 6), definir dia_semana como 0
+        const diaSemana = index === 6 ? 0 : index + 1;
+
         agendas.push({
-          dia_semana: index + 1,
+          dia_semana: diaSemana,
           hora_inicio: inputs[0].value,
           hora_fim: inputs[1].value,
         });
