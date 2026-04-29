@@ -1,19 +1,41 @@
-/* Botão Sessões estilizado */
+.btnConfigHorario,
+.btnSessoes,
+.btnFiltro {
+    display: flex;
+    align-items: center;   /* alinha verticalmente */
+    justify-content: center;
+    gap: 8px;              /* espaço entre ícone e texto */
+}
+
+/* Ícones maiores e alinhados */
+.btnConfigHorario ion-icon,
+.btnSessoes ion-icon,
+.btnFiltro ion-icon {
+    font-size: 20px;       /* aumenta tamanho */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    position: relative;
+    top: 1px;              /* pequeno ajuste fino */
+}
+
+/* opcional: botão sessões mais bonito igual da imagem */
 .btnSessoes {
-    background: #e6ddff;
+    background: #f2edff;
     color: #a48be6;
-    border: 2px solid #a48be6;
-    border-radius: 8px;
-    padding: 10px 16px;
+    border: 2px solid #cbbcff;
+    border-radius: 10px;
+    padding: 10px 18px;
     font-size: 1rem;
     font-weight: 600;
     font-family: 'Montserrat', Arial, sans-serif;
     cursor: pointer;
-    transition: background 0.2s, color 0.2s;
+    transition: 0.2s;
 }
 
 .btnSessoes:hover {
-    background: #d1c4e9;
+    background: #e6ddff;
     color: #7c5fc0;
 }
 
