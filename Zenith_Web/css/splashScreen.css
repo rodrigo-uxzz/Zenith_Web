@@ -1,0 +1,148 @@
+* { 
+    box-sizing: border-box; 
+    margin: 0; 
+    padding: 0; 
+}
+
+html, body { 
+    height: 100%;              
+}
+
+body { 
+    display: flex;
+    flex-direction: column;
+    font-family: 'Poppins', sans-serif; 
+    color: #290041; 
+}
+
+/* Navbar / header */
+header {
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.1rem 2rem;
+    background: #FFF;
+    box-shadow: 0 0 2px #000000;
+}
+
+/* logo e frase */
+.logoNav {
+    display: flex;
+    align-items: center;
+}
+
+.logoNav .imagemLogo {
+    height: 90px;
+    width: auto;
+    object-fit: contain;
+}
+
+.logoNav p {
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: #290041;
+    margin: 0;
+}
+
+/* botoes nav */
+.botoesNav {
+    list-style: none;
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+}
+
+.botoesNav a {
+    text-decoration: none;
+    padding: 1rem 0.75rem;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+.botaoC {
+    background-color: #A383FB;  
+    color: #FFF;
+}
+
+.botaoE{
+    background-color: #FFF; 
+    color: #A383FB;
+}
+
+.botaoE:hover {
+    color: #A383FB99;
+    box-shadow: #00000070 1px 1px 5px;
+    transition: all 0.5s ease;
+}
+
+.botaoC:hover {
+    background-color: #A383FB99; 
+    color: #FFF;
+    box-shadow: #00000070 1px 1px 5px;
+    transition: all 0.5s ease;
+}
+
+/* Main / conteúdo */
+main { 
+    flex: 1;
+    display: flex;
+    box-sizing: border-box;
+    max-width: 1700px;
+    padding: 1rem 2rem 0 5rem;
+    align-items: center;
+    justify-content: center;
+}
+
+/* section principal */
+article {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 100%;
+    max-width: 720px;
+    background-color: #fff;
+    padding: 1.5rem 0;
+}
+
+/* titulo e frase */
+article h2 {
+    font-size: 2.5rem;
+    color: #290041;
+    margin: 0 0 5px 0;
+}
+
+article p {
+    font-weight: 500;
+    font-size: 1.5rem;
+    color: #290041;
+}
+
+aside {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 500px;
+    flex-shrink: 0;
+}
+
+aside img {
+    width: 100%;
+    max-width: 450px;
+    height: auto;
+    object-fit: contain;
+}
+
+/* rodapé */
+footer { 
+    width: 100%;
+    align-items: center;
+    box-sizing: border-box;
+    background-color: #A383FB; 
+    padding: 1rem 0; 
+    text-align: center; 
+    color: #fff;
+}

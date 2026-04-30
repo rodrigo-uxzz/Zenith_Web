@@ -1,0 +1,183 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    height: 100vh;
+}
+
+/* SPLIT */
+.split-container {
+    display: flex;
+    height: 100vh;
+}
+
+/* ESQUERDA */
+.left-side {
+    flex: 1;
+    background: linear-gradient(135deg, #A383FB, #7B5CF5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.left-content {
+    text-align: center;
+}
+
+.left-content img {
+    width: 120px;
+    margin-bottom: 20px;
+}
+
+/* DIREITA */
+.right-side {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #A383FB40;
+    padding: 20px;
+}
+
+/* CARD */
+section {
+    width: 100%;
+    max-width: 850px; /* 🔥 AUMENTEI */
+    background: white;
+    padding: 2rem 2.5rem;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* HEADER */
+article {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+article p {
+    font-size: 1.3rem;
+    font-weight: 500;
+}
+
+/* FOTO CENTRAL */
+.profile-upload {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.upload-container {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    border: 2px dashed #A383FB;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+    background: #A383FB20;
+}
+
+.upload-btn {
+    background: #A383FB;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+}
+
+.info {
+    font-size: 12px;
+    color: #666;
+    margin-top: 5px;
+}
+
+/* GRID ARRUMADO */
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px; /* 🔥 mais espaço */
+    margin-top: 15px;
+}
+
+/* INPUT */
+.input-container {
+    position: relative;
+}
+
+input, select {
+    width: 100%;
+    padding: 14px 10px 10px 40px;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    font-size: 14px;
+}
+
+label {
+    position: absolute;
+    top: -10px;
+    left: 12px;
+    background: white;
+    font-size: 12px;
+    color: #666;
+}
+
+/* ICON */
+.icon-input {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+}
+
+/* BOTÃO */
+.botaoC {
+    margin-top: 20px;
+    width: 100%;
+    background: #A383FB;
+    color: white;
+    padding: 14px;
+    border-radius: 10px;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+/* LOGIN LINK */
+.façaContainer {
+    margin-top: 10px;
+    text-align: center;
+}
+
+.faça-login {
+    color: #A383FB;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+/* FOOTER */
+.mds {
+    text-align: center;
+    margin-top: 10px;
+    color: #666;
+}
+
+/* RESPONSIVO */
+@media (max-width: 900px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+
+    .left-side {
+        display: none;
+    }
+}

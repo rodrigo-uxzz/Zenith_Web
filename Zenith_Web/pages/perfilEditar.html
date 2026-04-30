@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Zenith</title>
+
+    <link rel="icon" type="image/png" sizes="64x64" href="../img/logoZ.png" />
+    <link rel="stylesheet" href="../css/perfilEditar.css" />
+    <link  href="./perfilScreen.html" />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      const token = localStorage.getItem("token");
+
+      if(!token){
+        window.location.href = "loginScreen.html";
+      }
+
+    </script>
+  </head>
+
+  <body>
+    <div class="sidebar">
+      <ul>
+        <li>
+          <a href="#">
+            <span class="icone">
+              <img src="../img/logo.png" class="logo" />
+            </span>
+            <span class="titulo">ZENITH</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="./homeScreen.html">
+            <span class="icone">
+              <ion-icon name="home-outline"></ion-icon>
+            </span>
+            <span class="titulo">Home</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="./agendaScreen.html">
+            <span class="icone">
+              <ion-icon name="calendar-outline"></ion-icon>
+            </span>
+            <span class="titulo">Agenda</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="#">
+            <span class="icone">
+              <ion-icon name="people-outline"></ion-icon>
+            </span>
+            <span class="titulo">Pacientes</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="#">
+            <span class="icone">
+              <ion-icon name="wallet-outline"></ion-icon>
+            </span>
+            <span class="titulo">Financeiro</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="#">
+            <span class="icone">
+              <ion-icon name="chatbubbles-outline"></ion-icon>
+            </span>
+            <span class="titulo">Chat</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="#">
+            <span class="icone">
+              <ion-icon name="settings-outline"></ion-icon>
+            </span>
+            <span class="titulo">Configurações</span>
+          </a>
+        </li>
+
+        <li>
+          <a href="./perfilEditar.html">
+            <span class="icone">
+              <ion-icon name="person-outline"></ion-icon>
+            </span>
+            <span class="titulo">Perfil</span>
+          </a>
+        </li>
+
+        <li class="conta">
+          <!--<a href="#">
+            <span class="icone">
+              <div class="imgCaixa">
+                <img src="img/user.svg"> 
+                A parte q o Roberto já fez
+              </div>
+            </span>
+            <span class="titulo">Moana Dark</span>
+          </a>-->
+        </li>
+
+        <li>
+          <a href="#" id="open-Modal-logout">
+            <span class="icone">
+              <ion-icon name="log-out-outline"></ion-icon>
+            </span>
+            <span class="titulo">Logout</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Modal de Logout -->
+    <div id="modal-logout" class="modal" style="display:none;">
+      <div class="modal-content">
+        <h2>Confirmar Logout</h2>
+        <p>Tem certeza de que deseja sair?</p>
+        <div class="logout-buttons">
+          <button class="btnCancel" id="btn-cancel-logout" type="button">Cancelar</button>
+          <button class="btnLogout" id="btn-confirm-logout" type="button">Sair</button>
+        </div>
+      </div>
+    </div>
+
+    <main>
+      <section class="perfil">
+        <div class="topo">
+          <h1>Perfil do Psicólogo</h1>
+          <h3>Gerencie suas informações e preferências</h3>
+        </div>
+
+        <div class="container-perfil">
+
+          <div class="banner-perfil">
+            <img id="previewBanner" class="img-banner" />
+
+            <label for="uploadBanner" class="botao-banner">
+              <ion-icon name="camera-outline"></ion-icon>
+            </label>
+
+            <input type="file" id="uploadBanner" accept="image/*" />
+          </div>
+
+
+          <div class="perfil-topo">
+            <div class="avatar-container">
+              <div class="avatar-img">
+                <img id="foto_perfil" src="../img/avatarZ.png" alt="foto de perfil" >
+              </div>
+
+              <label for="fotoPerfil" class="botao-foto">
+                <ion-icon name="camera-outline"></ion-icon>
+              </label>
+
+              <input type="file" id="fotoPerfil" accept="image/*" />
+            </div>
+
+            <div class="dados-psicologo"> 
+              <h2 id="mostrarNome"></h2>
+              <span>Psicólogo Clínico</span>
+              <p class="crp">CRP: <span id="mostrarCrp"></span></p>
+            </div>
+          </div>
+
+          <div class="editar-perfil">
+            <!-- DADOS PESSOAIS -->
+
+            <h2 class="titulo-secao">Dados Pessoais</h2>
+
+            <div class="grid-perfil">
+              <div class="campo">
+                <div class="linha">
+                    <label>Nome completo</label> <p class="asterisco">*</p>
+                </div>
+                <input type="text" id="nome" />
+              </div>
+
+              <div class="campo">
+                <div class="linha">
+                    <label>Email</label> <p class="asterisco">*</p>
+                </div>
+                <input
+                  type="email"
+                  id="email"
+                />
+              </div>
+
+              <div class="campo">
+                <label>Telefone</label>
+                <input type="text" id="telefone" />
+              </div>
+
+              <div class="campo">
+                <label>Data de nascimento</label>
+                <input type="date" id="data" />
+              </div>
+            </div>
+
+            <!-- DADOS PROFISSIONAIS -->
+
+            <h2 class="titulo-secao">Dados Profissionais</h2>
+
+            <div class="grid-perfil">
+              <div class="campo">
+                <div class="linha">
+                    <label>CRP</label> <p class="asterisco">*</p>
+                </div>
+                <input type="text" id="crp" />
+              </div>
+
+              <div class="campo">
+                <label>Especialidade</label>
+                <input type="text" value="Psicologia Clínica" />
+              </div>
+            </div>
+
+            <div class="campo">
+              <label>Biografia / Descrição profissional</label>
+
+              <textarea id="biografia">
+            </textarea
+              >
+            </div>
+
+            <!-- ALTERAR SENHA -->
+
+            <div class="alterar-senha-box">
+              <h2 class="titulo-secao">Alterar Senha</h2>
+
+              <div class="grid-perfil">
+                <div class="campo">
+                  <label>Nova senha</label>
+                  <input type="password" placeholder="Mínimo 8 caracteres" />
+                </div>
+
+                <div class="campo">
+                  <label>Confirmar nova senha</label>
+                  <input type="password" placeholder="Repita a senha" id="senha"/>
+                </div>
+              </div>
+
+              <p class="senha-info">
+                * Deixe em branco se não desejar alterar a senha
+              </p>
+
+              <div class="form-senha">
+
+                <a id="atualizarPerfil" class="salvar">
+                    <ion-icon name="save-outline"></ion-icon>
+                  Salvar alterações  
+                </a>
+
+                <a href="./perfilScreen.html" class="cancelar">
+                    Cancelar
+                </a>
+                <a id="deletar" class="excluir">
+                  Excluir conta
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+    ></script>
+
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+    ></script>
+
+    <script type="module" src="./../js/editarPerfil.js"></script>
+
+    <!-- Modal -->
+    <div id="modal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <p id="modal-message"></p>
+      </div>
+    </div>
+  </body>
+</html>
