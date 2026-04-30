@@ -310,18 +310,15 @@ function criarCardSessao(sessao) {
 
   let statusTexto = "Agendada";
   let statusClasse = "status-agendada";
-  let statusIcone = "⚪";
 
   if (status === "realizada") {
     statusTexto = "Realizada";
     statusClasse = "status-realizada";
-    statusIcone = "🟢";
   }
 
   if (status === "cancelada") {
     statusTexto = "Cancelada";
     statusClasse = "status-cancelada";
-    statusIcone = "🔴";
   }
 
   if (
@@ -330,7 +327,6 @@ function criarCardSessao(sessao) {
   ) {
     statusTexto = "Reagendada";
     statusClasse = "status-reagendada";
-    statusIcone = "🟡";
   }
 
   card.innerHTML = `
@@ -362,7 +358,6 @@ function criarCardSessao(sessao) {
     </div>
 
     <div class="card-sessao-status ${statusClasse}">
-      <span>${statusIcone}</span>
       <span>${statusTexto}</span>
     </div>
   `;

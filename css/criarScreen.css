@@ -1,350 +1,183 @@
-* { 
-    box-sizing: border-box; 
-    margin: 0; 
-    padding: 0; 
-}
-
-html, body { 
-    height: 100%;              
-}
-
-body { 
-    display: flex;
-    flex-direction: column;
-    font-family: 'Poppins', sans-serif; 
-    color: #290041; 
-    background-color: #A383FB40;
-}
-
-/* Main / conteúdo */
-main { 
-    flex: 1;
-    text-align: center;
-    align-items: center;
-    justify-content: center;
+* {
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
-    max-width: 1200px;
-    padding: 10px 20rem;
-    margin: auto;
 }
 
-/* section principal */
-section {
+body {
+    font-family: 'Poppins', sans-serif;
+    height: 100vh;
+}
+
+/* SPLIT */
+.split-container {
     display: flex;
-    flex-direction: column;
+    height: 100vh;
+}
+
+/* ESQUERDA */
+.left-side {
+    flex: 1;
+    background: linear-gradient(135deg, #A383FB, #7B5CF5);
+    display: flex;
     align-items: center;
     justify-content: center;
-    width: 100%;
-    max-width: 1000px;
-    gap: 0.75rem;
-    background-color: #fff;
-    padding: 1rem 2rem 2.5rem;
-    border-radius: 15px;
-    box-shadow: #00000060 0px 4px 8px;
-    height: auto;
+    color: white;
 }
 
-/* logo e frase */
-article {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-
-.profile-upload {
-  font-family: Arial, sans-serif;
-  max-width: 300px;
-  text-align: center;
-}
-
-.title {
-  display: block;
-  margin-bottom: 10px;
-  font-weight: bold;
-}
-
-.title span {
-  color: red;
-}
-
-.upload-container {
-  width: 120px;
-  height: 120px;
-  border: 2px dashed #A383FB;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #A383FB20;
-  margin: 0 auto 15px;
-  overflow: hidden;
-  position: relative;
-}
-
-.placeholder {
-  font-size: 30px;
-  color: #290041;
-}
-
-.upload-container img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.upload-btn {
-  display: block;
-  margin: 0 auto;
-  padding: 8px 16px;
-  background-color: #a383fb;
-  color: white;
-  border: 1px solid #A383FB;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: bold;
-  font-size: 0.9rem;
-}
-
-.upload-btn:hover {
-  background-color: #a383fbe0;
-  transition: all 0.5s ease;
-}
-
-.upload-btn ion-icon {
-  margin-right: 8px;
-}
-
-.info {
-  text-align: center;
-  font-size: 12px;
-  color: #666;
-  margin-top: 10px;
-}
-
-
-figure {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    min-width: 300px;
-}
-
-figure img {
-    max-width: 100%;
-    height: auto;
-    width: auto;
-    object-fit: contain;
-}
-
-
-article p{
-    font-weight: 500;
-    font-size: 1.25rem;
-    color: #290041;
-    margin-bottom: 1rem;
-}
-
-/* todos inputs, butões, etc. */
-form {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    width: 100%;
-}
-
- /* Estilo da borda do input */
-.input-diferenciado {
-    width: 100%;
-    padding: 15px 10px 10px 40px;
-    border: 2px solid #ccc;
-    border-radius: 10px;
-    outline: none;
-    font-size: 16px;
-    color: #C0B4B4;
-}
-
-.input-container {
-    position: relative;
-    margin-top: 20px;
-    width: 100%;
-}
-
-.icon-input {
-    position: absolute;
-    height: 20px;
-    width: auto;
-    left: 15px;
-    top: 56%;
-    transform: translateY(-50%);
-    color: #666;
-    pointer-events: none; 
-}
-
-/* Efeito de cor quando clica no input */
-input:focus {
-    border-color: #007bff;
-}
-
-input:focus + label {
-    color: #007bff;
-}
- 
-.label-diferenciado {
-    position: absolute;
-    left: 12px;
-    top: -10px; 
-    background-color: white; 
-    padding: 0 5px;
-    font-size: 14px;
-    color: #666;
-    pointer-events: none; 
-    transition: 0.2s;
-} 
-
-input::placeholder {
-    color: #C0B4B4; 
-    opacity: 1;      
-    font-size: 0.8rem;
-}
-
-/* buttons */
-.botaoC{
-    background-color: #a383fb; 
-    color: #FFF;
-    border: 1px solid #A383FB;
+.left-content {
     text-align: center;
-    text-decoration: none;
-    padding: 0.75rem;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 1rem;
+}
+
+.left-content img {
+    width: 120px;
+    margin-bottom: 20px;
+}
+
+/* DIREITA */
+.right-side {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #A383FB40;
+    padding: 20px;
+}
+
+/* CARD */
+section {
+    width: 100%;
+    max-width: 850px; /* 🔥 AUMENTEI */
+    background: white;
+    padding: 2rem 2.5rem;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* HEADER */
+article {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+article p {
+    font-size: 1.3rem;
+    font-weight: 500;
+}
+
+/* FOTO CENTRAL */
+.profile-upload {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     margin-top: 10px;
 }
 
-.botaoC:hover {
-    color: #FFF;
-    background-color: #a383fbe0;
-    transition: all 0.5s ease;
-}
-/* select genero */
-select {
-    width: 100%;
-    padding: 15px 10px 10px 40px;
-    border: 2px solid #ccc;
-    border-radius: 10px;
-    outline: none;
-    font-size: 16px;
-    color: #C0B4B4;
-    background-color: white;
-}   
-
-/* termos e privacidade */
-.containerT {
+.upload-container {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    border: 2px dashed #A383FB;
     display: flex;
     align-items: center;
-    justify-content: flex-start;
-    font-size: 0.9rem;
-    gap: 10px;
-    font-size: 13.5px;
+    justify-content: center;
+    margin-bottom: 10px;
+    background: #A383FB20;
 }
 
-.termos, #termos {
-    color: #666;
-    display: inline-block;
-    white-space: nowrap;
-    margin: 5px 5px 0 5px;
-}
-
-.link-termos {
-    color: #A383FB;
-    text-decoration: none;
-    font-weight: 600;
-}
-
-/* parte pra voltar ao login */
-.façaContainer {
-    display: flex;
-    font-size: 0.9rem;
-    align-self: center;
-    gap: 5px;
-}
-
-/* Modal */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0,0,0,0.4);
-}
-
-.modal-content {
-    background-color: #fefefe;
-    margin: 15% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-    max-width: 400px;
-    border-radius: 10px;
-    text-align: center;
-}
-
-.close {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-    color: black;
-    text-decoration: none;
+.upload-btn {
+    background: #A383FB;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 6px;
+    border: none;
     cursor: pointer;
 }
 
+.info {
+    font-size: 12px;
+    color: #666;
+    margin-top: 5px;
+}
+
+/* GRID ARRUMADO */
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px; /* 🔥 mais espaço */
+    margin-top: 15px;
+}
+
+/* INPUT */
+.input-container {
+    position: relative;
+}
+
+input, select {
+    width: 100%;
+    padding: 14px 10px 10px 40px;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    font-size: 14px;
+}
+
+label {
+    position: absolute;
+    top: -10px;
+    left: 12px;
+    background: white;
+    font-size: 12px;
+    color: #666;
+}
+
+/* ICON */
+.icon-input {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+}
+
+/* BOTÃO */
+.botaoC {
+    margin-top: 20px;
+    width: 100%;
+    background: #A383FB;
+    color: white;
+    padding: 14px;
+    border-radius: 10px;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+/* LOGIN LINK */
+.façaContainer {
+    margin-top: 10px;
+    text-align: center;
+}
+
 .faça-login {
-    color: #a383fb;
-    font-size: 0.9rem;
-    align-self: center;
+    color: #A383FB;
     text-decoration: none;
-    font-weight: 600;
+    font-weight: 500;
 }
 
-/* arrumando e alinhando input e label */
-.linha1, .linha2, .linha3 {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 0.50rem;
-}
-
-/* copyright abaixo do section */
+/* FOOTER */
 .mds {
     text-align: center;
-    font-size: 0.9rem;
+    margin-top: 10px;
     color: #666;
-    margin: 1.5rem 0 2rem;
 }
 
-/* Remove o ícone do date picker */
-input[type="date"]::-webkit-calendar-picker-indicator {
-    display: none;
-}
+/* RESPONSIVO */
+@media (max-width: 900px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
 
-input[type="date"]::-webkit-outer-spin-button,
-input[type="date"]::-webkit-inner-spin-button {
-    display: none;
-    -webkit-appearance: none;
-    margin: 0;
-}
-
-input[type="date"] {
-    color-scheme: light;
+    .left-side {
+        display: none;
+    }
 }
