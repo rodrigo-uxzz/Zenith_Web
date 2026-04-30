@@ -31,8 +31,8 @@ body {
 }
 
 .left-content img {
-    width: 120px;
-    margin-bottom: 20px;
+    width: 150px;
+    margin-bottom: 10px;
 }
 
 .left-content h1 {
@@ -45,18 +45,36 @@ body {
 
 /* LADO DIREITO */
 .right-side {
-    flex: 1;
     display: flex;
+    flex-direction: column;
+    justify-content: space-between; 
     align-items: center;
-    justify-content: center;
-    background-color: #A383FB40;
+    height: 100vh;
 }
 
-/* MAIN */
-main {
-    width: 100%;
+.right-side main {
     display: flex;
     justify-content: center;
+    align-items: center;
+    flex: 1;
+    width: 100%;
+}
+
+.right-side {
+    display: flex;
+    justify-content: center; 
+    align-items: center;    
+}
+
+.right-side section {
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    text-align: center;
+}
+
+.right-side form {
+    width: 100%;
 }
 
 /* CARD */
@@ -69,8 +87,8 @@ section {
     gap: 0.6rem;
     background-color: #fff;
     padding: 2rem;
-    border-radius: 15px;
-    box-shadow: #00000060 0px 4px 8px;
+    margin: 0px 2rem;
+   
 }
 
 /* LOGO + TEXTO */
@@ -78,6 +96,7 @@ article {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
 }
 
 figure img {
@@ -156,13 +175,10 @@ label {
 }
 
 /* FOOTER */
-.mds {
-    position: absolute;
-    bottom: 10px;
-    width: 100%;
-    text-align: center;
-    font-size: 0.9rem;
-    color: #666;
+.footer-right {
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #888;
 }
 
 /* MODAL (SEU ORIGINAL) */
