@@ -1,13 +1,26 @@
 import { apiRequest } from "./api.js";
 
-// Variável para armazenar todas as sessões
 let todasSessoes = [];
 let filtroAtual = "todas";
 let buscaPaciente = "";
 let filtroData = "";
 
-// Modal de logout
+/* =========================
+   INICIALIZAÇÃO
+========================= */
+
 document.addEventListener("DOMContentLoaded", function () {
+  configurarLogout();
+  configurarFiltros();
+  configurarBusca();
+  carregarHistoricoSessoes();
+});
+
+/* =========================
+   LOGOUT
+========================= */
+
+function configurarLogout() {
   const modal = document.getElementById("modal-logout");
   const openModalBtn = document.getElementById("open-Modal-logout");
   const cancelBtn = document.getElementById("btn-cancel-logout");
@@ -29,13 +42,11 @@ document.addEventListener("DOMContentLoaded", function () {
   if (confirmBtn) {
     confirmBtn.addEventListener("click", async function () {
       try {
-        const { ok, dados } = await apiRequest("/logout", "POST");
-        if (!ok) {
-          console.warn("Erro ao deslogar da API", dados);
-        }
+        await apiRequest("/logout", "POST");
       } catch (error) {
-        console.error("Erro ao fazer logout:", error);
+        console.error("Erro no logout:", error);
       }
+
       localStorage.removeItem("token");
       window.location.href = "./../pages/loginScreen.html";
     });
@@ -46,30 +57,25 @@ document.addEventListener("DOMContentLoaded", function () {
       modal.style.display = "none";
     }
   });
+}
 
-  // Configurar filtros
-  configurarFiltros();
-  
-  // Configurar listeners de busca
-  configurarBusca();
-  
-  // Carregar histórico de sessões
-  carregarHistoricoSessoes();
-});
+/* =========================
+   FILTROS
+========================= */
 
 function configurarBusca() {
   const inputBuscar = document.getElementById("buscarPaciente");
   const inputData = document.getElementById("filtrarData");
-  
+
   if (inputBuscar) {
-    inputBuscar.addEventListener("input", function() {
-      buscaPaciente = this.value.toLowerCase();
+    inputBuscar.addEventListener("input", function () {
+      buscaPaciente = this.value.toLowerCase().trim();
       filtrarSessoes();
     });
   }
-  
+
   if (inputData) {
-    inputData.addEventListener("change", function() {
+    inputData.addEventListener("change", function () {
       filtroData = this.value;
       filtrarSessoes();
     });
@@ -77,189 +83,282 @@ function configurarBusca() {
 }
 
 function configurarFiltros() {
-  const botoesFiltro = document.querySelectorAll(".btnFiltro");
-  
-  botoesFiltro.forEach(botao => {
-    botao.addEventListener("click", function() {
-      // Remove classe ativa de todos os filtros
-      document.querySelectorAll(".btnFiltro").forEach(btn => {
+  const botoesFiltro = document.querySelectorAll(".filtros-status .btnFiltro");
+
+  botoesFiltro.forEach((botao) => {
+    botao.addEventListener("click", function () {
+      // remove classe ativa de todos
+      botoesFiltro.forEach((btn) => {
         btn.classList.remove("filtro-ativo");
       });
-      // Adiciona classe ativa ao botão clicado
+
+      // adiciona no clicado
       this.classList.add("filtro-ativo");
-      
-      // Atualiza o filtro atual
-      filtroAtual = this.dataset.filtro;
+
+      // IMPORTANTE:
+      // seu HTML precisa ter data-filtro
+      filtroAtual = this.getAttribute("data-filtro");
+
+      console.log("Filtro selecionado:", filtroAtual);
+
       filtrarSessoes();
     });
   });
 }
 
+
+/* =========================
+   CARREGAR HISTÓRICO
+========================= */
+
 async function carregarHistoricoSessoes() {
   const container = document.getElementById("listaSessoes");
+
   if (!container) return;
 
-  container.innerHTML = '<div class="semSessoes">Carregando...</div>';
+  container.innerHTML = `
+    <div class="semSessoes">
+      Carregando sessões...
+    </div>
+  `;
 
   try {
-    // Tentar buscar do dia de hoje
-    const hoje = new Date();
-    const dataFormatada = hoje.toLocaleDateString("en-CA");
-    
-    const { ok, dados } = await apiRequest(`/sessoesPendentes?data=${dataFormatada}`, "GET");
-    
+    const { ok, dados } = await apiRequest(
+      "/psicologoHistorico",
+      "GET"
+    );
+
+    console.log("RETORNO API:", ok, dados);
+
     if (!ok) {
-      throw new Error(dados?.error || "Erro na API");
+      throw new Error(
+        dados?.error || "Erro ao buscar histórico"
+      );
     }
-    
-    let sessoes = [];
-    
-    if (dados.sessoes && dados.sessoes.length > 0) {
-      dados.sessoes.forEach(item => {
-        if (item.sessao && item.sessao.id_sessao) {
-          sessoes.push({
-            ...item.sessao,
-            data_hora: item.hora_inicio,
-            data_original: dataFormatada
-          });
-        }
-      });
+
+    // seu Laravel retorna:
+    // {
+    //   realizadas: [],
+    //   cancelamentos: []
+    // }
+
+    todasSessoes = [
+      ...(dados.realizadas || []),
+      ...(dados.cancelamentos || [])
+    ];
+
+    console.log("SESSÕES TRATADAS:", todasSessoes);
+
+    if (!todasSessoes.length) {
+      container.innerHTML = `
+        <div class="semSessoes">
+          Nenhuma sessão encontrada
+        </div>
+      `;
+      return;
     }
-    
-    // Armazenar todas as sessões
-    todasSessoes = sessoes;
-    
-    // Aplicar filtro inicial
+
     filtrarSessoes();
 
   } catch (error) {
-    console.error("Erro ao carregar histórico:", error.message);
-    container.innerHTML = '<div class="semSessoes">Erro ao carregar sessões. Tente novamente mais tarde.</div>';
+    console.error(
+      "Erro ao carregar histórico:",
+      error
+    );
+
+    container.innerHTML = `
+      <div class="semSessoes">
+        Erro ao carregar sessões
+      </div>
+    `;
   }
 }
 
+
+/* =========================
+   FILTRAR
+========================= */
 
 function filtrarSessoes() {
   const container = document.getElementById("listaSessoes");
   if (!container) return;
 
-  let sessoesFiltradas = todasSessoes;
+  let sessoesFiltradas = [...todasSessoes];
 
-  // Filtrar por status
+  /* filtro por status */
+
   if (filtroAtual !== "todas") {
-    sessoesFiltradas = sessoesFiltradas.filter(sessao => {
-      const status = (sessao.status_sessao || sessao.status || "").toLowerCase();
-      return status.includes(filtroAtual.substring(0, 4));
+    sessoesFiltradas = sessoesFiltradas.filter((sessao) => {
+      const status = (
+        sessao.status_sessao || ""
+      ).toLowerCase();
+
+      if (filtroAtual === "realizadas") {
+        return status === "realizada";
+      }
+
+      if (filtroAtual === "canceladas") {
+        return status === "cancelada";
+      }
+
+      if (filtroAtual === "reagendadas") {
+        return (
+          status === "reagendamento_solicitado" ||
+          status === "reagendada"
+        );
+      }
+
+      return true;
     });
   }
 
-  // Filtrar por nome de paciente
+  /* filtro por nome */
+
   if (buscaPaciente) {
-    sessoesFiltradas = sessoesFiltradas.filter(sessao => {
-      const nome = (sessao.paciente?.usuario?.nome || "").toLowerCase();
+    sessoesFiltradas = sessoesFiltradas.filter((sessao) => {
+      const nome = (
+        sessao.paciente?.usuario?.name ||
+        sessao.paciente?.usuario?.nome ||
+        ""
+      ).toLowerCase();
+
       return nome.includes(buscaPaciente);
     });
   }
 
-  // Filtrar por data
+  /* filtro por data */
+
   if (filtroData) {
-    sessoesFiltradas = sessoesFiltradas.filter(sessao => {
-      const dataSessao = new Date(sessao.data_hora || sessao.data);
-      const dataFormatada = dataSessao.toISOString().split("T")[0];
-      return dataFormatada === filtroData;
+    sessoesFiltradas = sessoesFiltradas.filter((sessao) => {
+      const dataSessao = (
+        sessao.data_sessao || ""
+      ).substring(0, 10);
+
+      return dataSessao === filtroData;
     });
   }
 
-  // Ordenar por data (mais recente primeiro)
+  /* ordenação */
+
   sessoesFiltradas.sort((a, b) => {
-    const dataA = new Date(a.data_hora || a.data);
-    const dataB = new Date(b.data_hora || b.data);
+    const dataA = new Date(
+      `${a.data_sessao} ${a.hora_inicio}`
+    );
+
+    const dataB = new Date(
+      `${b.data_sessao} ${b.hora_inicio}`
+    );
+
     return dataB - dataA;
   });
 
-  if (sessoesFiltradas.length === 0) {
-    container.innerHTML = '<div class="semSessoes">Nenhuma sessão encontrada</div>';
+  renderizarSessoes(sessoesFiltradas);
+}
+
+/* =========================
+   RENDERIZAR
+========================= */
+
+function renderizarSessoes(sessoes) {
+  const container = document.getElementById("listaSessoes");
+  if (!container) return;
+
+  if (!sessoes.length) {
+    container.innerHTML = `
+      <div class="semSessoes">
+        Nenhuma sessão encontrada
+      </div>
+    `;
     return;
   }
 
   container.innerHTML = "";
 
-  sessoesFiltradas.forEach(sessao => {
+  sessoes.forEach((sessao) => {
     const card = criarCardSessao(sessao);
     container.appendChild(card);
   });
 }
 
+/* =========================
+   CARD
+========================= */
+
 function criarCardSessao(sessao) {
   const card = document.createElement("div");
   card.classList.add("card-sessao");
 
-  // Dados da sessão
-  const nome = sessao.paciente?.usuario?.nome || "Paciente";
-  const data = new Date(sessao.data_hora || sessao.data);
-  const dataFormatada = data.toLocaleDateString("pt-BR", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric"
-  });
-  const horaFormatada = data.toLocaleTimeString("pt-BR", {
+  const nome =
+    sessao.paciente?.usuario?.name ||
+    sessao.paciente?.usuario?.nome ||
+    "Paciente";
+
+  const dataObj = new Date(
+    `${sessao.data_sessao} ${sessao.hora_inicio}`
+  );
+
+  const dataFormatada = dataObj.toLocaleDateString("pt-BR");
+
+  const horaFormatada = dataObj.toLocaleTimeString("pt-BR", {
     hour: "2-digit",
     minute: "2-digit"
   });
-  
-  const status = sessao.status_sessao || sessao.status || "agendada";
-  const observacao = sessao.observacao || sessao.tipo_sessao || "Sessão de acompanhamento";
-  
-  // Determinar ícone e cor do status
-  let statusIcone = "";
-  let statusCor = "";
-  let statusTexto = "";
-  let statusInfo = "";
 
-  switch (status.toLowerCase()) {
-    case "realizada":
-      statusIcone = "🟢";
-      statusCor = "status-realizada";
-      statusTexto = "Realizada";
-      statusInfo = "Sessão concluída";
-      break;
-    case "cancelada":
-      statusIcone = "🔴";
-      statusCor = "status-cancelada";
-      statusTexto = "Cancelada";
-      statusInfo = sessao.motivo_cancelamento || "Paciente não compareceu";
-      break;
-    case "reagendada":
-    case "remarcada":
-      statusIcone = "🟡";
-      statusCor = "status-reagendada";
-      statusTexto = "Remarcada";
-      const novaData = sessao.nova_data ? new Date(sessao.nova_data) : null;
-      statusInfo = novaData ? `Remarcada para ${novaData.toLocaleDateString("pt-BR")}` : "Aguardando nova data";
-      break;
-    default:
-      statusIcone = "⚪";
-      statusCor = "status-agendada";
-      statusTexto = "Agendada";
-      statusInfo = "Aguardando";
+  const status = (
+    sessao.status_sessao || "agendada"
+  ).toLowerCase();
+
+  let statusTexto = "Agendada";
+  let statusClasse = "status-agendada";
+
+  if (status === "realizada") {
+    statusTexto = "Realizada";
+    statusClasse = "status-realizada";
+  }
+
+  if (status === "cancelada") {
+    statusTexto = "Cancelada";
+    statusClasse = "status-cancelada";
+  }
+
+  if (
+    status === "reagendamento_solicitado" ||
+    status === "reagendada"
+  ) {
+    statusTexto = "Reagendada";
+    statusClasse = "status-reagendada";
   }
 
   card.innerHTML = `
     <div class="card-sessao-icone">
-      <span>👤</span>
-    </div>
-    <div class="card-sessao-info">
-      <div class="card-sessao-nome">${nome}</div>
-      <div class="card-sessao-detalhes">
-        <span class="card-sessao-data">📅 ${dataFormatada}</span>
-        <span class="card-sessao-hora">🕒 ${horaFormatada}</span>
+      <div class="iconConsulta">
+          <span class="icone"><ion-icon name="person-outline"></ion-icon></span>
       </div>
-      <div class="card-sessao-observacao">💬 ${observacao}</div>
-      <div class="card-sessao-info-extra">${statusInfo}</div>
     </div>
-    <div class="card-sessao-status ${statusCor}">
-      <span class="status-icone">${statusIcone}</span>
-      <span class="status-texto">${statusTexto}</span>
+
+    <div class="card-sessao-info">
+      <div class="card-sessao-nome">
+        ${nome}
+      </div>
+
+      <div class="card-sessao-detalhes">
+        <span>
+          <div class="card-icon">
+                  <ion-icon name="calendar-clear-outline"></ion-icon>
+                  ${dataFormatada}
+          </div>
+        </span>
+        <span>
+            <div class="card-icon">
+                <ion-icon name="time-outline"></ion-icon>
+                ${horaFormatada}
+            </div>
+        </span>
+      </div>
+    </div>
+
+    <div class="card-sessao-status ${statusClasse}">
+      <span>${statusTexto}</span>
     </div>
   `;
 

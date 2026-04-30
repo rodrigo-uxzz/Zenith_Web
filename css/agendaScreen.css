@@ -1,21 +1,67 @@
-/* Botão Sessões estilizado */
+.btnConfigHorario,
+.btnSessoes,
+.btnFiltro {
+    display: flex;
+    align-items: center;   /* alinha verticalmente */
+    justify-content: center;
+    gap: 8px;              /* espaço entre ícone e texto */
+}
+
+/* Ícones maiores e alinhados */
+.btnConfigHorario ion-icon,
+.btnSessoes ion-icon,
+.btnFiltro ion-icon {
+    font-size: 20px;       /* aumenta tamanho */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    position: relative;
+    top: 1px;              /* pequeno ajuste fino */
+}
+
+/* opcional: botão sessões mais bonito igual da imagem */
 .btnSessoes {
-    background: #e6ddff;
+    background: #f2edff;
     color: #a48be6;
-    border: 2px solid #a48be6;
-    border-radius: 8px;
-    padding: 10px 16px;
+    border: 2px solid #cbbcff;
+    border-radius: 10px;
+    padding: 10px 18px;
     font-size: 1rem;
     font-weight: 600;
     font-family: 'Montserrat', Arial, sans-serif;
     cursor: pointer;
-    transition: background 0.2s, color 0.2s;
+    transition: 0.2s;
 }
 
 .btnSessoes:hover {
-    background: #d1c4e9;
+    background: #e6ddff;
     color: #7c5fc0;
 }
+
+/* Toast de Alerta */
+.toast {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: white;
+    color: #333;
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    font-size: 16px;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s, visibility 0.5s;
+}
+
+.toast.show {
+    opacity: 1;
+    visibility: visible;
+}
+
 /* RESET */
 
 * {
@@ -309,6 +355,10 @@ main.agendaContainer {
     padding: 30px 16px;
     border-radius: 8px;
     position: relative;
+    min-height: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .consultaRealizada {
@@ -317,6 +367,10 @@ main.agendaContainer {
     padding: 30px 16px;
     border-radius: 8px;
     position: relative;
+    min-height: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .consultaCard strong {
@@ -331,6 +385,44 @@ main.agendaContainer {
     color: #28a745;
 }
 
+.consultaPendente {
+    background: #fff3cd;
+    margin: 10px;
+    padding: 30px 16px;
+    border-radius: 8px;
+    position: relative;
+    min-height: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border: 2px solid #ffc107;
+}
+
+/* nova consulta pendente */
+.consultaPendente {
+    background: #fff8e1;
+    border-left: 5px solid #f4b400;
+}
+
+/* cancelamento solicitado */
+.consultaCancelamentoSolicitado {
+    background: #ffeaea;
+    border-left: 5px solid #dc3545;
+}
+
+/* reagendamento solicitado */
+.consultaReagendamentoSolicitado {
+    background: #e8f0ff;
+    border-left: 5px solid #3b82f6;
+}
+
+/* cancelada definitiva */
+.consultaCancelada {
+    background: #f5f5f5;
+    border-left: 5px solid #888;
+}
+
+
 .consultaCard span {
     font-size: 15px;
     color: #555;
@@ -338,23 +430,63 @@ main.agendaContainer {
 
 .status-badge {
     position: absolute;
-    top: 5px;
-    right: 5px;
-    font-size: 12px;
+    top: 8px;
+    right: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: 0.3px;
     color: #fff !important;
-    background: #7b5cff;
-    padding: 5px 10px;
+    padding: 8px 18px;
     border-radius: 8px;
     text-transform: capitalize;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 38px;
 }
+
+/* Agendada */
 .status-agendada {
     background: #5b3cc4;
 }
 
+/* Pendente */
+.status-pendente {
+    background: #ffc107;
+    color: #333 !important;
+}
+
+/* Realizada */
 .status-realizada {
     background: #28a745;
-    padding: 8px 20px;
 }
+
+/* Cancelamento solicitado */
+.status-cancelamento_solicitado {
+    background: #dc3545;
+}
+
+/* Cancelada */
+.status-cancelada {
+    background: #dc3545;
+}
+
+/* Reagendada */
+.status-reagendada {
+    background: #2ad4b0;
+}
+
+/* Reagendamento solicitado */
+.status-reagendamento_solicitado {
+    background: #2ad4b0;
+}
+
+/* Remarcada */
+.status-remarcada {
+    background: #2ad4b0;
+}
+
 .botaoConsulta {
     border: none;
     width: auto;
@@ -411,6 +543,32 @@ main.agendaContainer {
     overscroll-behavior: contain;
 }
 
+#cancelar-modal {
+    z-index: 1000;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+#cancelar-modal .modal-content {
+    padding: 30px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+#cancelar-modal .modal-content h2 {
+    margin-bottom: 15px;
+    color: #290041;
+    font-size: 1.5rem;
+}
+
+#cancelar-modal .modal-content p {
+    margin-bottom: 25px;
+    color: #666;
+    font-size: 1rem;
+}
+
 .consulta-modal-content {
     padding: 24px 24px 20px;
 }
@@ -429,23 +587,50 @@ main.agendaContainer {
     color: #3f2fa3;
     font-size: 22px;
 }
-
 .consulta-modal-header {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
+    margin-top: 10px;
+    width: 100%;
 }
 
 #consulta-modal-nome {
-    display: block;
     font-size: 20px;
     font-weight: 600;
     color: #3f2fa3;
+
+    flex: 1;
+    text-align: left; /* deixa o nome na esquerda */
 }
 
 .btnEditar {
-   background-color: #7b5cff;
+    width: 42px;
+    height: 42px;
+    min-width: 42px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: #f1ebff;
+    border: 1px solid #dcd2ff;
+    border-radius: 10px;
+
+    cursor: pointer;
+    transition: 0.2s ease;
+    padding: 0;
+}
+
+.btnEditar ion-icon {
+    font-size: 18px;
+    color: #5b3cc4;
+}
+
+.btnEditar:hover {
+    background: #e6ddff;
+    transform: translateY(-1px);
 }
 
 .consulta-modal-item {
@@ -506,20 +691,64 @@ span.consulta-modal-item-label {
 }
 
 .consulta-modal-actions {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    display: flex;
     gap: 10px;
     margin-top: 25px;
+    justify-content: center;
 }
 
-.btnAcao {
-    border: none;
+.acao-pendente {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+}
+
+.acao-pendente .btnAcao {
+    flex: 1;
+    padding: 14px 20px;
     border-radius: 10px;
-    padding: 12px 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-aceitar-modal {
+    background: #28a745;
+    color: white;
+    border: none;
+}
+
+.btn-aceitar-modal:hover {
+    background: #218838;
+    transform: translateY(-1px);
+}
+
+.btn-recusar-modal {
+    background: #dc3545;
+    color: white;
+    border: none;
+}
+
+.btn-recusar-modal:hover {
+    background: #c82333;
+    transform: translateY(-1px);
+}
+
+.acao-agendada {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+}
+
+.acao-agendada .btnAcao {
+    flex: 1;
+    padding: 12px 8px;
+    border-radius: 10px;
     color: #fff;
     font-weight: 600;
     cursor: pointer;
     transition: transform 0.2s ease;
+    border: none;
 }
 
 .btnAcao:hover {

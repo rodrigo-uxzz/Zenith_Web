@@ -255,41 +255,38 @@ main.sessoesContainer {
     border: 1px solid #cbbcff;
     background: transparent;
     padding: 8px 14px;
-    border-radius: 8px;
+    border-radius: 20px;
     cursor: pointer;
     font-size: 13px;
 }
 
 /* LISTA SESSÕES */
+
 .listaSessoes {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    max-height: calc(100vh - 300px);
-    overflow-y: auto;
-    padding-right: 10px;
     background: white;
     border-radius: 12px;
+    overflow: hidden;
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
     padding: 15px;
 }
 
-/* Scrollbar personalizada */
+/* Scroll igual ao da agenda */
 .listaSessoes::-webkit-scrollbar {
-    width: 8px;
+    width: 6px;
 }
 
 .listaSessoes::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 4px;
+    background: transparent;
 }
 
 .listaSessoes::-webkit-scrollbar-thumb {
-    background: #A383FB;
-    border-radius: 4px;
+    background: rgba(95, 63, 209, 0.3);
+    border-radius: 999px;
 }
 
 .listaSessoes::-webkit-scrollbar-thumb:hover {
-    background: #8B5CF6;
+    background: #8b5cf6;
 }
 
 .linhaSessao {
@@ -384,6 +381,16 @@ main.sessoesContainer {
     color: #fff;
 }
 
+.iconConsulta {
+    margin-top: 4px;
+    font-size: 25px;
+    color: #7b5cff;
+}
+
+.card-icon {
+    margin-bottom: 1px;
+}
+
 /* FILTROS DE STATUS */
 .filtros-status {
     display: flex;
@@ -395,7 +402,7 @@ main.sessoesContainer {
     border: 1px solid #ddd;
     background: #f8f8f8;
     padding: 8px 16px;
-    border-radius: 20px;
+    border-radius: 20px; 
     cursor: pointer;
     font-size: 13px;
     transition: all 0.2s ease;
@@ -409,7 +416,9 @@ main.sessoesContainer {
     background: #7b5cff;
     color: white;
     border-color: #7b5cff;
+    border-radius: 20px;
 }
+
 
 /* CARD DE SESSÃO NOVO */
 .card-sessao {
@@ -430,10 +439,10 @@ main.sessoesContainer {
 }
 
 .card-sessao-icone {
-    width: 50px;
-    height: 50px;
-    background: #f5f0ff;
-    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    background: oklab(96.33500000000001% 0.01065 -0.01773);
+    border-radius: 15px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -448,7 +457,7 @@ main.sessoesContainer {
 .card-sessao-nome {
     font-weight: 600;
     color: #290041;
-    font-size: 16px;
+    font-size: 20px;
     margin-bottom: 6px;
 }
 
@@ -456,7 +465,7 @@ main.sessoesContainer {
     display: flex;
     gap: 15px;
     margin-bottom: 6px;
-    font-size: 13px;
+    font-size: 16px;
     color: #555;
 }
 
@@ -470,16 +479,19 @@ main.sessoesContainer {
     font-size: 12px;
     color: #888;
     font-style: italic;
+    
 }
 
 .card-sessao-status {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     gap: 4px;
-    padding: 8px 14px;
-    border-radius: 8px;
-    min-width: 90px;
+    width: 115px; 
+    height: 60px; 
+    padding: 8px;
+    border-radius: 10px;
 }
 
 .status-icone {

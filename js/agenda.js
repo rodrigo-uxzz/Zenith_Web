@@ -1,11 +1,31 @@
 import { apiRequest } from "./api.js";
 
+// Botões do modal de pendente (definidos fora para uso global)
+let btnAceitarConsulta, btnRecusarConsulta;
+
+// Função para mostrar toast de alerta
+function showToast(message) {
+  const toast = document.getElementById("toast");
+  const toastMessage = document.getElementById("toast-message");
+  if (toast && toastMessage) {
+    toastMessage.textContent = message;
+    toast.classList.add("show");
+    setTimeout(() => {
+      toast.classList.remove("show");
+    }, 3000);
+  }
+}
+
 // Modal de logout
 document.addEventListener("DOMContentLoaded", function () {
   const modal = document.getElementById("modal-logout");
   const openModalBtn = document.getElementById("open-Modal-logout");
   const cancelBtn = document.getElementById("btn-cancel-logout");
   const confirmBtn = document.getElementById("btn-confirm-logout");
+
+  // Inicializar botões do modal
+  btnAceitarConsulta = document.getElementById("btn-aceitar-consulta");
+  btnRecusarConsulta = document.getElementById("btn-recusar-consulta");
 
   // Abrir modal
   if (openModalBtn) {
@@ -47,6 +67,69 @@ document.addEventListener("DOMContentLoaded", function () {
       modal.style.display = "none";
     }
   });
+
+  // Delegação de eventos para botões criados dinamicamente
+  const listaHorarios = document.getElementById("listaHorarios");
+  if (listaHorarios) {
+    listaHorarios.addEventListener("click", function (e) {
+      const button = e.target.closest(".botaoConsulta");
+      if (button) {
+        showConsultaModal(button);
+      }
+    });
+  }
+
+  // Event listeners para botões de aceitar e recusar
+  if (btnAceitarConsulta) {
+    btnAceitarConsulta.addEventListener("click", async function () {
+      const idSessao = consultaModal.dataset.id;
+      if (!idSessao) {
+        showToast("ID da sessão não encontrado");
+        return;
+      }
+
+      try {
+        const { ok, dados } = await apiRequest(
+          `/aprovarSessao/${idSessao}`,
+          "POST",
+        );
+
+        if (ok) {
+          showToast("Solicitação aprovada com sucesso!");
+          consultaModal.style.display = "none";
+          atualizarData();
+        } else {
+          showToast(dados?.error || "Erro ao aprovar solicitação");
+        }
+      } catch (error) {
+        console.error(error);
+        showToast("Erro ao aprovar solicitação");
+      }
+    });
+  }
+
+  if (btnRecusarConsulta) {
+    btnRecusarConsulta.addEventListener("click", async function () {
+      const idSessao = consultaModal.dataset.id;
+      const statusSessao = consultaModal.dataset.status || "";
+      if (!idSessao) {
+        showToast("ID da sessão não encontrado");
+        return;
+      }
+
+      // Sempre abrir modal de cancelamento quando houver botão de recusar
+      consultaModal.style.display = "none";
+      if (cancelarModal) {
+        cancelarModal.dataset.mode = "recusar";
+        motivoCancelamento.value = "";
+        const modalTitle = cancelarModal.querySelector("h2");
+        const modalText = cancelarModal.querySelector("p");
+        if (modalTitle) modalTitle.textContent = "Recusar solicitação";
+        if (modalText) modalText.textContent = "Informe o motivo da recusa:";
+        cancelarModal.style.display = "flex";
+      }
+    });
+  }
 });
 
 let dataAtual = new Date();
@@ -74,7 +157,12 @@ async function atualizarData() {
 
     if (dataAtual.toDateString() === hoje.toDateString()) {
       textoData = "Hoje";
-      textoData2 = "Hoje";
+      textoData2 = dataAtual.toLocaleDateString("pt-BR", {
+        weekday: "long",
+        day: "2-digit",
+        month: "long",
+        year: "numeric",
+      });
     } else {
       textoData = dataAtual.toLocaleDateString("pt-BR", {
         day: "2-digit",
@@ -139,24 +227,102 @@ async function atualizarData() {
         conteudo = document.createElement("button");
         conteudo.classList.add("consultaCard", "botaoConsulta");
 
-
-        // consulta status
+        // consulta status - com tratamento de erro
         conteudo.dataset.id = item.sessao?.id_sessao;
-        conteudo.dataset.status = item.sessao?.status || "agendada";
+
+        // Tratamento de erro robusto para o status
+        let status =
+          item.sessao?.status || item.sessao?.status_sessao || "agendada";
+
+        // Normalizar status para evitar problemas
+        status = status.toLowerCase().trim();
+
+        // Verificar se o status é válido
+        const statusValidos = [
+          "agendada",
+          "pendente",
+          "realizada",
+          "cancelada",
+          "reagendada",
+          "remarcada",
+        ];
+        const isStatusValido = statusValidos.some((s) => status.includes(s));
+
+        if (!isStatusValido && item.sessao?.status) {
+          console.warn("Status inválido recebido da API:", item.sessao.status);
+        }
+
+        // Se status for vazio ou inválido, usar agendada como padrão
+        if (!status || status === "null" || status === "undefined") {
+          status = "agendada";
+        }
+
+        conteudo.dataset.status = status;
 
         const nome = item.sessao?.paciente?.usuario?.nome || "Paciente";
-        const status = item.sessao?.status || "agendada"; // assuming status is here
 
         console.log("Status da sessão:", status);
 
         // Verificar se é realizada (aceita variações)
-        const isRealizada = status && status.toLowerCase().includes('realiz');
-        conteudo.classList.add(isRealizada ? "consultaRealizada" : "consultaCard");
+        const isRealizada = status.includes("realiz");
+        // Verificar se é pendente
+        const isPendente = status.includes("pendente");
+        // Verificar se é cancelamento solicitado (pendente de aprovação)
+        const isCancelamentoSolicitado =
+          status.includes("cancelamento_solicitado") ||
+          status === "cancelamento_solicitado";
+        // Verificar se é cancelada (já aprovada)
+        const isCancelada =
+          status.includes("cancel") && !isCancelamentoSolicitado;
+        // Verificar se é reagendamento (pendente de aprovação)
+        const isReagendada =
+          status.includes("reagend") || status.includes("remarc");
+
+        // Aplicar classe conforme o status
+        conteudo.classList.remove("consultaCard");
+        if (isRealizada) {
+          conteudo.classList.add("consultaRealizada");
+        } else if (isPendente) {
+          conteudo.classList.add("consultaPendente");
+        } else if (isCancelamentoSolicitado) {
+          conteudo.classList.add("consultaCancelamentoSolicitado");
+        } else if (isCancelada) {
+          conteudo.classList.add("consultaCancelada");
+        } else if (isReagendada) {
+          conteudo.classList.add("consultaReagendamentoSolicitado");
+        } else {
+          conteudo.classList.add("consultaCard");
+        }
+
+        // Formatar texto do status para exibição
+        let statusTexto = status.charAt(0).toUpperCase() + status.slice(1);
+        if (status.includes("cancelamento_solicitado"))
+          statusTexto = "Cancelamento Solicitado";
+        else if (status.includes("cancel")) statusTexto = "Cancelada";
+        else if (status.includes("reagend") || status.includes("remarc"))
+          statusTexto = "Reagendamento Solicitado";
+
+        conteudo.style.position = "relative";
 
         conteudo.innerHTML = `
-          <strong>${nome}</strong>
-          <span>${item.hora_inicio.slice(0, 2) + "h"}</span>
-          <span class="status-badge status-${status}">${status}</span>
+          <div style="display: flex; flex-direction: column; gap: 4px;">
+            <strong>${nome}</strong>
+            <span>${item.hora_inicio.slice(0, 2) + "h"}</span>
+          </div>
+
+          <span 
+            class="status-badge status-${status}"
+            style="
+              position: absolute;
+              right: 16px;
+              top: 50%;
+              transform: translateY(-50%);
+              margin: 0;
+              white-space: nowrap;
+            "
+          >
+            ${statusTexto}
+          </span>
         `;
       } else {
         conteudo = document.createElement("div");
@@ -174,14 +340,20 @@ async function atualizarData() {
   }
 }
 
+const cancelarModal = document.getElementById("cancelar-modal");
+const closeCancelarModal = document.getElementById("close-cancelar-modal");
+const btnVoltarCancelar = document.getElementById("btn-voltar-cancelar");
+const btnConfirmarCancelamento = document.getElementById(
+  "btn-confirmar-cancelamento",
+);
+const motivoCancelamento = document.getElementById("motivo-cancelamento");
+
 const consultaButtons = document.querySelectorAll(".botaoConsulta");
 const consultaModal = document.getElementById("consulta-modal");
 const closeConsultaModal = document.getElementById("close-consulta-modal");
 const btnEditar = document.querySelector(".btnEditar");
 const editarModal = document.getElementById("editar-modal");
 const closeEditarModal = document.getElementById("close-editar-modal");
-const editarData = document.getElementById("editar-data");
-const editarHorario = document.getElementById("editar-horario");
 const editarLink = document.getElementById("editar-link");
 const editarObservacoes = document.getElementById("editar-observacoes");
 const btnCancelarEditar = document.getElementById("btn-cancelar-editar");
@@ -197,7 +369,9 @@ const closeConfirmModal = document.getElementById("close-confirm-modal");
 const btnVoltarConfirm = document.getElementById("btn-voltar-confirm");
 const btnConfirmAction = document.getElementById("btn-confirm-action");
 const confirmDoneModal = document.getElementById("confirm-done-modal");
-const closeConfirmDoneModal = document.getElementById("close-confirm-done-modal");
+const closeConfirmDoneModal = document.getElementById(
+  "close-confirm-done-modal",
+);
 const btnVoltarConfirmDone = document.getElementById("btn-voltar-confirm-done");
 const btnConfirmDoneAction = document.getElementById("btn-confirm-done-action");
 const btnRealizada = document.querySelector(".btnRealizada");
@@ -255,21 +429,54 @@ function showConsultaModal(button) {
   document.getElementById("consulta-modal-observacao").textContent =
     "Primeira consulta";
 
-  consultaModal.style.display = "flex";
+  // Ajustar botões conforme o status
+  const status = (button.dataset.status || "agendada").toLowerCase();
+  const actionsContainer = document.querySelector(".consulta-modal-actions");
+  const modalHeader = document.querySelector(".consulta-modal-header");
+
+  if (actionsContainer && modalHeader) {
+    const acaoPendente = actionsContainer.querySelector(".acao-pendente");
+    const acaoAgendada = actionsContainer.querySelector(".acao-agendada");
+    const btnEditar = modalHeader.querySelector(".btnEditar");
+    const btnReagendar = actionsContainer.querySelector(".btnReagendar");
+    const btnRealizada = actionsContainer.querySelector(".btnRealizada");
+    const btnCancelada = actionsContainer.querySelector(".btnCancelada");
+
+    // ESCONDE TUDO PRIMEIRO
+    if (acaoPendente) acaoPendente.style.display = "none";
+    if (acaoAgendada) acaoAgendada.style.display = "none";
+    if (btnEditar) btnEditar.style.display = "none";
+    if (btnReagendar) btnReagendar.style.display = "none";
+    if (btnRealizada) btnRealizada.style.display = "none";
+    if (btnCancelada) btnCancelada.style.display = "none";
+
+    // MOSTRAR BOTÕES CONFORME O STATUS
+    if (
+      status.includes("pendente") ||
+      status.includes("cancelamento_solicitado") ||
+      status.includes("reagendamento_solicitado")
+    ) {
+      if (acaoPendente) acaoPendente.style.display = "flex";
+    } else if (status === "agendada") {
+      if (acaoAgendada) acaoAgendada.style.display = "flex";
+
+      if (btnReagendar) btnReagendar.style.display = "block";
+      if (btnRealizada) btnRealizada.style.display = "block";
+      if (btnCancelada) btnCancelada.style.display = "block";
+
+      // APENAS AGENDADA TEM BOTÃO DE EDITAR
+      if (btnEditar) btnEditar.style.display = "block";
+    }
+
+    consultaModal.style.display = "flex";
+  }
 }
 
 function showEditarModal() {
-  const data = document.getElementById("consulta-modal-data").textContent;
-  const horario =
-    document
-      .getElementById("consulta-modal-horario")
-      .textContent.split(" - ")[0] || "";
   const link = document.getElementById("consulta-modal-link").href || "";
   const observacoes =
     document.getElementById("consulta-modal-observacao").textContent || "";
 
-  editarData.value = formatDateInput(data);
-  editarHorario.value = horario;
   editarLink.value = link === "#" ? "" : link;
   editarObservacoes.value = observacoes;
 
@@ -350,7 +557,7 @@ if (btnConfigHorario) {
 if (btnSessoes) {
   btnSessoes.addEventListener("click", function () {
     window.location.href = "././sessoes.html";
-  })
+  });
 }
 
 if (closeHorarioModal) {
@@ -388,6 +595,10 @@ window.addEventListener("click", function (event) {
 
   if (event.target === statusModal) {
     statusModal.style.display = "none";
+  }
+
+  if (event.target === cancelarModal) {
+    cancelarModal.style.display = "none";
   }
 });
 
@@ -481,7 +692,27 @@ function showConfirmModal(type) {
 
 if (btnCancelar) {
   btnCancelar.addEventListener("click", function () {
-    showConfirmModal("cancel");
+    cancelarModal.dataset.mode = "cancel";
+    motivoCancelamento.value = "";
+    const modalTitle = cancelarModal.querySelector("h2");
+    const modalText = cancelarModal.querySelector("p");
+    if (modalTitle) modalTitle.textContent = "Cancelar consulta";
+    if (modalText) modalText.textContent = "Informe o motivo do cancelamento:";
+    consultaModal.style.display = "none";
+    cancelarModal.style.display = "flex";
+  });
+}
+
+if (closeCancelarModal) {
+  closeCancelarModal.addEventListener("click", () => {
+    cancelarModal.style.display = "none";
+  });
+}
+
+if (btnVoltarCancelar) {
+  btnVoltarCancelar.addEventListener("click", () => {
+    cancelarModal.style.display = "none";
+    consultaModal.style.display = "flex";
   });
 }
 
@@ -556,52 +787,68 @@ if (btnConfirmDoneAction) {
 
 // Função para forçar visualmente como realizada
 function atualizarDataForceRealizada(id) {
-  const botoes = document.querySelectorAll('.botaoConsulta');
-  botoes.forEach(botao => {
+  const botoes = document.querySelectorAll(".botaoConsulta");
+  botoes.forEach((botao) => {
     if (botao.dataset.id == id) {
-      botao.classList.remove('consultaCard');
-      botao.classList.add('consultaRealizada');
-      
+      botao.classList.remove("consultaCard");
+      botao.classList.add("consultaRealizada");
+
       // Atualizar o badge de status
-      const badge = botao.querySelector('.status-badge');
+      const badge = botao.querySelector(".status-badge");
       if (badge) {
-        badge.classList.remove('status-agendada');
-        badge.classList.add('status-realizada');
-        badge.textContent = 'realizada';
+        badge.classList.remove("status-agendada");
+        badge.classList.add("status-realizada");
+        badge.textContent = "realizada";
       }
-      
+
       // Atualizar dataset
-      botao.dataset.status = 'realizada';
-      
+      botao.dataset.status = "realizada";
+
       console.log("Atualização visual forçada para ID:", id);
     }
   });
 }
 
-if (btnConfirmAction) {
-  btnConfirmAction.addEventListener("click", async function () {
-    confirmModal.style.display = "none";
-
+if (btnConfirmarCancelamento) {
+  btnConfirmarCancelamento.addEventListener("click", async function () {
     const id = consultaModal.dataset.id;
+    const motivo = motivoCancelamento.value.trim();
+    const modo = cancelarModal.dataset.mode || "cancel";
 
-    if (!id) {
-      showStatusModal("Erro", "ID da sessão não encontrado");
+    if (!motivo) {
+      showToast(
+        modo === "recusar"
+          ? "Informe o motivo da recusa"
+          : "Informe o motivo do cancelamento",
+      );
       return;
     }
 
     try {
-      const { ok, dados } = await apiRequest(`/cancelarSessao/${id}`, "POST");
+      const endpoint =
+        modo === "recusar" ? `/recusarSessao/${id}` : `/cancelarSessao/${id}`;
+      const { ok, dados } = await apiRequest(endpoint, "POST", {
+        motivo: motivo,
+      });
 
       if (!ok) {
-        showStatusModal("Erro", dados?.error || "Erro na operação");
+        showStatusModal(
+          "Erro",
+          dados?.error ||
+            (modo === "recusar"
+              ? "Erro ao recusar solicitação"
+              : "Erro ao cancelar"),
+        );
         return;
       }
 
-      consultaModal.style.display = "none";
+      cancelarModal.style.display = "none";
+      cancelarModal.dataset.mode = "cancel";
 
       showStatusModal(
-        "Consulta cancelada",
-        "A consulta foi cancelada com sucesso.",
+        modo === "recusar"
+          ? "Solicitação recusada com sucesso!"
+          : "Sessão cancelada!",
       );
 
       atualizarData();
@@ -619,31 +866,53 @@ if (statusModalOk) {
 }
 
 if (btnSalvarReagendar) {
-  btnSalvarReagendar.addEventListener("click", function () {
-    reagendarModal.style.display = "none";
-    showStatusModal(
-      "Consulta reagendada",
-      "A consulta foi reagendada com sucesso.",
-    );
+  btnSalvarReagendar.addEventListener("click", async function () {
+    const id = consultaModal.dataset.id;
+    const data = reagendarDate.value;
+    const hora = reagendarTime.value;
+
+    if (!data || !hora) {
+      showToast("Preencha data e horário");
+      return;
+    }
+
+    try {
+      const { ok, dados } = await apiRequest(`/reagendarSessao/${id}`, "POST", {
+        nova_data: data,
+        nova_hora: hora,
+      });
+
+      if (!ok) {
+        showStatusModal("Erro", dados?.error || "Erro ao reagendar");
+        return;
+      }
+
+      reagendarModal.style.display = "none";
+
+      showStatusModal(
+        "Consulta reagendada",
+        "A consulta foi reagendada com sucesso.",
+      );
+
+      atualizarData();
+    } catch (error) {
+      console.error(error);
+      showStatusModal("Erro", "Erro ao comunicar com o servidor");
+    }
   });
 }
 
 if (btnSalvarEditar) {
   btnSalvarEditar.addEventListener("click", function () {
-    const data = formatDateDisplay(editarData.value);
-    const horario = editarHorario.value;
     const link = editarLink.value.trim() || "#";
     const observacoes = editarObservacoes.value.trim();
 
-    document.getElementById("consulta-modal-data").textContent = data;
-    document.getElementById("consulta-modal-horario").textContent =
-      `${horario} - ${formatHorarioEnd(horario)}`;
     const consultaLink = document.getElementById("consulta-modal-link");
     consultaLink.href = link;
-    consultaLink.textContent =
-      link && link !== "#" ? "Abrir link externo" : "Sem link";
+    consultaLink.textContent = link !== "#" ? "Abrir link externo" : "Sem link";
+
     document.getElementById("consulta-modal-observacao").textContent =
-      observacoes;
+      observacoes || "Sem observações";
 
     editarModal.style.display = "none";
     consultaModal.style.display = "flex";
@@ -737,7 +1006,6 @@ document
       consultaModal.dataset.status = sessao.status;
       if (sessao.status === "realizada") {
         document.querySelector(".btnReagendar").style.display = "inline-block";
-        document.querySelector(".btnReagendar").textContent = "Editar agenda";
         document.querySelector(".btnRealizada").style.display = "none";
       }
     } catch (error) {
@@ -758,8 +1026,11 @@ document
       const inputs = dia.querySelectorAll("input[type='time']");
 
       if (checkbox && checkbox.checked) {
+        // Se for domingo (index 6), definir dia_semana como 0
+        const diaSemana = index === 6 ? 0 : index + 1;
+
         agendas.push({
-          dia_semana: index + 1,
+          dia_semana: diaSemana,
           hora_inicio: inputs[0].value,
           hora_fim: inputs[1].value,
         });

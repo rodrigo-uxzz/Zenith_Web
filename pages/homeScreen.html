@@ -139,104 +139,135 @@
     </section>
 
     <!-- ÁREA CENTRAL -->
-    <section class="grid-principal">
+<section class="grid-principal">
 
-        <!-- Próximas consultas -->
-        <div class="painel">
-            <h2>Próximas Consultas</h2>
 
-            <div class="consulta">
-                <div class="iconConsulta">
-                    <span class="icone"><ion-icon name="person-outline"></ion-icon></span>
-                </div>
-                <div>
-                    <strong>Ana Carolina Silva</strong>
-                    <span class="hora">09:00</span>
-                </div>
-                <button class="btn">Entrar
-                    <img src="../img/open.svg" alt="Ícone Entrar" class="iconeC">
-                </button>
+    <!-- Próximas consultas -->
+    <div class="painel">
+        <h2>Próximas Consultas</h2>
+
+        <div class="consulta">
+            <div class="iconConsulta">
+                <span class="icone"><ion-icon name="person-outline"></ion-icon></span>
             </div>
-
-            <div class="consulta">
-                <div class="iconConsulta">
-                    <span class="icone"><ion-icon name="person-outline"></ion-icon></span>
-                </div>
-                <div>
-                    <strong>Carlos Silva</strong>
-                    <span class="hora">11:00</span>
-                </div>
-                <button class="btn secundario">Aguarde</button>
+            <div>
+                <strong>Ana Carolina Silva</strong>
+                <span class="hora">09:00</span>
             </div>
+            <button class="btn">Entrar
+                <img src="../img/open.svg" alt="Ícone Entrar" class="iconeC">
+            </button>
+        </div>
 
-            <div class="consulta">
-                <div class="iconConsulta">
-                    <span class="icone"><ion-icon name="person-outline"></ion-icon></span>
-                </div>
-                <div>
-                    <strong>Mariana Costa</strong>
-                    <span class="hora">14:00</span>
-                </div>
-                <button class="btn secundario">Aguarde</button>
+        <div class="consulta">
+            <div class="iconConsulta">
+                <span class="icone"><ion-icon name="person-outline"></ion-icon></span>
             </div>
+            <div>
+                <strong>Carlos Silva</strong>
+                <span class="hora">11:00</span>
+            </div>
+            <button class="btn secundario">Aguarde</button>
+        </div>
+
+        <div class="consulta">
+            <div class="iconConsulta">
+                <span class="icone"><ion-icon name="person-outline"></ion-icon></span>
+            </div>
+            <div>
+                <strong>Mariana Costa</strong>
+                <span class="hora">14:00</span>
+            </div>
+            <button class="btn secundario">Aguarde</button>
+        </div>
+
+        <div class="consulta">
+            <div class="iconConsulta">
+                <span class="icone"><ion-icon name="person-outline"></ion-icon></span>
+            </div>
+            <div>
+                <strong>Mario Santos</strong>
+                <span class="hora">16:00</span>
+            </div>
+            <button class="btn secundario">Aguarde</button>
+        </div>
+    </div>
+
+    <!-- CENTRAL DE NOTIFICAÇÕES -->
+    <div class="painel">
+        <h2>Central de Notificações</h2>
+
+        <div id="central-notificacoes">
+            <div class="sem-notificacoes">
+                Nenhuma notificação no momento
+            </div>
+        </div>
+    </div>
+
+    <div id="recusar-modal" class="modal">
+  <div class="modal-content">
+    <span class="close" id="close-recusar-modal">&times;</span>
+
+    <h2>Recusar Consulta</h2>
+    <p>Informe o motivo da recusa:</p>
+
+    <textarea id="motivo-recusar" class="editar-textarea" placeholder="Digite o motivo..."></textarea>
+
+    <div class="editar-buttons">
+      <button id="btn-voltar-recusar" class="btnVoltar">Voltar</button>
+      <button id="btn-confirmar-recusar" class="btnCancelEdit">Recusar</button>
+    </div>
+  </div>
+</div>
+
+</section>
+
+
+<!-- PARTE INFERIOR -->
+<section class="grid-inferior">
+
+    <div class="painel">
+        <h2>Consultas por Semana</h2>
+        <div class="grafico-fake"></div>
+    </div>
+
+    <div class="painel">
+        <h2>Faturamento Mensal</h2>
+        <div class="grafico-fake"></div>
+    </div>
+
+    <!-- ATALHOS RÁPIDOS (desceu no lugar das notificações) -->
+    <div class="painelCard atalhosRapidos">
+
+        <h2 class="tituloPainel">Atalhos Rápidos</h2>
+
+        <div class="listaAtalhos">
+
+            <button class="botaoAtalho">
+                <img src="../img/personAdd.svg" alt="Ícone Novo Paciente" class="iconAtalho">
+                <p class="textoAtalho">Novo Paciente</p>
+            </button>
+
+            <button class="botaoAtalho">
+                <img src="../img/editNote.svg" alt="Ícone Nova Consulta" class="iconAtalho">
+                <p class="textoAtalho">Nova Consulta</p>
+            </button>
+
+            <button class="botaoAtalho" id="verAgenda">
+                <img src="../img/calendar.svg" alt="Ícone Ver Agenda" class="iconAtalho">
+                <p class="textoAtalho">Ver Agenda</p>
+            </button>
+
+            <button class="botaoAtalho">
+                <img src="../img/prontuario.svg" alt="Ícone Ver Prontuários" class="iconAtalho">
+                <p class="textoAtalho">Ver Prontuários</p>
+            </button>
 
         </div>
 
-        <!-- Atalhos -->
-        <div class="painelCard atalhosRapidos">
+    </div>
 
-            <h2 class="tituloPainel">Atalhos Rápidos</h2>
-
-            <div class="listaAtalhos">
-            
-                <button class="botaoAtalho">
-                    <img src="../img/personAdd.svg" alt="Ícone Novo Paciente" class="iconAtalho">
-                    <p class="textoAtalho">Novo Paciente</p>
-                </button>
-            
-                <button class="botaoAtalho">
-                    <img src="../img/editNote.svg" alt="Ícone Nova Consulta" class="iconAtalho">
-                    <p class="textoAtalho">Nova Consulta</p>
-                </button>
-            
-                <button class="botaoAtalho" id="verAgenda">
-                    <img src="../img/calendar.svg" alt="Ícone Ver Agenda" class="iconAtalho">
-                    <p class="textoAtalho">Ver Agenda</p>
-                </button>
-            
-                <button class="botaoAtalho">
-                    <img src="../img/prontuario.svg" alt="Ícone Ver Prontuários" class="iconAtalho">
-                    <p class="textoAtalho">Ver Prontuários</p>
-                </button>
-            
-            </div>
-        
-        </div>
-
-    </section>
-
-    <!-- PARTE INFERIOR -->
-    <section class="grid-inferior">
-
-        <div class="painel">
-            <h2>Consultas por Semana</h2>
-            <div class="grafico-fake"></div>
-        </div>
-
-        <div class="painel">
-            <h2>Faturamento Mensal</h2>
-            <div class="grafico-fake"></div>
-        </div>
-
-        <div class="painel">
-            <h2>Central de Notificações</h2>
-
-            <div id="central-notificacoes">
-                <div class="sem-notificacoes">Nenhuma notificação no momento</div>
-            </div>
-        </div>
-
-    </section>
+</section>
 
 </main>
     
@@ -249,5 +280,11 @@
     </footer>
 
     <script type="module" src="./../js/home.js"></script>    
+
+    <!-- Toast de Alerta -->
+    <div id="toast" class="toast">
+        <span id="toast-message"></span>
+    </div>
+
 </body>
 </html>
