@@ -6,13 +6,12 @@
 
 body {
     font-family: 'Poppins', sans-serif;
-    height: 100vh;
 }
 
 /* SPLIT */
 .split-container {
     display: flex;
-    height: 100vh;
+    min-height: 100vh;
 }
 
 /* ESQUERDA */
@@ -23,6 +22,7 @@ body {
     align-items: center;
     justify-content: center;
     color: white;
+    padding: 2rem;
 }
 
 .left-content {
@@ -30,34 +30,55 @@ body {
 }
 
 .left-content img {
-    width: 120px;
-    margin-bottom: 20px;
+    width: 150px;
+    margin-bottom: 10px;
 }
 
 /* DIREITA */
 .right-side {
     flex: 1;
     display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     align-items: center;
+    min-height: 100vh;
+}
+
+.right-side main {
+    flex: 1;
+    display: flex;
     justify-content: center;
-    background: #A383FB40;
-    padding: 20px;
+    align-items: center;
+    width: 100%;
 }
 
 /* CARD */
 section {
     width: 100%;
-    max-width: 850px; /* 🔥 AUMENTEI */
-    background: white;
-    padding: 2rem 2.5rem;
-    border-radius: 15px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    max-width: 500px;
+    background: #fff;
+    padding: 2rem;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 /* HEADER */
 article {
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     margin-bottom: 15px;
+}
+
+figure {
+    margin: 0;
+}
+
+figure img {
+    display: block;
+    margin: 0 auto;
 }
 
 article p {
@@ -65,12 +86,11 @@ article p {
     font-weight: 500;
 }
 
-/* FOTO CENTRAL */
+/* FOTO */
 .profile-upload {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 10px;
 }
 
 .upload-container {
@@ -97,14 +117,14 @@ article p {
 .info {
     font-size: 12px;
     color: #666;
-    margin-top: 5px;
 }
 
-/* GRID ARRUMADO */
+/* GRID */
 .grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 15px; /* 🔥 mais espaço */
+    gap: 15px;
+    width: 100%;
     margin-top: 15px;
 }
 
@@ -118,7 +138,6 @@ input, select {
     padding: 14px 10px 10px 40px;
     border: 2px solid #ccc;
     border-radius: 10px;
-    font-size: 14px;
 }
 
 label {
@@ -127,7 +146,6 @@ label {
     left: 12px;
     background: white;
     font-size: 12px;
-    color: #666;
 }
 
 /* ICON */
@@ -148,11 +166,10 @@ label {
     padding: 14px;
     border-radius: 10px;
     border: none;
-    font-size: 1rem;
     cursor: pointer;
 }
 
-/* LOGIN LINK */
+/* LOGIN */
 .façaContainer {
     margin-top: 10px;
     text-align: center;
@@ -161,23 +178,41 @@ label {
 .faça-login {
     color: #A383FB;
     text-decoration: none;
-    font-weight: 500;
+}
+
+/* Modal */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none; 
+
+    justify-content: center;
+    align-items: center;
+
+    background: rgba(0,0,0,0.5);
+}
+
+.modal.show {
+    display: flex;
 }
 
 /* FOOTER */
-.mds {
-    text-align: center;
-    margin-top: 10px;
-    color: #666;
+.footer-right {
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #888;
 }
 
 /* RESPONSIVO */
 @media (max-width: 900px) {
-    .grid {
-        grid-template-columns: 1fr;
-    }
-
     .left-side {
         display: none;
+    }
+
+    .grid {
+        grid-template-columns: 1fr;
     }
 }

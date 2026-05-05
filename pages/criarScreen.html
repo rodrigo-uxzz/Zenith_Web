@@ -15,10 +15,10 @@
 
 <div class="split-container">
 
-    <!-- LADO ESQUERDO (IGUAL AO LOGIN) -->
+    <!-- LADO ESQUERDO -->
     <div class="left-side">
         <div class="left-content">
-            <img src="../img/logo.png">
+            <img src="../img/logo.png" alt="Logo Zenith">
             <h1>Zenith</h1>
             <p>Cadastre-se e comece a gerenciar seus atendimentos.</p>
         </div>
@@ -31,11 +31,12 @@
             <section>
 
                 <article>
+                    <figure>
+                        <img src="../img/logo.png" alt="Logo Zenith">
+                    </figure>
                     <p>Cadastro de Psicólogo</p>
 
-                    <!-- FOTO (MANTIDO) -->
                     <div class="profile-upload">
-
                         <div class="upload-container" id="uploadContainer">
                             <img id="preview" hidden />
                             <div class="placeholder" id="placeholder">
@@ -52,7 +53,6 @@
                         <p class="info">
                             JPG, PNG ou GIF • máx 5MB
                         </p>
-
                     </div>
                 </article>
 
@@ -116,14 +116,16 @@
             </section>
         </main>
 
+        <footer class="footer-right">
+            &copy; 2026 Zenith. Todos os direitos reservados.
+        </footer>
+
     </div>
 
 </div>
 
-<p class="mds">&copy; 2026 Zenith. Todos os direitos reservados.</p>
-
 <!-- MODAL -->
-<div id="modal" class="modal">
+<div id="modal" class="modal hidden">
     <div class="modal-content">
         <span class="close">&times;</span>
         <p id="modal-message"></p>
