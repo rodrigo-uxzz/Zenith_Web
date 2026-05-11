@@ -6,17 +6,20 @@
 
 body {
     font-family: 'Poppins', sans-serif;
-}
-
-/* SPLIT */
-.split-container {
-    display: flex;
     min-height: 100vh;
 }
 
-/* ESQUERDA */
+/* SPLIT SCREEN */
+.split-container {
+    display: flex;
+    min-height: 100vh;
+    align-items: stretch;
+}
+
+/* LADO ESQUERDO */
 .left-side {
     flex: 1;
+    min-height: 100vh;
     background: linear-gradient(135deg, #A383FB, #7B5CF5);
     display: flex;
     align-items: center;
@@ -27,16 +30,27 @@ body {
 
 .left-content {
     text-align: center;
+    max-width: 100%;
+    overflow: hidden;
+    margin-bottom: 4.9rem;
 }
 
 .left-content img {
-    width: 150px;
-    margin-bottom: 10px;
+    width: 180px;
 }
 
-/* DIREITA */
+.left-content h1 {
+    font-size: 2rem;
+    word-wrap: break-word;
+}
+
+.left-content p {
+    opacity: 0.9;
+    word-wrap: break-word;
+}
+
+/* LADO DIREITO */
 .right-side {
-    flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -45,23 +59,36 @@ body {
 }
 
 .right-side main {
-    flex: 1;
     display: flex;
     justify-content: center;
+    align-items: flex-start;
+    flex: 1;
+    width: 100%;
+    padding-top: 2rem;
+}
+
+.right-side section {
+    display: flex;
+    flex-direction: column;
     align-items: center;
+    text-align: center;
+}
+
+.right-side form {
     width: 100%;
 }
 
 /* CARD */
 section {
-    width: 100%;
-    max-width: 500px;
-    background: #fff;
-    padding: 2rem;
-    margin: auto;
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 100%;
+    max-width: 500px;
+    gap: 0.6rem;
+    background-color: #fff;
+    padding: 2rem;
+    margin: 0px 1.5rem;
 }
 
 /* HEADER */
@@ -82,8 +109,9 @@ figure img {
 }
 
 article p {
-    font-size: 1.3rem;
+    font-size: 1.5rem;
     font-weight: 500;
+    margin-bottom: 20px;
 }
 
 /* FOTO */
@@ -128,6 +156,14 @@ article p {
     margin-top: 15px;
 }
 
+/* FORM */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 100%;
+}
+
 /* INPUT */
 .input-container {
     position: relative;
@@ -135,17 +171,34 @@ article p {
 
 input, select {
     width: 100%;
-    padding: 14px 10px 10px 40px;
+    padding: 15px 10px 10px 40px;
     border: 2px solid #ccc;
     border-radius: 10px;
+    font-size: 16px;
+    color: #666;
+}
+
+input:focus {
+    border-color: #007bff;
+}
+
+input::placeholder {
+    color: #666;
+}
+
+select option {
+    color: #666;
+    background-color: white;
 }
 
 label {
     position: absolute;
     top: -10px;
-    left: 12px;
+    left: 10px;
     background: white;
-    font-size: 12px;
+    padding: 0 5px;
+    font-size: 14px;
+    color: #666;
 }
 
 /* ICON */
@@ -155,6 +208,14 @@ label {
     top: 50%;
     transform: translateY(-50%);
     width: 18px;
+    pointer-events: none;
+}
+
+/* FOOTER */
+.footer-right {
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #888;
 }
 
 /* BOTÃO */
@@ -163,15 +224,20 @@ label {
     width: 100%;
     background: #A383FB;
     color: white;
-    padding: 14px;
+    padding: 15px;
     border-radius: 10px;
     border: none;
     cursor: pointer;
+    font-size: 16px;
+}
+
+.botaoC:hover {
+    background-color: #8f6df5;
 }
 
 /* LOGIN */
 .façaContainer {
-    margin-top: 10px;
+    margin-top: 0px;
     text-align: center;
 }
 
@@ -211,8 +277,8 @@ label {
     .left-side {
         display: none;
     }
-
-    .grid {
-        grid-template-columns: 1fr;
+    
+    .right-side {
+        flex: 1;
     }
 }

@@ -1,0 +1,374 @@
+* {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Toast de Alerta */
+.toast {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: white;
+    color: #333;
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    font-size: 16px;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s, visibility 0.5s;
+}
+
+.toast.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+body {
+    min-height: 100vh;
+    background-color: #A383FB40;
+    background: #f3f0fa;
+    color: #333;
+    padding: 0;
+    margin: 0;
+}
+
+/* organizando sidebar */
+.sidebar {
+    position: fixed;
+    width: 60px;
+    height: 100vh;
+    background-color: #5b3cc4;
+    overflow: hidden;
+    transition: .5s;
+    box-shadow: 0 0 5px #00000060;
+    z-index: 10;
+
+}
+
+.sidebar:hover {
+    width: 300px;
+}
+
+.sidebar ul li:hover{
+    background-color: #8E6BFF;
+}
+
+.sidebar ul li a {
+    display: flex;
+    white-space: nowrap;
+    text-decoration: none;
+}
+
+
+/* espaçamento icons */
+.sidebar ul li .icone {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    min-width: 60px;
+    height: 60px;
+    color:white;
+}
+
+.sidebar ul li .titulo {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 60px;
+    font-size: 1rem;
+    letter-spacing: .05rem;
+}
+
+.sidebar ul li.logo {
+    margin-bottom: 50px;
+}
+.sidebar ul li.logo:hover {
+    background-color: none;
+}
+
+.sidebar ul li.logo .icone {
+    font-size: 2rem;
+}
+
+.sidebar ul li.logo .titulo {
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.logo {
+    width: 80px;
+    height: auto;    
+}
+
+.titulo {
+    color: white;
+}
+
+/* perfil */
+.sidebar ul li.conta {
+    position: absolute;
+    bottom: 60px;
+    width: 100%;
+}
+
+.sidebar ul li.conta .titulo {
+    text-transform: none;
+}
+
+.sidebar ul li.conta .imgCaixa {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.sidebar ul li.conta img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* primeiro e ultimo */
+.sidebar ul li:first-of-type{
+    bottom: 100;
+    width: 100%;
+    margin-bottom: 60px;
+}
+
+.sidebar ul li:last-of-type{
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+.titulo{
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.logo{
+    width: 42px;
+}
+
+.container{
+    width: min(100%, 1180px);
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 32px;
+}
+
+
+/* Aqui começa a home*/
+main {
+    margin-left: 60px;
+    padding: 30px;
+    transition: .5s;
+    z-index: 1;
+    max-width: calc(100vw - 120px);
+}
+
+/* Header Home*/
+.dashboard-header{
+    margin-left: 25px;
+    margin-top: 10px;
+
+}
+.dashboard-header h1 {
+    font-size: 2.2rem;
+    color: #290041;
+    font-weight:600;
+}
+
+.dashboard-header h4 {
+    color: #290041;
+    font-weight:500;
+}
+
+.tituloAgenda {
+    color: #5b3cc4;
+    margin-bottom: 20px;
+}
+
+.dashboardCards{
+    display: grid;
+    grid-template-columns: repeat(2, minmax(280px, 1fr));
+    gap: 24px;
+    align-items: start;
+}
+
+.cardGrafico{
+    background: #f8f4ff;
+    border-radius: 18px;
+    padding: 24px;
+    min-height: 260px;
+    height: auto;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.cardDestaque{
+    border: none;
+}
+
+.tituloCard{
+    color: #5c229f;
+    font-size: 1.35rem;
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 18px;
+}
+
+.graficoLinha{
+    width: 100%;
+    height: 150px;
+    position: relative;
+}
+
+.graficoLinha path{
+    vector-effect: non-scaling-stroke;
+}
+.linhasGrid{
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.linhaGrid{
+    width: 100%;
+    height: 1px;
+    background: #e4def0;
+}
+
+.graficoLinha svg{
+    width: 100%;
+    height: 100%;
+    position: relative;
+    z-index: 2;
+}
+
+.meses{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 12px;
+}
+
+.mes{
+    font-size: 0.85rem;
+    color: #8d88a1;
+}
+
+.legenda{
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 12px;
+}
+
+.itemLegenda{
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.9rem;
+}
+
+.bolinha{
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.roxo{
+    background: #9d79ff;
+}
+
+.turquesa{
+    background: #69ddd5;
+}
+
+.graficoBarra{
+    width: 100%;
+    height: 150px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    position: relative;
+    gap: 10px;
+}
+
+.barra{
+    width: 16px;
+    border-radius: 4px 4px 0 0;
+}
+
+.barraRoxa{
+    background: #9d79ff;
+}
+
+.barraTurquesa{
+    background: #7be4dc;
+}
+
+.cabecalhoCard{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.receitaInfo{
+    text-align: right;
+}
+
+.receitaLabel{
+    color: #9a96ac;
+    font-size: 0.85rem;
+}
+
+.receitaValor{
+    color: #52d6cf;
+    font-size: 1.4rem;
+    font-weight: 700;
+}
+
+@media(max-width: 900px){
+
+    .sidebar{
+        width: 90px;
+    }
+
+    .titulo{
+        display: none;
+    }
+}
+
+@media(max-width: 700px){
+
+    .dashboardCards{
+        grid-template-columns: 1fr;
+    }
+
+    .container{
+        padding: 20px;
+    }
+}
+
+@media (max-width: 900px){
+    .dashboardCards{
+        grid-template-columns: 1fr;
+    }
+}

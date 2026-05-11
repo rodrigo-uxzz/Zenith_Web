@@ -3,46 +3,291 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" sizes="64x64" href="../img/logoZ.png">
     <title>Zenith</title>
-    <link rel="icon" type="image/x-icon" href="../img/logo z.PNG">
-    <link rel="stylesheet" href="./css/splashScreen.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <link rel="icon" type="image/png" sizes="64x64" href="img/logoZ.png">
+    <link rel="stylesheet" href="css/splashScreen.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
+
+    <!-- HEADER -->
     <header>
 
         <div class="logoNav">
-            <img src="./img/logo.png" alt="Logo" class="imagemLogo">
+            <img src="../img/logo.png" alt="Logo Zenith" class="imagemLogo">
             <p>Zenith</p>
         </div>
 
         <nav>
             <ul class="botoesNav">
-                <li><a href="./pages/loginScreen.html" class="botaoE">Entrar</a></li>
-                <li><a href="./pages/criarScreen.html" class="botaoC">Cadastrar</a></li>
+
+                <li><a href="/pages/loginScreen.html" class="botaoE">Entrar</a></li>
+                <li><a href="/pages/criarScreen.html" class="botaoC">Cadastrar</a></li>
+
             </ul>
         </nav>
 
     </header>
-    
-    <main>
-        <article>
-          <h2>Gestão completa de consultas psicológicas</h2> <!-- Título do post -->
-          <p>Plataforma que conecta psicólogos e pacientes para gerenciarem consultas online com segurança e praticidade</p>
-          
-        </article>
-        
-        
-        <aside>
-            <img src="./img/celular.png" alt="celular">  
-        </aside>
-    </main>
-      
-     
 
+    <!-- HERO -->
+    <section class="hero">
+
+        <div class="heroText">
+
+            <h1>Gestão completa de consultas psicológicas</h1>
+
+            <p>
+                Plataforma que conecta psicólogos e pacientes para
+                gerenciarem consultas online com segurança e praticidade.
+            </p>
+
+            <div class="heroButtons">
+                <a href="./pages/criarScreen.html" class="btnPrimary">Cadastrar agora</a>
+                <a href="#" class="btnSecondary">Saiba mais</a>
+            </div>
+
+        </div>
+
+        <div class="heroImage">
+            <img src="../img/celular.png" alt="Celular Zenith">
+        </div>
+
+    </section>
+
+    <!-- FUNCIONALIDADES -->
+    <section class="funcionalidades">
+
+        <h2>
+            Funcionalidades que
+            <span>facilitam sua rotina</span>
+        </h2>
+
+        <p class="subtitulo">
+            Tudo o que você precisa em um só lugar.
+        </p>
+
+        <div class="cards">
+
+            <div class="card">
+                <img src="../img/agenda.png" alt="Agenda Inteligente">
+                <h3>Agenda Inteligente</h3>
+                <p>
+                    Gerencie horários, confirme consultas
+                    e evite conflitos facilmente.
+                </p>
+            </div>
+
+            <div class="card">
+                <img src="../img/chat.png" alt="Chat">
+                <h3>Chat Integrado</h3>
+                <p>
+                    Comunique-se com seus pacientes
+                    de forma rápida e segura.
+                </p>
+            </div>
+
+            <div class="card">
+                <img src="../img/prontuario.png" alt="Prontuário Digital">
+                <h3>Prontuário Digital</h3>
+                <p>
+                    Registre atendimentos e acompanhe
+                    o histórico clínico organizado.
+                </p>
+            </div>
+
+            <div class="card">
+                <img src="./img/fananceiro.png" alt="Controle Financeiro">
+                <h3>Controle Financeiro</h3>
+                <p>
+                    Acompanhe pagamentos e tenha
+                    total controle financeiro.
+                </p>
+            </div>
+
+            <div class="card">
+                <img src="../img/relatorios.png" alt="Relatórios">
+                <h3>Relatórios</h3>
+                <p>
+                    Visualize dados importantes do seu
+                    consultório de forma simples.
+                </p>
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- COMO FUNCIONA -->
+    <section class="comoFunciona">
+
+        <h2>Como <span>funciona</span></h2>
+        <p>Simples, rápido e eficiente.</p>
+
+        <div class="steps">
+
+            <div class="step">
+                <div class="circle">
+                    <ion-icon name="person-add-outline"></ion-icon>
+                </div>
+                <h3>Paciente agenda</h3>
+                <p>
+                    O paciente escolhe o psicólogo,
+                    horário e envia a solicitação.
+                </p>
+            </div>
+
+            <div class="step">
+                <div class="circle">
+                    <ion-icon name="checkmark-circle-outline"></ion-icon>
+                </div>
+                <h3>Psicólogo confirma</h3>
+                <p>
+                    Você confirma a consulta de acordo
+                    com sua disponibilidade.
+                </p>
+            </div>
+
+            <div class="step">
+                <div class="circle">
+                    <ion-icon name="videocam-outline"></ion-icon>
+                </div>
+                <h3>Consulta acontece</h3>
+                <p>
+                    A consulta é realizada online
+                    com segurança.
+                </p>
+            </div>
+
+            <div class="step">
+                <div class="circle">
+                    <ion-icon name="bookmark-outline"></ion-icon>
+                </div>
+                <h3>Histórico salvo</h3>
+                <p>
+                    Todas as informações ficam
+                    registradas no sistema.
+                </p>
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- DASHBOARD -->
+    <section class="dashboardSection">
+
+        <div class="dashboardText">
+
+            <h2>
+                Tudo organizado em um
+                <span>painel completo</span>
+            </h2>
+
+            <p>
+                Tenha visão geral da sua agenda,
+                pacientes, consultas e finanças.
+            </p>
+
+            <ul>
+                <li><ion-icon name="checkmark-circle"></ion-icon>Agenda do dia e próximos atendimentos</li>
+                <li><ion-icon name="checkmark-circle"></ion-icon>Histórico dos pacientes</li>
+                <li><ion-icon name="checkmark-circle"></ion-icon>Controle financeiro simplificado</li>
+                <li><ion-icon name="checkmark-circle"></ion-icon>Relatórios e indicadores</li>
+            </ul>
+
+        </div>
+
+        <div class="dashboardImage">
+            <img src="./img/dashPsi.png" alt="Dashboard">
+        </div>
+
+    </section>
+
+    <!-- SEGURANÇA -->
+    <section class="seguranca">
+
+        <!-- ESQUERDA -->
+        <div class="segurancaLeft">
+
+            <div class="segurancaIcon">
+                <ion-icon name="shield-checkmark-outline"></ion-icon>
+            </div>
+
+            <div class="segurancaText">
+
+                <h2>Segurança e privacidade em primeiro lugar</h2>
+
+                <p>
+                    O Zenith segue as melhores práticas de segurança da informação
+                    e está em conformidade com a LGPD para proteger seus dados
+                    e dos seus pacientes.
+                </p>
+
+            </div>
+
+        </div>
+
+        <!-- DIREITA -->
+        <div class="segurancaRight">
+
+            <div class="lockCircle">
+                <img src="./img/lock.png" alt="lock">
+            </div>
+
+            <p>
+                Seus dados <br>
+                estão seguros <br>
+                conosco.
+            </p>
+
+        </div>
+
+    </section>
+
+    <!-- CTA -->
+    <section class="cta">
+
+        <div class="ctaText">
+            <h2>
+                Pronto para transformar
+                a gestão do seu consultório?
+            </h2>
+
+            <p>
+                Junte-se a centenas de psicólogos que já usam o Zenith.
+            </p>
+        </div>
+
+        <div class="ctaButtons">
+            <a href="#" class="btnWhite">Criar conta grátis</a>
+            <a href="#" class="btnOutline">Falar com especialista</a>
+        </div>
+
+    </section>
+
+    <!-- BOTÃO ADMIN -->
+    <a href="./pages/adminLogin.html" class="floating-admin-button">
+        ⚙
+    </a>
+
+    <!-- FOOTER -->
     <footer>
-        <p>&copy; 2026 Zenith. Todos os direitos reservados.</p>
+
+        <div class="footerLogo">
+
+            <img src="../img/logo.png" alt="Logo Zenith">
+            <h2>Zenith</h2>
+
+        </div>
+
+        <p>© 2026 Zenith. Todos os direitos reservados.</p>
+
     </footer>
+
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </body>
 </html>

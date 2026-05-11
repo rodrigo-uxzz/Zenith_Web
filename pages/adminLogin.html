@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Zenith - Login</title>
+    <link rel="icon" type="image/x-icon" href="../img/logo z.PNG">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/loginScreen.css">
+</head>
+<body>
+
+<div class="split-container">
+
+    <div class="left-side">
+        <div class="left-content">
+            <img src="../img/logo.png" alt="Logo Zenith">
+            <h1>Bem-vindo, Admin</h1>
+            <p>Faça login com suas credenciais de administrador para acessar o painel.</p>
+        </div>
+    </div>
+
+    <div class="right-side">
+
+        <main>
+            <section>
+
+                <article>
+                    <figure>
+                        <img src="../img/logo.png" alt="Logo Zenith">
+                    </figure>
+                    <p>Entre com seu e-mail de administrador e senha.</p>
+                </article>
+
+                <form action="adminHome.html" method="get">
+
+                    <div class="input-container">
+                        <label for="adminEmail">E-mail ou usuário:</label>
+                        <input type="text" id="adminEmail" name="adminEmail" placeholder="admin@zenith.com" required>
+                    </div>
+
+                    <div class="input-container">
+                        <label for="adminPassword">Senha:</label>
+                        <input type="password" id="adminPassword" name="adminPassword" placeholder="******" required>
+                    </div>
+
+                    <button type="submit" class="botaoE">Entrar</button>
+                    <a href="../index.html" class="botaoC">Voltar</a>
+
+                </form>
+
+            </section>
+        </main>
+        <footer class="footer-right">
+            &copy; 2026 Zenith. Todos os direitos reservados.
+        </footer>
+    </div>
+</div>
+
+<script type="module" src="../js/login.js"></script>
+</body>
+</html>
