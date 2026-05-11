@@ -12,6 +12,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+     <script>
+      const token = localStorage.getItem("token");
+
+      if(!token){
+        window.location.href = "loginScreen.html";
+      }
+    </script>
 </head>
 
 <body>
@@ -71,7 +78,7 @@
             </li>
 
             <li>
-                <a href="../index.html">
+                <a id="open-Modal-logout" href="#">
                     <span class="icone">
                         <ion-icon name="log-out-outline"></ion-icon>
                     </span>
@@ -96,43 +103,8 @@
                     Crescimento Mensal de Usuários
                 </h2>
 
-                <div class="graficoLinha">
-
-                    <div class="linhasGrid">
-                        <span class="linhaGrid"></span>
-                        <span class="linhaGrid"></span>
-                        <span class="linhaGrid"></span>
-                        <span class="linhaGrid"></span>
-                        <span class="linhaGrid"></span>
-                    </div>
-
-                    <svg viewBox="0 0 300 120" fill="none">
-
-                        <path
-                            d="M10 95
-                            C40 98, 45 98, 70 75
-                            C95 55, 115 70, 140 60
-                            C170 45, 190 35, 220 38
-                            C250 40, 265 20, 290 22"
-
-                            stroke="#52D6CF"
-                            stroke-width="5"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                        />
-
-                    </svg>
-
-                </div>
-
-                <div class="meses">
-                    <span class="mes">Jan</span>
-                    <span class="mes">Fev</span>
-                    <span class="mes">Mar</span>
-                    <span class="mes">Abr</span>
-                    <span class="mes">Mai</span>
-                    <span class="mes">Jun</span>
-                    <span class="mes">Jul</span>
+                <div class="graficoCanvas">
+                    <canvas id="usuariosChart"></canvas>
                 </div>
 
             </article>
@@ -143,43 +115,8 @@
                     Crescimento Mensal de Psicólogos
                 </h2>
 
-                <div class="graficoLinha">
-
-                    <div class="linhasGrid">
-                        <span class="linhaGrid"></span>
-                        <span class="linhaGrid"></span>
-                        <span class="linhaGrid"></span>
-                        <span class="linhaGrid"></span>
-                        <span class="linhaGrid"></span>
-                    </div>
-
-                    <svg viewBox="0 0 300 120" fill="none">
-
-                        <path
-                            d="M10 98
-                            C40 98, 50 95, 75 70
-                            C95 52, 120 65, 145 50
-                            C175 32, 200 40, 225 35
-                            C250 32, 270 15, 290 18"
-
-                            stroke="#9D79FF"
-                            stroke-width="5"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                        />
-
-                    </svg>
-
-                </div>
-
-                <div class="meses">
-                    <span class="mes">Jan</span>
-                    <span class="mes">Fev</span>
-                    <span class="mes">Mar</span>
-                    <span class="mes">Abr</span>
-                    <span class="mes">Mai</span>
-                    <span class="mes">Jun</span>
-                    <span class="mes">Jul</span>
+                <div class="graficoCanvas">
+                    <canvas id="psicologosChart"></canvas>
                 </div>
 
             </article>
@@ -199,66 +136,13 @@
 
                     <div class="itemLegenda">
                         <span class="bolinha turquesa"></span>
-                        <span>Planejadas</span>
+                        <span>Agendadas</span>
                     </div>
 
                 </div>
 
-                <div class="graficoBarra">
-
-                    <div class="linhasGrid">
-                        <span class="linhaGrid"></span>
-                        <span class="linhaGrid"></span>
-                        <span class="linhaGrid"></span>
-                        <span class="linhaGrid"></span>
-                        <span class="linhaGrid"></span>
-                    </div>
-
-                    <div class="grupoBarra">
-                        <div class="barra barraTurquesa" style="height: 45px;"></div>
-                        <div class="barra barraRoxa" style="height: 38px;"></div>
-                    </div>
-
-                    <div class="grupoBarra">
-                        <div class="barra barraTurquesa" style="height: 60px;"></div>
-                        <div class="barra barraRoxa" style="height: 48px;"></div>
-                    </div>
-
-                    <div class="grupoBarra">
-                        <div class="barra barraTurquesa" style="height: 92px;"></div>
-                        <div class="barra barraRoxa" style="height: 84px;"></div>
-                    </div>
-
-                    <div class="grupoBarra">
-                        <div class="barra barraTurquesa" style="height: 88px;"></div>
-                        <div class="barra barraRoxa" style="height: 86px;"></div>
-                    </div>
-
-                    <div class="grupoBarra">
-                        <div class="barra barraTurquesa" style="height: 98px;"></div>
-                        <div class="barra barraRoxa" style="height: 92px;"></div>
-                    </div>
-
-                    <div class="grupoBarra">
-                        <div class="barra barraTurquesa" style="height: 90px;"></div>
-                        <div class="barra barraRoxa" style="height: 86px;"></div>
-                    </div>
-
-                    <div class="grupoBarra">
-                        <div class="barra barraTurquesa" style="height: 105px;"></div>
-                        <div class="barra barraRoxa" style="height: 98px;"></div>
-                    </div>
-
-                </div>
-
-                <div class="meses">
-                    <span class="mes">Jan</span>
-                    <span class="mes">Fev</span>
-                    <span class="mes">Mar</span>
-                    <span class="mes">Abr</span>
-                    <span class="mes">Mai</span>
-                    <span class="mes">Jun</span>
-                    <span class="mes">Jul</span>
+                <div class="graficoCanvas">
+                    <canvas id="sessoesChart"></canvas>
                 </div>
 
             </article>
@@ -272,56 +156,39 @@
                     </h2>
 
                     <div class="receitaInfo">
-                        <span class="receitaLabel">Receita Total</span>
-                        <span class="receitaValor">R$5000</span>
+                        <span class="receitaLabel">Receita Total</span><br>
+                        <span id="total" class="receitaValor"></span>
                     </div>
 
                 </div>
 
-                <div class="graficoLinha">
-
-                    <div class="linhasGrid">
-                        <span class="linhaGrid"></span>
-                        <span class="linhaGrid"></span>
-                        <span class="linhaGrid"></span>
-                        <span class="linhaGrid"></span>
-                        <span class="linhaGrid"></span>
-                    </div>
-
-                    <svg viewBox="0 0 300 120" fill="none">
-
-                        <path
-                            d="M10 100
-                            C40 96, 60 98, 85 90
-                            C115 80, 135 82, 160 76
-                            C190 68, 205 50, 230 44
-                            C255 38, 270 22, 290 6"
-
-                            stroke="#52D6CF"
-                            stroke-width="5"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                        />
-
-                    </svg>
-
-                </div>
-
-                <div class="meses">
-                    <span class="mes">Jan</span>
-                    <span class="mes">Fev</span>
-                    <span class="mes">Mar</span>
-                    <span class="mes">Abr</span>
-                    <span class="mes">Mai</span>
-                    <span class="mes">Jun</span>
-                    <span class="mes">Jul</span>
+                <div class="graficoCanvas">
+                    <canvas id="faturamentoChart"></canvas>
                 </div>
 
             </article>
 
-        </section>
+        </section>  
 
     </main>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script type="module" src="./../js/adminHome.js"></script>
+
+     <!-- Modal de Logout -->
+    <div id="modal-logout" class="modal" style="display:none;">
+      <div class="modal-content">
+        <h2>Confirmar Logout</h2>
+        <p>Tem certeza de que deseja sair?</p>
+        <div class="logout-buttons">
+          <button class="btnCancel" id="btn-cancel-logout" type="button">Cancelar</button>
+          <button class="btnLogout" id="btn-confirm-logout" type="button">Sair</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="toast" class="toast">
+        <span id="toast-message"></span>
+    </div>
 </body>
 </html>

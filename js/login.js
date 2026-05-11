@@ -84,7 +84,7 @@ document
 
     console.log(dados);
 
-    // 🚨 PRIMEIRO: trata erro
+    // PRIMEIRO: trata erro
     if (!ok) {
       if (dados?.error === "Aguarde a verificação da conta") {
         showModal("Sua conta está em análise pelo administrador, aguarde");
