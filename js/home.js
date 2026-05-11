@@ -116,7 +116,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  consultasHoje();
+  carregarDashboard();
   carregarNotificacoes();
 });
 
@@ -291,24 +291,143 @@ function recusarSessao(id) {
 // CONSULTAS DE HOJE
 // ===============================
 
-async function consultasHoje() {
-  const dataAtual = new Date();
-  const dataFormatada = dataAtual.toISOString().split("T")[0];
+async function carregarDashboard() {
+  const nomesMeses = [
+    "",
+    "Jan",
+    "Fev",
+    "Mar",
+    "Abr",
+    "Mai",
+    "Jun",
+    "Jul",
+    "Ago",
+    "Set",
+    "Out",
+    "Nov",
+    "Dez",
+  ];
 
-  try {
-    const { dados } = await apiRequest(
-      `/consultasDoDia?data=${dataFormatada}`,
-      "GET",
-    );
+  const nomesDias = ["", "Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
 
-    const sessoes = dados.sessoes || [];
+  const response = await apiRequest("/dahsBoardPsicologo");
 
-    const count = sessoes.filter(
-      (s) => s.status_sessao !== "disponivel",
-    ).length;
-
-    document.getElementById("consultasHoje").innerText = count;
-  } catch (error) {
-    console.error("Erro ao carregar consultas:", error);
+  if (!response.ok) {
+    console.error(response.dados);
+    return;
   }
+
+  const data = response.dados;
+
+  const pacientes = data.cards.total_pacientes;
+  const consultasMes = data.cards.consultas_mes;
+  const faturamentoTotal = data.cards.faturamentoTotal;
+  const consultasDia = data.cards.consultas_hoje;
+
+  document.getElementById("pacientes").textContent = pacientes;
+  document.getElementById("consultas_mes").textContent = consultasMes;
+  document.getElementById("faturamentoTotal").textContent = ("R$")+faturamentoTotal;
+  document.getElementById("consultasHoje").textContent = consultasDia;
+
+  const faturamento = data.graficos.faturamento_mensal;
+
+  new Chart(document.getElementById("faturamentoChart"), {
+    type: "line",
+
+    data: {
+      labels: faturamento.map((item) => nomesMeses[item.mes]),
+
+      datasets: [
+        {
+          data: faturamento.map((item) => item.total),
+
+          borderColor: "#27c7c0",
+          backgroundColor: "rgba(39,199,192,0.08)",
+
+          fill: true,
+          tension: 0.4,
+          pointRadius: 4,
+          pointHoverRadius: 6,
+        },
+      ],
+    },
+
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+
+      plugins: {
+        legend: {
+          display: false,
+        },
+      },
+
+      scales: {
+        x: {
+          grid: {
+            color: "#ececec",
+          },
+        },
+
+        y: {
+          beginAtZero: true,
+
+          grid: {
+            color: "#ececec",
+          },
+        },
+      },
+    },
+  });
+
+  const sessoes = data.graficos.consultas_por_semana;
+
+  new Chart(document.getElementById("sessoesChart"), {
+    type: "bar",
+
+    data: {
+      labels: sessoes.map((item) => nomesDias[item.dia]),
+
+      datasets: [
+        {
+          data: sessoes.map((item) => item.total),
+
+          backgroundColor: "rgba(157,121,255,0.75)",
+          borderRadius: 12,
+          borderSkipped: false,
+        },
+      ],
+    },
+
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+
+      plugins: {
+        legend: {
+          display: false,
+        },
+      },
+
+      scales: {
+        x: {
+          grid: {
+            display: false,
+          },
+        },
+
+        y: {
+          beginAtZero: true,
+
+          ticks: {
+            stepSize: 1,
+          },
+
+          grid: {
+            color: "#ececec",
+          },
+        },
+      },
+    },
+  });
 }

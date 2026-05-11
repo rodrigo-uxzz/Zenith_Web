@@ -1,9 +1,8 @@
 import { apiRequest } from "./api.js";
 
 async function carregarDashboard() {
-
-    const nomesMeses = [
-    "", 
+  const nomesMeses = [
+    "",
     "Jan",
     "Fev",
     "Mar",
@@ -15,173 +14,220 @@ async function carregarDashboard() {
     "Set",
     "Out",
     "Nov",
-    "Dez"
-    ];
+    "Dez",
+  ];
 
-    const response = await apiRequest("/dashboard");
+  const response = await apiRequest("/dashboard");
 
-    if (!response.ok) {
-        console.error(response.dados);
-        return;
-    }
+  if (!response.ok) {
+    console.error(response.dados);
+    return;
+  }
 
-    const data = response.dados;
+  const data = response.dados;
 
-    // =========================
-    // USUÁRIOS
-    // =========================
+  // =========================
+  // USUÁRIOS
+  // =========================
 
-    const usuarios = data.graficos.usuarios_por_mes;
+  const usuarios = data.graficos.usuarios_por_mes;
 
-    new Chart(document.getElementById("usuariosChart"), {
-        type: "line",
-        data: {
-            labels: usuarios.map(item => nomesMeses[item.mes]),
-            datasets: [{
-                data: usuarios.map(item => item.total),
-                borderColor: "#52D6CF",
-                backgroundColor: "#52D6CF",
-                tension: 0.4
-            }]
+  new Chart(document.getElementById("usuariosChart"), {
+    type: "line",
+    data: {
+      labels: usuarios.map((item) => nomesMeses[item.mes]),
+      datasets: [
+        {
+          data: usuarios.map((item) => item.total),
+          borderColor: "#52D6CF",
+          backgroundColor: "#52d6cf1f",
+          fill: true,
+          tension: 0.4,
         },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    display: false
-                }
-            }
-        }
-    });
-
-    // =========================
-    // PSICÓLOGOS
-    // =========================
-
-    const psicologos = data.graficos.psicologos_por_mes;
-
-    new Chart(document.getElementById("psicologosChart"), {
-        type: "line",
-        data: {
-            labels: psicologos.map(item => nomesMeses[item.mes]),
-            datasets: [{
-                data: psicologos.map(item => item.total),
-                borderColor: "#9D79FF",
-                backgroundColor: "#9D79FF",
-                //fill: true,
-                tension: 0.4
-            }]
+      ],
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          display: false,
         },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    display: false  
-                }
-            },
-            scales: {
-                y: {
-                    ticks: {
-                        stepSize: 1
-                    }
-                }
-    
-            }
-        }
-    });
+      },
+    },
+  });
 
-    // =========================
-    // SESSÕES
-    // =========================
+  // =========================
+  // PSICÓLOGOS
+  // =========================
 
-    const sessoes = data.graficos.sessoes_por_mes;
+  const psicologos = data.graficos.psicologos_por_mes;
 
-    new Chart(document.getElementById("sessoesChart"), {
+  new Chart(document.getElementById("psicologosChart"), {
+    type: "line",
+    data: {
+      labels: psicologos.map((item) => nomesMeses[item.mes]),
+      datasets: [
+        {
+          data: psicologos.map((item) => item.total),
+          borderColor: "#9D79FF",
+          backgroundColor: "#9d79ff26",
+          fill: true,
+          tension: 0.4,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          display: false,
+        },
+      },
+      scales: {
+        y: {
+          ticks: {
+            stepSize: 1,
+          },
+        },
+      },
+    },
+  });
+
+  // =========================
+  // SESSÕES
+  // =========================
+
+  const sessoes = data.graficos.sessoes_por_mes;
+
+  new Chart(document.getElementById("sessoesChart"), {
     type: "bar",
 
     data: {
-        labels: sessoes.map(item => nomesMeses[item.mes]),
+      labels: nomesMeses.slice(1),
 
-        datasets: [
-            {
-                label: "Realizadas",
-                data: sessoes.map(item => item.realizadas),
-                backgroundColor: "#9D79FF",
-                borderRadius: 10,
-            },
+      datasets: [
+        {
+          label: "Realizadas",
+          data: sessoes.map((item) => item.realizadas),
 
-            {
-                label: "Agendadas",
-                data: sessoes.map(item => item.agendadas),
-                backgroundColor: "#52D6CF",
-                borderRadius: 10,
-            }
-        ]
+          backgroundColor: "#9D79FF",
+          borderRadius: 10,
+        },
+
+        {
+          label: "Agendadas",
+          data: sessoes.map((item) => item.agendadas),
+
+          backgroundColor: "#52D6CF",
+          borderRadius: 10,
+        },
+      ],
     },
 
     options: {
-        responsive: true,
+      responsive: true,
 
-        plugins: {
-            legend: {
-                display: false,
-                labels: {
-                    usePointStyle: true,
-                    pointStyle: 'circle'
-                }
-            }
+      plugins: {
+        legend: {
+          display: false,
+        },
+      },
+
+      scales: {
+        x: {
+          grid: {
+            display: false,
+          },
         },
 
-        scales: {
-            x: {
-                grid: {
-                    display: false
-                }
-            },
+        y: {
+          beginAtZero: true,
 
-            y: {
-                beginAtZero: true,
+          ticks: {
+            stepSize: 1,
+          },
 
-                ticks: {
-                    stepSize: 1
-                },
-
-                grid: {
-                    color: "rgba(0,0,0,0.05)"
-                }
-            }
-        }
-    }
-});
-
-    // =========================
-    // FATURAMENTO
-    // =========================
-
-    const faturamento = data.graficos.faturamento_mensal;
-    const receitaTotal = data.cards.receita_total;
-
-    new Chart(document.getElementById("faturamentoChart"), {
-        type: "line",
-        data: {
-            labels: faturamento.map(item => nomesMeses[item.mes]),
-            datasets: [{
-                data: faturamento.map(item => item.total),
-                borderColor: "#52D6CF",
-                tension: 0.4
-            }]
+          grid: {
+            color: "rgba(0,0,0,0.05)",
+          },
         },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    display: false
-                }
-            }
-        }
-    });
-    document.getElementById("total").textContent = ("R$")+receitaTotal;
+      },
+    },
+  });
 
+  // =========================
+  // FATURAMENTO
+  // =========================
+
+  const faturamento = data.graficos.faturamento_mensal;
+  const receitaTotal = data.cards.receita_total;
+
+  const meses = [
+    "Jan",
+    "Fev",
+    "Mar",
+    "Abr",
+    "Mai",
+    "Jun",
+    "Jul",
+    "Ago",
+    "Set",
+    "Out",
+    "Nov",
+    "Dez",
+  ];
+
+  const faturamentoMeses = faturamento.map((item) => parseFloat(item.total));
+
+  new Chart(document.getElementById("faturamentoChart"), {
+    type: "line",
+
+    data: {
+      labels: meses,
+
+      datasets: [
+        {
+          data: faturamentoMeses,
+
+          borderColor: "#27c7c0",
+          backgroundColor: "rgba(39,199,192,0.08)",
+
+          fill: true,
+          tension: 0.4,
+          pointRadius: 4,
+          pointHoverRadius: 6,
+        },
+      ],
+    },
+
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+
+      plugins: {
+        legend: {
+          display: false,
+        },
+      },
+
+      scales: {
+        x: {
+          grid: {
+            color: "#ececec",
+          },
+        },
+
+        y: {
+          beginAtZero: true,
+
+          grid: {
+            color: "#ececec",
+          },
+        },
+      },
+    },
+  });
+  document.getElementById("total").textContent = "R$" + receitaTotal;
 }
 
 carregarDashboard();
