@@ -8,13 +8,13 @@
     <link rel="stylesheet" href="../css/homeScreen.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=door_open" />
-    <script>
+    <!-- <script>
         const token = localStorage.getItem("token");
         
         if(!token){
             window.location.href = "loginScreen.html";  
         }
-    </script>
+    </script> -->
 </head>
 <body>
     <div class="sidebar">
@@ -109,7 +109,7 @@
                 <span class="icone"><ion-icon name="people-outline"></ion-icon></span>
             </div>
             <h3>Total de Pacientes</h3>
-            <p class="numero">41</p>
+            <p id="pacientes" class="numero"></p>
         </div>
 
         <div class="card">
@@ -117,7 +117,7 @@
                 <ion-icon name="calendar-clear-outline"></ion-icon>
             </div>
             <h3>Consultas no Mês</h3>
-            <p class="numero">132</p>
+            <p id="consultas_mes" class="numero"></p>
         </div>
 
         <div class="card">
@@ -125,7 +125,7 @@
                 <ion-icon name="cash-outline"></ion-icon>
             </div>
             <h3>Faturamento</h3>
-            <p class="numero">R$3000</p>
+            <p id="faturamentoTotal" class="numero"></p>
         </div>
 
         <div class="card">
@@ -228,12 +228,18 @@
 
     <div class="painel">
         <h2>Consultas por Semana</h2>
-        <div class="grafico-fake"></div>
+
+        <div class="chart-container">
+            <canvas id="sessoesChart"></canvas>
+        </div>
     </div>
 
     <div class="painel">
         <h2>Faturamento Mensal</h2>
-        <div class="grafico-fake"></div>
+
+        <div class="chart-container">
+            <canvas id="faturamentoChart"></canvas>
+        </div>
     </div>
 
     <!-- ATALHOS RÁPIDOS (desceu no lugar das notificações) -->
@@ -279,6 +285,7 @@
         <!-- <p>&copy; 2026 Zenith. Todos os direitos reservados.</p> -->
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script type="module" src="./../js/home.js"></script>    
 
     <!-- Toast de Alerta -->

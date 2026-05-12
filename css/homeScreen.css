@@ -803,3 +803,22 @@ strong{
 .editar-textarea {
     margin-top: 15px;
 }
+
+
+.grid-inferior .painel{
+    height: 350px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.chart-container{
+    position: relative;
+    flex: 1;
+    width: 100%;
+}
+
+.chart-container canvas{
+    width: 100% !important;
+    height: 100% !important;
+}

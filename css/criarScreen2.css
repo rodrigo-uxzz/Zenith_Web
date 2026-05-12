@@ -4,44 +4,90 @@
     padding: 0; 
 }
 
-html, body { 
-    height: 100%;              
+body {
+    font-family: 'Poppins', sans-serif;
+    min-height: 100vh;
 }
 
-body { 
+/* SPLIT SCREEN */
+.split-container {
     display: flex;
-    flex-direction: column;
-    font-family: 'Poppins', sans-serif; 
-    color: #290041; 
-    background-color: #A383FB40;
+    min-height: 100vh;
+    align-items: stretch;
 }
 
-/* Main / conteúdo */
-main { 
+/* LADO ESQUERDO */
+.left-side {
     flex: 1;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #A383FB, #7B5CF5);
     display: flex;
     align-items: center;
     justify-content: center;
-    box-sizing: border-box;
-    max-width: 1200px;
-    padding: 10px 20rem;
-    margin: auto;
+    color: white;
+    padding: 2rem;
 }
 
-/* section principal */
+.left-content {
+    text-align: center;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.left-content img {
+    width: 180px;
+}
+
+.left-content h1 {
+    font-size: 2rem;
+    word-wrap: break-word;
+}
+
+.left-content p {
+    opacity: 0.9;
+    word-wrap: break-word;
+}
+
+/* LADO DIREITO */
+.right-side {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.right-side main {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex: 1;
+    width: 100%;
+    padding-top: 2rem;
+}
+
+.right-side section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.right-side form {
+    width: 100%;
+}
+
+/* CARD */
 section {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     width: 100%;
-    max-width: 1000px;
-    gap: 0.75rem;
+    max-width: 500px;
+    gap: 0.6rem;
     background-color: #fff;
-    padding: 0 4rem 2.5rem;
-    border-radius: 15px;
-    box-shadow: #00000060 0px 4px 8px;
-    height: auto;
+    padding: 2rem;
+    margin: 0px 2rem;
 }
 
 /* logo e frase */
@@ -51,7 +97,8 @@ article {
     align-items: center;
     justify-content: center;
     gap: 0.1rem;
-    margin-top: 2rem;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
 }
 
 figure {
@@ -71,7 +118,7 @@ figure img {
 
 article p{
     font-weight: 500;
-    font-size: 1.25rem;
+    font-size: 1.5rem;
     color: #290041;
 }
 
@@ -84,7 +131,6 @@ form {
     margin-top: 10px;
 } 
 
- /* Estilo da borda do input */
 .input-diferenciado {
     width: 100%;
     padding: 15px 10px 10px 40px;
@@ -92,6 +138,7 @@ form {
     border-radius: 10px;
     outline: none;
     font-size: 16px;
+    color: #666;
 }
 
 .input-container {
@@ -158,12 +205,12 @@ input:focus + label {
     color: #666;
     pointer-events: none; 
     transition: 0.2s;
-} 
+}
 
 input::placeholder {
-    color: #C0B4B4; 
+    color: #666; 
     opacity: 1;      
-    font-size: 0.8rem;
+    font-size: 14px;
 }
 
 /* buttons */
@@ -173,10 +220,10 @@ input::placeholder {
     border: 1px solid #A383FB;
     text-align: center;
     text-decoration: none;
-    padding: 0.75rem;
+    padding: 15px;
     border-radius: 8px;
     cursor: pointer;
-    font-size: 1rem;
+    font-size: 16px;
 }
 
 .botaoC:hover {
@@ -244,7 +291,7 @@ input::placeholder {
     gap: 8px;
     cursor: pointer;
     font-size: 14px;
-    color: #290041;
+    color: #666;
 }
 
 .radio-label input[type="radio"] {
@@ -260,7 +307,7 @@ input::placeholder {
 }
 
 .radio-label input[type="radio"]:hover {
-    border-color: #290041;
+    border-color: #666;
 }
 
 .radio-label input[type="radio"]:checked {
@@ -270,15 +317,13 @@ input::placeholder {
 }
 
 
-/* copyright abaixo do section */
-.mds {
-    text-align: center;
-    font-size: 0.9rem;
-    color: #666;
-    margin: 1.5rem 0 2rem;
+/* FOOTER */
+.footer-right {
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #888;
 }
 
-/* Select estilizado */
 select.input-diferenciado {
     appearance: none;
     background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
@@ -286,7 +331,12 @@ select.input-diferenciado {
     background-position: right 10px center;
     background-size: 20px;
     padding-right: 35px;
-    color: #C0B4B4;
+    color: #666;
+}
+
+select.input-diferenciado option {
+    color: #666;
+    background-color: white;
 }
 
 select.input-diferenciado:focus {
@@ -437,4 +487,15 @@ select.input-diferenciado:focus {
 
 .btnSuccess:hover {
     opacity: 0.95;
+}
+
+/* RESPONSIVO */
+@media (max-width: 900px) {
+    .left-side {
+        display: none;
+    }
+    
+    .right-side {
+        flex: 1;
+    }
 }

@@ -7,8 +7,8 @@ export async function apiRequest(endPoint, method = "GET", dados = null) {
     method: method,
     headers: {
       "Cache-Control": "no-cache, no-store, must-revalidate",
-      "Pragma": "no-cache",
-      "Expires": "0",
+      Pragma: "no-cache",
+      Expires: "0",
     },
   };
 
@@ -25,7 +25,16 @@ export async function apiRequest(endPoint, method = "GET", dados = null) {
 
   const response = await fetch(API_URL + endPoint, options);
 
-  const result = await response.json();
+  const text = await response.text();
+
+  let result;
+
+  try {
+    result = JSON.parse(text);
+  } catch {
+    console.error("Resposta não é JSON:", text);
+    result = { error: "Resposta inválida do servidor", raw: text };
+  }
 
   return {
     ok: response.ok,

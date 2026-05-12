@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Zenith</title>
+
+    <link rel="icon" type="image/x-icon" href="../img/logo z.PNG">
+    <link rel="stylesheet" href="../css/adminHome.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+     <script>
+      const token = localStorage.getItem("token");
+
+      if(!token){
+        window.location.href = "loginScreen.html";
+      }
+    </script>
+</head>
+
+<body>
+
+    <div class="sidebar">
+
+        <ul>
+
+            <li>
+                <a href="#">
+                    <span class="icone">
+                        <img src="../img/logo.png" class="logo" alt="logo do site">
+                    </span>
+
+                    <span class="titulo">ZENITH</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="adminHome.html">
+                    <span class="icone">
+                        <ion-icon name="home-outline"></ion-icon>
+                    </span>
+
+                    <span class="titulo">Home</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="#">
+                    <span class="icone">
+                        <ion-icon name="people-outline"></ion-icon>
+                    </span>
+
+                    <span class="titulo">Pacientes</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="#">
+                    <span class="icone">
+                        <ion-icon name="person-add-outline"></ion-icon>
+                    </span>
+
+                    <span class="titulo">Psicólogos</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="#">
+                    <span class="icone">
+                        <ion-icon name="settings-outline"></ion-icon>
+                    </span>
+
+                    <span class="titulo">Configurações</span>
+                </a>
+            </li>
+
+            <li>
+                <a id="open-Modal-logout" href="#">
+                    <span class="icone">
+                        <ion-icon name="log-out-outline"></ion-icon>
+                    </span>
+
+                    <span class="titulo">Sair</span>
+                </a>
+            </li>
+
+        </ul>
+
+    </div>
+
+    <main class="container">
+
+            <h1 class="tituloAgenda">Dashboard Administrativo</h1>
+
+        <section class="dashboardCards">
+
+            <article class="cardGrafico cardDestaque">
+
+                <h2 class="tituloCard">
+                    Crescimento Mensal de Usuários
+                </h2>
+
+                <div class="graficoCanvas">
+                    <canvas id="usuariosChart"></canvas>
+                </div>
+
+            </article>
+
+            <article class="cardGrafico">
+
+                <h2 class="tituloCard">
+                    Crescimento Mensal de Psicólogos
+                </h2>
+
+                <div class="graficoCanvas">
+                    <canvas id="psicologosChart"></canvas>
+                </div>
+
+            </article>
+
+            <article class="cardGrafico">
+
+                <h2 class="tituloCard">
+                    Sessões: Planejadas vs Realizadas
+                </h2>
+
+                <div class="legenda">
+
+                    <div class="itemLegenda">
+                        <span class="bolinha roxo"></span>
+                        <span>Realizadas</span>
+                    </div>
+
+                    <div class="itemLegenda">
+                        <span class="bolinha turquesa"></span>
+                        <span>Agendadas</span>
+                    </div>
+
+                </div>
+
+                <div class="graficoCanvas">
+                    <canvas id="sessoesChart"></canvas>
+                </div>
+
+            </article>
+
+            <article class="cardGrafico">
+
+                <div class="cabecalhoCard">
+
+                    <h2 class="tituloCard">
+                        Faturamento Mensal
+                    </h2>
+
+                    <div class="receitaInfo">
+                        <span class="receitaLabel">Receita Total</span><br>
+                        <span id="total" class="receitaValor"></span>
+                    </div>
+
+                </div>
+
+                <div class="graficoCanvas">
+                    <canvas id="faturamentoChart"></canvas>
+                </div>
+
+            </article>
+
+        </section>  
+
+    </main>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script type="module" src="./../js/adminHome.js"></script>
+
+     <!-- Modal de Logout -->
+    <div id="modal-logout" class="modal" style="display:none;">
+      <div class="modal-content">
+        <h2>Confirmar Logout</h2>
+        <p>Tem certeza de que deseja sair?</p>
+        <div class="logout-buttons">
+          <button class="btnCancel" id="btn-cancel-logout" type="button">Cancelar</button>
+          <button class="btnLogout" id="btn-confirm-logout" type="button">Sair</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="toast" class="toast">
+        <span id="toast-message"></span>
+    </div>
+</body>
+</html>
