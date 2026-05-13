@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Zenith · Chat</title>
+  <link rel="icon" type="image/png" sizes="64x64" href="../img/logoZ.png">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="../css/chat.css" />
+</head>
+<body>
+
+  <!-- ── Sidebar (padrão do projeto) ── -->
+  <div class="sidebar">
+    <ul>
+      <li>
+        <a href="#">
+          <span class="icone"><img src="../img/logo.png" class="logo" alt="logo do site"></span>
+          <span class="titulo">ZENITH</span>
+        </a>
+      </li>
+      <li>
+        <a href="./homeScreen.html">
+          <span class="icone"><ion-icon name="home-outline"></ion-icon></span>
+          <span class="titulo">Home</span>
+        </a>
+      </li>
+      <li>
+        <a href="./agendaScreen.html">
+          <span class="icone"><ion-icon name="calendar-outline"></ion-icon></span>
+          <span class="titulo">Agenda</span>
+        </a>
+      </li>
+      <li>
+        <a href="#">
+          <span class="icone"><ion-icon name="people-outline"></ion-icon></span>
+          <span class="titulo">Pacientes</span>
+        </a>
+      </li>
+      <li>
+        <a href="#">
+          <span class="icone"><ion-icon name="wallet-outline"></ion-icon></span>
+          <span class="titulo">Financeiro</span>
+        </a>
+      </li>
+      <li>
+        <a href="#" class="active">
+          <span class="icone"><ion-icon name="chatbubbles-outline"></ion-icon></span>
+          <span class="titulo">Chat</span>
+        </a>
+      </li>
+      <li>
+        <a href="#">
+          <span class="icone"><ion-icon name="settings-outline"></ion-icon></span>
+          <span class="titulo">Configurações</span>
+        </a>
+      </li>
+      <li>
+        <a href="./perfilScreen.html">
+          <span class="icone"><ion-icon name="person-outline"></ion-icon></span>
+          <span class="titulo">Perfil</span>
+        </a>
+      </li>
+      <li>
+        <a href="#" id="open-Modal-logout">
+          <span class="icone"><ion-icon name="log-out-outline"></ion-icon></span>
+          <span class="titulo">Logout</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Modal de Logout -->
+  <div id="modal-logout" class="modal" style="display:none;">
+    <div class="modal-content">
+      <h2>Confirmar Logout</h2>
+      <p>Tem certeza de que deseja sair?</p>
+      <div class="logout-buttons">
+        <button class="btnCancel" id="btn-cancel-logout" type="button">Cancelar</button>
+        <button class="btnLogout" id="btn-confirm-logout" type="button">Sair</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Main ── -->
+  <main class="main">
+
+    <!-- Page header -->
+    <header class="page-header">
+      <div>
+        <h1>Chat</h1>
+        <p class="date">terça-feira, 31 de março de 2026</p>
+      </div>
+      <button class="btn-new">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Criar Novo Chat
+      </button>
+    </header>
+
+    <!-- Chat area -->
+    <div class="chat-body">
+
+      <!-- Conversation list -->
+      <div class="conv-list">
+        <div class="search-wrap">
+          <input type="text" placeholder="Pesquisar" />
+        </div>
+        <ul>
+          <li class="conv-item active">
+            <div class="avatar">LU</div>
+            <div class="conv-info">
+              <div class="conv-name">Luizinho</div>
+              <div class="conv-preview">Sim! Já estou ansioso. Queria confirmar...</div>
+            </div>
+            <span class="conv-time">10:37</span>
+          </li>
+          <li class="conv-item">
+            <div class="avatar" style="background:linear-gradient(135deg,#a78bfa,#f9a8d4)">VV</div>
+            <div class="conv-info">
+              <div class="conv-name">Vincent van Gogh</div>
+              <div class="conv-preview">Pode remarcar para esse horário.</div>
+            </div>
+            <span class="conv-time">Ontem</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Message window -->
+      <div class="msg-window">
+
+        <!-- Header -->
+        <div class="msg-header">
+          <div class="avatar">LU</div>
+          <div class="msg-header-info">
+            <div class="name">Luizinho</div>
+            <div class="status">Visto por último hoje às 14:01</div>
+          </div>
+        </div>
+
+        <!-- Messages -->
+        <div class="messages">
+
+          <div class="day-divider">Hoje</div>
+
+          <div class="msg-row sent">
+            <div class="bubble">
+              Olá! Tudo bem com você?
+              <div class="bubble-meta">
+                <span class="bubble-time">10:32</span>
+                <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="msg-row recv">
+            <div class="bubble">
+              Oi Dra. Eloísa! Estou bem, Obrigado!
+              <div class="bubble-meta">
+                <span class="bubble-time">10:34</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="msg-row sent">
+            <div class="bubble">
+              Que bom! Como tem sido sua semana?
+              <div class="bubble-meta">
+                <span class="bubble-time">10:35</span>
+                <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="msg-row recv">
+            <div class="bubble">
+              Bem melhor que a anterior. Consegui aplicar as técnicas que conversamos.
+              <div class="bubble-meta">
+                <span class="bubble-time">10:36</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="msg-row sent">
+            <div class="bubble">
+              Excelente! Fico muito feliz em saber. Vamos conversar mais sobre isso na nossa próxima sessão, combinado?
+              <div class="bubble-meta">
+                <span class="bubble-time">10:39</span>
+                <svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="msg-row recv">
+            <div class="bubble">
+              Sim! Já estou ansioso. Queria confirmar: é quarta às 14h, certo?
+              <div class="bubble-meta">
+                <span class="bubble-time">10:37</span>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /messages -->
+
+        <!-- Input bar -->
+        <div class="input-bar">
+          <button class="attach" title="Anexar arquivo">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg>
+          </button>
+          <input type="text" placeholder="Digite uma mensagem" />
+          <button class="btn-send" title="Enviar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </button>
+        </div>
+
+      </div><!-- /msg-window -->
+    </div><!-- /chat-body -->
+  </main>
+
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+
+</body>
+</html>
