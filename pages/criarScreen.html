@@ -35,7 +35,7 @@
 
                     <div class="profile-upload">
                         <div class="upload-container" id="uploadContainer">
-                            <img id="preview" hidden />
+                            <img id="preview" style="display: none;" />
                             <div class="placeholder" id="placeholder">
                                 <ion-icon name="person-outline"></ion-icon>
                             </div>
@@ -60,25 +60,25 @@
                         <div class="input-container">
                             <img src="../img/user.svg" class="icon-input">
                             <label>Nome Completo</label>
-                            <input type="text" name="fullName" required placeholder="Seu nome completo">
+                            <input type="text" id="fullName" required placeholder="Seu nome completo">
                         </div>
 
                         <div class="input-container">
                             <img src="../img/telefone.svg" class="icon-input">
                             <label>Telefone</label>
-                            <input type="text" name="telefone" required placeholder="(00) 00000-0000">
+                            <input type="text" id="telefone" required placeholder="(00) 00000-0000">
                         </div>
 
                         <div class="input-container">
                             <img src="../img/calendar.png" class="icon-input">
                             <label>Data Nascimento</label>
-                            <input type="text" name="dataNascimento" required placeholder="dd/mm/aaaa">
+                            <input type="date" id="dataNascimento" required placeholder="dd/mm/aaaa">
                         </div>
 
                         <div class="input-container">
                             <img src="../img/arrow.png" class="icon-input">
                             <label>Gênero</label>
-                            <select name="genero" required>
+                            <select id="genero" required>
                                 <option value="">Selecione</option>
                                 <option>Masculino</option>
                                 <option>Feminino</option>
@@ -90,13 +90,13 @@
                         <div class="input-container">
                             <img src="../img/lock.svg" class="icon-input">
                             <label>CPF</label>
-                            <input type="text" name="cpf" required placeholder="000.000.000-00">
+                            <input type="text" id="cpf" required placeholder="000.000.000-00">
                         </div>
 
                         <div class="input-container">
                             <img src="../img/user.svg" class="icon-input">
                             <label>CRP</label>
-                            <input type="text" name="crp" required placeholder="XX/XXXXX">
+                            <input type="text" id="crp" required placeholder="XX/XXXXX">
                         </div>
 
                     </div>
@@ -124,7 +124,6 @@
 <!-- MODAL -->
 <div id="modal" class="modal hidden">
     <div class="modal-content">
-        <span class="close">&times;</span>
         <p id="modal-message"></p>
     </div>
 </div>

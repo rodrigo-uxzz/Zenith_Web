@@ -6,7 +6,7 @@ document.getElementById("proximaTela").addEventListener("click", function () {
 // Função para validar e ir pra próxima tela
 function showModal(message) {
   document.getElementById("modal-message").textContent = message;
-  document.getElementById("modal").style.display = "block";
+  document.getElementById("modal").style.display = "flex";
   // Fechar automaticamente em 3 segundos
   setTimeout(() => {
     document.getElementById("modal").style.display = "none";
@@ -14,9 +14,9 @@ function showModal(message) {
 }
 
 // Fechar modal
-document.querySelector(".close").onclick = function () {
-  document.getElementById("modal").style.display = "none";
-};
+// document.querySelector(".close").onclick = function () {
+//   document.getElementById("modal").style.display = "none";
+// };
 
 window.onclick = function (event) {
   if (event.target == document.getElementById("modal")) {
@@ -27,6 +27,7 @@ window.onclick = function (event) {
 // Função para validar e ir pra próxima tela
 function validarProximo() {
   // Pegando os valores dos campos
+  console.log(document.getElementById("fullName"));
   let nome = document.getElementById("fullName").value;
   let telefone = document.getElementById("telefone").value;
   let data = document.getElementById("dataNascimento").value;
@@ -51,7 +52,7 @@ function validarProximo() {
   showModal("✅ Dados salvos! Continuando...");
 
   setTimeout(() => {
-    window.location.href = "criarScreen2.html";
+    window.location.href = "./../pages/criarScreen2.html";
   }, 2000);
 }
 
@@ -76,8 +77,8 @@ if (inputFoto) {
 
         // MOSTRAR PREVIEW
         document.getElementById("preview").src = base64;
-        document.getElementById("preview").hidden = false;
-        document.getElementById("placeholder").hidden = true;
+        document.getElementById("preview").style.display = "block";
+        document.getElementById("placeholder").style.display = "none";
       };
 
       reader.readAsDataURL(arquivo);

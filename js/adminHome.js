@@ -107,16 +107,16 @@ async function carregarDashboard() {
 
       datasets: [
         {
-          label: "Realizadas",
-          data: sessoes.map((item) => item.realizadas),
+          label: "Agendadas",
+          data: sessoes.map((item) => item.agendadas),
 
           backgroundColor: "#9D79FF",
           borderRadius: 10,
         },
 
         {
-          label: "Agendadas",
-          data: sessoes.map((item) => item.agendadas),
+          label: "Realizadas",
+          data: sessoes.map((item) => item.realizadas),
 
           backgroundColor: "#52D6CF",
           borderRadius: 10,

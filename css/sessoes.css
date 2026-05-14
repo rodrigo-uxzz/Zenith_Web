@@ -22,7 +22,7 @@ body {
     position: fixed;
     width: 60px;
     height: 100vh;
-    background-color: #FFF;
+    background-color: #5b3cc4;
     overflow: hidden;
     transition: .5s;
     box-shadow: 0 0 5px #00000060;
@@ -34,7 +34,7 @@ body {
 }
 
 .sidebar ul li:hover {
-    background-color: #f3f3f3;
+    background-color: #8E6BFF;
 }
 
 .sidebar ul li a {
@@ -50,7 +50,7 @@ body {
     font-size: 1.5rem;
     min-width: 60px;
     height: 60px;
-    color: black;
+    color: white;
 }
 
 .sidebar ul li .titulo {
@@ -85,7 +85,7 @@ body {
 }
 
 .titulo {
-    color: #161616;
+    color: #fff;
 }
 
 .sidebar ul li.conta {
