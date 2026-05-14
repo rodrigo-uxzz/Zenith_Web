@@ -1210,3 +1210,68 @@ span.consulta-modal-item-label {
     color: #777;
     text-align: center;
 }
+
+.valor-sessao-box {
+    width: 100%;
+    margin-bottom: 28px;
+}
+
+.input-money {
+    display: flex;
+    align-items: center;
+
+    background: linear-gradient(
+        180deg,
+        #faf7ff 0%,
+        #f5f0ff 100%
+    );
+
+    border: 1.5px solid #d8c8ff;
+
+    border-radius: 16px;
+
+    padding: 0 18px;
+
+    max-width: 100%;
+    height: 68px;
+
+    transition: 0.25s ease;
+
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.7),
+        0 4px 10px rgba(123, 92, 255, 0.06);
+}
+
+.input-money:hover {
+    border-color: #b89cff;
+}
+
+.input-money:focus-within {
+    border-color: #7b5cff;
+
+    box-shadow:
+        0 0 0 4px rgba(123, 92, 255, 0.12),
+        0 8px 20px rgba(123, 92, 255, 0.10);
+}
+
+.input-money span {
+    font-size: 20px;
+    font-weight: 700;
+    color: #5b3cc4;
+    margin-right: 12px;
+}
+
+.input-money input {
+    border: none;
+    outline: none;
+    background: transparent;
+
+    width: 100%;
+
+    font-size: 32px;
+    font-weight: 700;
+
+    color: #2f234f;
+
+    letter-spacing: 1px;
+}

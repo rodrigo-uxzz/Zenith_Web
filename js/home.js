@@ -187,18 +187,37 @@ async function carregarNotificacoes() {
 
       const div = document.createElement("div");
       div.classList.add("notificacao-item");
+
       let infoExtra = "";
 
+      // REAGENDAMENTO
       if (status === "reagendamento_solicitado") {
         const novaData = sessao.data_solicitada || "--/--/----";
         const novaHora = sessao.hora_solicitada || "--:--";
 
         infoExtra = `
     <span class="notificacao-novo-horario">
-    <span class="icone">
-    <ion-icon name="repeat-outline"></ion-icon>
-    </span>
+      <span class="icone">
+        <ion-icon name="repeat-outline"></ion-icon>
+      </span>
+
       Solicitado para: ${novaData} às ${novaHora}
+    </span>
+  `;
+      }
+
+      // CANCELAMENTO
+      if (status === "cancelamento_solicitado") {
+        const motivo =
+          sessao.observacoes || sessao.motivo || "Motivo não informado";
+
+        infoExtra = `
+    <span class="notificacao-motivo">
+      <span class="icone">
+        <ion-icon name="alert-circle-outline"></ion-icon>
+      </span>
+
+      Motivo: ${motivo}
     </span>
   `;
       }
@@ -326,7 +345,8 @@ async function carregarDashboard() {
 
   document.getElementById("pacientes").textContent = pacientes;
   document.getElementById("consultas_mes").textContent = consultasMes;
-  document.getElementById("faturamentoTotal").textContent = ("R$")+faturamentoTotal;
+  document.getElementById("faturamentoTotal").textContent =
+    "R$" + faturamentoTotal;
   document.getElementById("consultasHoje").textContent = consultasDia;
 
   const faturamento = data.graficos.faturamento_mensal;
