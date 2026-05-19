@@ -36,12 +36,12 @@ document
   .addEventListener("submit", async function (event) {
     event.preventDefault();
 
-    const email = document.getElementById("email").value.trim();
-    const password = document.getElementById("password").value.trim();
+    const email = document.getElementById("adminEmail").value.trim();
+    const password = document.getElementById("adminPassword").value.trim();
 
     // Validação: campo vazio
     if (email === "") {
-      showModal("Por favor, preencha o campo de E-mail ou CRP");
+      showModal("Por favor, preencha o campo de E-mail");
       return;
     }
 
@@ -52,21 +52,7 @@ document
 
     // Validação: formato de email se parecer com email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const crpRegex = /^CRP-\d{2}\/\d{5}$/; // Exemplo: CRP-01/12345
 
-    if (email.includes("@")) {
-      // Se tem @, validar como email
-      if (!emailRegex.test(email)) {
-        showModal("Por favor, insira um e-mail válido");
-        return;
-      }
-    } else {
-      // Se não tem @, validar como CRP
-      if (!crpRegex.test(email.toUpperCase())) {
-        showModal("Por favor, insira um CRP válido no formato CRP-XX/XXXXX");
-        return;
-      }
-    }
 
     // Validação: senha com mínimo de 6 caracteres
     if (password.length < 6) {
@@ -80,17 +66,13 @@ document
     };
     console.log(login);
 
-    const { ok, dados } = await apiRequest("/login", "POST", login);
+    const { ok, dados } = await apiRequest("/loginAdmin", "POST", login);
 
     console.log(dados);
 
     // PRIMEIRO: trata erro
     if (!ok) {
-      if (dados?.error === "Aguarde a verificação da conta") {
-        showModal("Sua conta está em análise pelo administrador, aguarde");
-      } else {
-        showModal("Login inválido: verifique suas credenciais");
-      }
+      showModal("Login inválido: verifique suas credenciais");
       return;
     }
 
@@ -99,12 +81,12 @@ document
       return;
     }
 
-    if (dados.user.tipo_usuario !== "psicologo") {
-      showModal("Login inválido: apenas psicólogos podem acessar");
+    if (dados.user.tipo_usuario !== "admin") {
+      showModal("Acesso negado!");
       return;
     }
 
     localStorage.setItem("token", dados.access_token);
-    window.location.href = "homeScreen.html";
+    window.location.href = "./../pages/adminHome.html";
     console.log(ok);
   });

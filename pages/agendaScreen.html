@@ -7,13 +7,13 @@
 
     <link rel="stylesheet" href="../css/agendaScreen.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <script>
+    <!-- <script>
       const token = localStorage.getItem("token");
 
       if(!token){
         window.location.href = "loginScreen.html";
       }
-    </script>
+    </script> -->
 </head>
 
 <body>
@@ -45,13 +45,13 @@
                 </a>
             </li>
             <li>
-                <a href="#">
+                <a href="./financeiro.html">
                     <span class="icone"><ion-icon name="wallet-outline"></ion-icon></span>
                     <span class="titulo">Financeiro</span>
                 </a>
             </li>
             <li>
-                <a href="#">
+                <a href="./chat.html">
                     <span class="icone"><ion-icon name="chatbubbles-outline"></ion-icon></span>
                     <span class="titulo">Chat</span>
                 </a>
@@ -187,7 +187,7 @@
                 <div class="consulta-modal-item-icon"><ion-icon name="time-outline"></ion-icon></div>
                 <div class="consulta-modal-item-details">
                     <span class="consulta-modal-item-label">Horário</span>
-                    <span id="consulta-modal-horario">09:00 - 10:00</span>
+                    <span id="consulta-modal-horario"></span>
                 </div>
             </div>
 
@@ -196,6 +196,14 @@
                 <div class="consulta-modal-item-details">
                     <span class="consulta-modal-item-label">Link da consulta</span>
                     <a id="consulta-modal-link" href="#" target="_blank">Abrir link externo</a>
+                </div>
+            </div>
+
+            <div class="consulta-modal-item">
+                <div class="consulta-modal-item-icon"><ion-icon name="cash-outline"></ion-icon></div>
+                <div class="consulta-modal-item-details">
+                    <span class="consulta-modal-item-label">Valor consulta</span>
+                    <a id="consulta-valor"></a>
                 </div>
             </div>
 
@@ -302,9 +310,27 @@
             <h2>Configurar Horários</h2>
             <hr>
 
+            <div class="valor-sessao-box">
+
+                <label class="editar-label" for="preco_sessao">
+                    Valor da Sessão
+                </label>
+
+                <div class="input-money">
+                    <span>R$</span>
+
+                    <input
+                        id="preco_sessao"
+                        type="text"
+                        inputmode="numeric"
+                        autocomplete="off"
+                    />
+                </div>
+
+            </div>
+
             <div class="horario-semana">
                 <h3>Disponibilidade Semanal</h3>
-
                 <label class="horario-row">
                     <span class="diaLabel"><input type="checkbox" class="dot"> Segunda</span>
                     <div class="horario-row-inputs">

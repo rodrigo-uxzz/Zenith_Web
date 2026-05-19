@@ -18,6 +18,7 @@ function showToast(message) {
 
 // Modal de logout
 document.addEventListener("DOMContentLoaded", function () {
+  atualizarData();
   const modal = document.getElementById("modal-logout");
   const openModalBtn = document.getElementById("open-Modal-logout");
   const cancelBtn = document.getElementById("btn-cancel-logout");
@@ -963,6 +964,7 @@ document
       "Carregando...";
     document.getElementById("consulta-modal-data").textContent = "";
     document.getElementById("consulta-modal-horario").textContent = "";
+    document.getElementById("consulta-valor").textContent = "";
     document.getElementById("consulta-modal-observacao").textContent = "";
     try {
       const { ok, dados } = await apiRequest(`/detalhesConsulta/${id}`);
@@ -997,8 +999,11 @@ document
       document.getElementById("consulta-modal-horario").textContent =
         sessao.hora_inicio.slice(0, 5) + " - " + sessao.hora_fim.slice(0, 5);
 
+      document.getElementById("consulta-valor").textContent =
+        `R$ ${Number(sessao.valor).toFixed(2).replace(".", ",")}`;
+
       document.getElementById("consulta-modal-observacao").textContent =
-        sessao.observacoes || "Sem observações";
+        sessao.anotacoes || "Sem observações";
 
       consultaModal.style.display = "flex";
       console.log(dados);
@@ -1015,9 +1020,47 @@ document
     if (!button) return;
   });
 
+const inputPreco = document.getElementById("preco_sessao");
+
+if (inputPreco) {
+  inputPreco.value = "0,00";
+
+  inputPreco.addEventListener("input", function (e) {
+    let valor = e.target.value.replace(/\D/g, "");
+
+    if (valor.length === 0) {
+      e.target.value = "0,00";
+      return;
+    }
+
+    valor = (parseInt(valor, 10) / 100).toFixed(2);
+
+    valor = valor.replace(".", ",").replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
+    e.target.value = valor;
+  });
+
+  inputPreco.addEventListener("blur", function () {
+    if (
+      inputPreco.value.trim() === "" ||
+      inputPreco.value === "0" ||
+      inputPreco.value === ","
+    ) {
+      inputPreco.value = "0,00";
+    }
+  });
+}
+
 document
   .getElementById("btn-salvar-horario")
   .addEventListener("click", async function () {
+    // PEGAR VALOR DA SESSÃO
+    const precoSessao = document
+      .getElementById("preco_sessao")
+      .value.replace(/\./g, "")
+      .replace(",", ".");
+
+    // PEGAR DIAS E HORÁRIOS
     const dias = document.querySelectorAll(".horario-row");
     let agendas = [];
 
@@ -1026,7 +1069,7 @@ document
       const inputs = dia.querySelectorAll("input[type='time']");
 
       if (checkbox && checkbox.checked) {
-        // Se for domingo (index 6), definir dia_semana como 0
+        // domingo = 0
         const diaSemana = index === 6 ? 0 : index + 1;
 
         agendas.push({
@@ -1037,27 +1080,34 @@ document
       }
     });
 
+    // VALIDAÇÃO
     if (agendas.length === 0) {
       showStatusModal(
         "Atenção",
         "Selecione pelo menos um dia e horário para configurar a agenda.",
       );
+
       return;
     }
 
+    // SALVAR AGENDA + PREÇO
     const { ok, dados } = await apiRequest("/configurarAgenda", "POST", {
       agendas: agendas,
+      preco_sessao: precoSessao,
     });
 
     if (!ok) {
       console.error("Erro ao salvar agenda:", dados);
+
       showStatusModal(
         "Erro",
         "Não foi possível salvar a agenda. Tente novamente mais tarde.",
       );
+
       return;
     }
 
+    // HORÁRIO DE ALMOÇO
     const almocoInicio = document.getElementById("almoco-inicio").value;
     const almocoFim = document.getElementById("almoco-fim").value;
 
@@ -1074,17 +1124,20 @@ document
 
       if (!okAlmoco) {
         console.error("Erro ao salvar horário de almoço:", dadosAlmoco);
+
         showStatusModal("Erro", "Não foi possível salvar o horário de almoço.");
+
         return;
       }
     }
 
+    // FECHAR MODAL
     horarioModal.style.display = "none";
+
     showStatusModal(
       "Horários salvos",
       "A configuração de horários foi atualizada com sucesso.",
     );
+
     window.location.reload();
   });
-
-window.onload = atualizarData;

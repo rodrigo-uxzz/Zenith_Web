@@ -32,7 +32,7 @@
                     <p>Entre com seu e-mail de administrador e senha.</p>
                 </article>
 
-                <form action="adminHome.html" method="get">
+                <form id="loginForm" method="post">
 
                     <div class="input-container">
                         <label for="adminEmail">E-mail ou usuário:</label>
@@ -57,6 +57,20 @@
     </div>
 </div>
 
-<script type="module" src="../js/login.js"></script>
+<script type="module" src="../js/adminLogin.js"></script>
+
+<!-- MODAL (MANTIDO) -->
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <p id="modal-message"></p>
+    </div>
+</div>
+
+<!-- TOAST (MANTIDO) -->
+<div id="toast" class="toast">
+    <span id="toast-message"></span>
+</div>
+
 </body>
 </html>
