@@ -31,7 +31,7 @@ body {
   position: fixed;
   width: 60px;
   height: 100vh;
-  background-color: #fff;
+  background-color: #6d28d9;
   overflow: hidden;
   transition: .5s;
   box-shadow: 0 0 5px #00000060;
@@ -40,18 +40,12 @@ body {
 
 .sidebar:hover { width: 300px; }
 
-.sidebar ul li:hover { background-color: #f3f3f3; }
+.sidebar ul li:hover { background-color: #7c3aed; }
 
 .sidebar ul li a {
   display: flex;
   white-space: nowrap;
   text-decoration: none;
-}
-
-.sidebar ul li a.active .icone,
-.sidebar ul li a.active .titulo {
-  color: var(--accent);
-  font-weight: 600;
 }
 
 .sidebar ul li .icone {
@@ -61,7 +55,7 @@ body {
   font-size: 1.5rem;
   min-width: 60px;
   height: 60px;
-  color: black;
+  color: white;
 }
 
 .sidebar ul li .titulo {
@@ -71,7 +65,7 @@ body {
   height: 60px;
   font-size: 1rem;
   letter-spacing: .05rem;
-  color: #161616;
+  color: #ffffff;
 }
 
 .logo { width: 80px; height: auto; }
@@ -140,36 +134,6 @@ body {
   transition: .5s;
 }
 
-/* Page header */
-.page-header {
-  background: var(--header-bg);
-  padding: 22px 28px 18px;
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  flex-shrink: 0;
-}
-
-.page-header h1   { font-size: 1.6rem; font-weight: 700; color: var(--text-dark); }
-.page-header .date { font-size: .8rem; color: var(--text-muted); margin-top: 2px; }
-
-.btn-new {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: var(--white);
-  border: 1.5px solid var(--accent);
-  color: var(--accent);
-  font-family: inherit;
-  font-size: .8rem;
-  font-weight: 600;
-  padding: 8px 16px;
-  border-radius: 20px;
-  cursor: pointer;
-  transition: background .15s, color .15s;
-}
-.btn-new:hover { background: var(--accent); color: var(--white); }
-
 /* Chat body */
 .chat-body {
   flex: 1;
@@ -205,6 +169,32 @@ body {
   background-size: 16px;
   background-position: 12px center;
 }
+
+.container-bila {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn-new {
+  background-color: #6d28d9;
+  color: #fff;
+  border-radius: 100%;
+  margin: 2px 5px 2px 0;
+  padding: 5px 6px;
+  border: none;
+}
+
+.btn-new p {
+  margin: auto 5px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.btn-new:hover {
+  background-color: #7c3aed;
+}
+
 
 .conv-list ul { overflow-y: auto; flex: 1; }
 

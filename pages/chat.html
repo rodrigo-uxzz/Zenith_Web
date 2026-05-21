@@ -7,6 +7,13 @@
   <link rel="icon" type="image/png" sizes="64x64" href="../img/logoZ.png">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="../css/chat.css" />
+  <!-- <script>
+    const token = localStorage.getItem("token");
+
+    if(!token){
+      window.location.href = "loginScreen.html";
+    }
+  </script> -->
 </head>
 <body>
 
@@ -85,25 +92,18 @@
   <!-- ── Main ── -->
   <main class="main">
 
-    <!-- Page header -->
-    <header class="page-header">
-      <div>
-        <h1>Chat</h1>
-        <p class="date">terça-feira, 31 de março de 2026</p>
-      </div>
-      <button class="btn-new">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        Criar Novo Chat
-      </button>
-    </header>
-
     <!-- Chat area -->
     <div class="chat-body">
 
       <!-- Conversation list -->
       <div class="conv-list">
-        <div class="search-wrap">
-          <input type="text" placeholder="Pesquisar" />
+        <div class="container-bila">
+            <div class="search-wrap">
+              <input type="text" placeholder="Pesquisar" />
+            </div>
+            <button class="btn-new">
+              <p>+</p>
+            </button>
         </div>
         <ul>
           <li class="conv-item active">
