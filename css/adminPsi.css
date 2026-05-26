@@ -1,0 +1,530 @@
+* {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Toast de Alerta */
+.toast {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: white;
+    color: #333;
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    font-size: 16px;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s, visibility 0.5s;
+}
+
+.toast.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+body {
+    min-height: 100vh;
+    background-color: #A383FB40;
+    background: #f3f0fa;
+    color: #333;
+    padding: 0;
+    margin: 0;
+}
+
+/* organizando sidebar */
+.sidebar {
+    position: fixed;
+    width: 60px;
+    height: 100vh;
+    background-color: #5b3cc4;
+    overflow: hidden;
+    transition: .5s;
+    box-shadow: 0 0 5px #00000060;
+    z-index: 10;
+
+}
+
+.sidebar:hover {
+    width: 300px;
+}
+
+.sidebar ul li:hover{
+    background-color: #8E6BFF;
+}
+
+.sidebar ul li a {
+    display: flex;
+    white-space: nowrap;
+    text-decoration: none;
+}
+
+
+/* espaçamento icons */
+.sidebar ul li .icone {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    min-width: 60px;
+    height: 60px;
+    color:white;
+}
+
+.sidebar ul li .titulo {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 60px;
+    font-size: 1rem;
+    letter-spacing: .05rem;
+}
+
+.sidebar ul li.logo {
+    margin-bottom: 50px;
+}
+.sidebar ul li.logo:hover {
+    background-color: none;
+}
+
+.sidebar ul li.logo .icone {
+    font-size: 2rem;
+}
+
+.sidebar ul li.logo .titulo {
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.logo {
+    width: 80px;
+    height: auto;    
+}
+
+.titulo {
+    color: white;
+}
+
+/* perfil */
+.sidebar ul li.conta {
+    position: absolute;
+    bottom: 60px;
+    width: 100%;
+}
+
+.sidebar ul li.conta .titulo {
+    text-transform: none;
+}
+
+.sidebar ul li.conta .imgCaixa {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.sidebar ul li.conta img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* primeiro e ultimo */
+.sidebar ul li:first-of-type{
+    bottom: 100;
+    width: 100%;
+    margin-bottom: 60px;
+}
+
+.sidebar ul li:last-of-type{
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+.titulo{
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.logo{
+    width: 42px;
+}
+
+
+.container {
+    margin-left: 80px;
+    padding: 30px;
+    width: calc(100% - 80px);
+    max-width: 1380px;
+}
+
+h1 {
+  color: #4c0070;
+  margin-bottom: 20px;
+  font-size: 32px;
+}
+
+.psicologos-card {
+  background: #ffffff;
+  border-radius: 26px;
+  box-shadow: 0 18px 40px rgba(25, 0, 83, 0.07);
+  padding: 24px;
+  margin-top: 20px;
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.cardHeader h2 {
+  font-size: 26px;
+  color: #4c0070;
+  margin-bottom: 6px;
+}
+
+.cardHeader p {
+  color: #6a5f8f;
+  font-size: 0.95rem;
+}
+
+/* CARDS */
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.card {
+  background: white;
+  border-radius: 14px;
+  padding: 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.card .icon {
+  font-size: 24px;
+  color: #5f118a;
+}
+
+.card span {
+  color: #777;
+  font-size: 14px;
+}
+
+.card h2 {
+  color: #5f118a;
+  font-size: 24px;
+}
+
+/* BUSCA */
+
+.search-box {
+  background: white;
+  border-radius: 18px;
+  padding: 18px 20px;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 22px;
+  box-shadow: 0 10px 28px rgba(92, 51, 182, 0.08);
+}
+
+.input-search {
+  flex: 1;
+  position: relative;
+}
+
+.input-search i {
+  position: absolute;
+  top: 50%;
+  left: 16px;
+  transform: translateY(-50%);
+  color: #8e7ad6;
+}
+
+.input-search input {
+  width: 100%;
+  padding: 12px 16px 12px 44px;
+  border-radius: 14px;
+  border: 1px solid #e3d9ff;
+  font-size: 0.98rem;
+  color: #3c2d6c;
+  background: #faf7ff;
+}
+
+.input-search input:focus {
+  outline: none;
+  border-color: #7b5cff;
+}
+
+.buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.btn {
+  background: #f4efff;
+  color: #5f118a;
+  border: 1px solid transparent;
+  border-radius: 14px;
+  padding: 12px 20px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+}
+
+.btn:hover,
+.btn.active {
+  background: #5b3cc4;
+  color: #fff;
+}
+
+.btn.active {
+  border-color: #4c0070;
+}
+
+/* LISTA */
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.person {
+  background: #f6f1ff;
+  border: 1px solid #e6d9ff;
+  border-radius: 18px;
+  padding: 18px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.person .info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.person .info i {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  font-size: 1.35rem;
+  color: #6d4dff;
+  background: rgba(94, 67, 255, 0.12);
+}
+
+.person h3 {
+  font-size: 1.05rem;
+  color: #2c1d56;
+}
+
+.person p {
+  color: #7b6f97;
+  font-size: 0.95rem;
+}
+
+.status {
+  padding: 10px 14px;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.status.pending {
+  color: #8f5ba6;
+  background: #f5ebff;
+}
+
+.status.active-status {
+  color: #2b4e91;
+  background: #e7efff;
+}
+
+@media (max-width: 1100px) {
+  .cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .container {
+    margin-left: 60px;
+    padding: 18px;
+    width: calc(100% - 60px);
+  }
+
+  .search-box,
+  .psicologos-card {
+    padding: 16px;
+  }
+
+  .cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+.input-search {
+  flex: 1;
+  background: #f8f8f8;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+}
+
+.input-search i {
+  color: #999;
+}
+
+.input-search input {
+  width: 100%;
+  border: none;
+  background: transparent;
+  padding: 14px 10px;
+  outline: none;
+  font-size: 15px;
+}
+
+.buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.btn {
+  border: none;
+  background: #e7dcfa;
+  color: #5f118a;
+  padding: 12px 18px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn:hover {
+  background: #d7c3f7;
+}
+
+/* LISTA */
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.person {
+  background: white;
+  border-radius: 14px;
+  padding: 16px 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.info {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.info i {
+  font-size: 22px;
+  color: #5f118a;
+}
+
+.info h3 {
+  color: #5f118a;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.info p {
+  color: #999;
+  font-size: 14px;
+}
+
+.status {
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.pending {
+  background: #fff2df;
+  color: #ff9800;
+}
+
+.active-status {
+  background: #dff4ef;
+  color: #1e9b76;
+}
+@media (max-width: 768px) {
+
+  .sidebar {
+    width: 60px;
+  }
+
+  .container {
+    margin-left: 60px;
+    width: calc(100% - 60px);
+    padding: 20px;
+  }
+
+  h1 {
+    font-size: 24px;
+  }
+
+  .cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .search-box {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .buttons {
+    width: 100%;
+  }
+
+  .btn {
+    flex: 1;
+  }
+
+  .person {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+}

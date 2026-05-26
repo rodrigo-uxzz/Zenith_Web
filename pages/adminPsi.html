@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Zenith</title>
+
+    <link rel="icon" type="image/x-icon" href="../img/logo z.PNG">
+    <link rel="stylesheet" href="../css/adminPsi.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+     <!-- <script>
+      const token = localStorage.getItem("token");
+
+      if(!token){
+        window.location.href = "loginScreen.html";
+      }
+    </script> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+</head>
+
+<body>
+
+    <div class="sidebar">
+
+        <ul>
+
+            <li>
+                <a href="#">
+                    <span class="icone">
+                        <img src="../img/logo.png" class="logo" alt="logo do site">
+                    </span>
+
+                    <span class="titulo">ZENITH</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="adminHome.html">
+                    <span class="icone">
+                        <ion-icon name="home-outline"></ion-icon>
+                    </span>
+
+                    <span class="titulo">Home</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="#">
+                    <span class="icone">
+                        <ion-icon name="people-outline"></ion-icon>
+                    </span>
+
+                    <span class="titulo">Pacientes</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="adminPsi.html">
+                    <span class="icone">
+                        <ion-icon name="person-add-outline"></ion-icon>
+                    </span>
+
+                    <span class="titulo">Psicólogos</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="#">
+                    <span class="icone">
+                        <ion-icon name="settings-outline"></ion-icon>
+                    </span>
+
+                    <span class="titulo">Configurações</span>
+                </a>
+            </li>
+
+            <li>
+                <a id="open-Modal-logout" href="#">
+                    <span class="icone">
+                        <ion-icon name="log-out-outline"></ion-icon>
+                    </span>
+
+                    <span class="titulo">Sair</span>
+                </a>
+            </li>
+
+        </ul>
+
+    </div>
+
+    <div class="container">
+
+    <h1>Gestão de Psicólogos</h1>
+
+    <!-- Cards -->
+    <div class="cards">
+
+      <div class="card">
+        <div class="icon">
+          <i class="fa-solid fa-users"></i>
+        </div>
+
+        <div>
+          <span>Total</span>
+          <h2>10</h2>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="icon">
+          <i class="fa-solid fa-circle-check"></i>
+        </div>
+
+        <div>
+          <span>Ativos</span>
+          <h2>10</h2>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="icon">
+          <i class="fa-solid fa-circle-exclamation"></i>
+        </div>
+
+        <div>
+          <span>Pendentes</span>
+          <h2>2</h2>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="icon">
+          <i class="fa-solid fa-user-group"></i>
+        </div>
+
+        <div>
+          <span>Online</span>
+          <h2>8</h2>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Busca -->
+    <div class="search-box">
+
+      <div class="input-search">
+        <i class="fa-solid fa-magnifying-glass"></i>
+
+        <input
+          type="text"
+          placeholder="Buscar por nome, CRP ou CPF"
+        >
+      </div>
+
+      <div class="buttons">
+        <button class="btn active">Todos</button>
+        <button class="btn">Pendentes</button>
+      </div>
+
+    </div>
+
+    <!-- Lista -->
+    <section class="psicologos-card">
+      <div class="cardHeader">
+        <div>
+          <h2>Psicólogos Cadastrados</h2>
+          <p>Veja os profissionais ativos e pendentes no sistema.</p>
+        </div>
+      </div>
+
+      <div class="list">
+
+        <div class="person">
+          <div class="info">
+            <i class="fa-regular fa-user"></i>
+
+            <div>
+              <h3>Dra. Ana Paula Silva</h3>
+              <p>CRP: 06/123456</p>
+            </div>
+          </div>
+
+          <span class="status pending">Pendente</span>
+        </div>
+
+        <div class="person">
+          <div class="info">
+            <i class="fa-regular fa-user"></i>
+
+            <div>
+              <h3>Dr. Carlos Silva</h3>
+              <p>CRP: 01/234567</p>
+            </div>
+          </div>
+
+          <span class="status pending">Pendente</span>
+        </div>
+
+        <div class="person">
+          <div class="info">
+            <i class="fa-regular fa-user"></i>
+
+            <div>
+              <h3>Dra. Mariana Costa</h3>
+              <p>CRP: 08/345678</p>
+            </div>
+          </div>
+
+          <span class="status active-status">Ativo</span>
+        </div>
+
+        <div class="person">
+          <div class="info">
+            <i class="fa-regular fa-user"></i>
+
+            <div>
+              <h3>Dr. Roberto Oliveira</h3>
+              <p>CRP: 03/456789</p>
+            </div>
+          </div>
+
+          <span class="status active-status">Ativo</span>
+        </div>
+
+        <div class="person">
+          <div class="info">
+            <i class="fa-regular fa-user"></i>
+
+            <div>
+              <h3>Dra. Juliana Ferreira</h3>
+              <p>CRP: 02/567890</p>
+            </div>
+          </div>
+
+          <span class="status active-status">Ativo</span>
+        </div>
+
+      </div>
+    </section>
+
+  </div>
+<!-- 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script type="module" src="./../js/adminHome.js"></script> -->
+
+</body>
+</html>
