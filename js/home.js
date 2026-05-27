@@ -118,16 +118,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
   carregarDashboard();
   carregarNotificacoes();
+  carregarProximasConsultas();
 });
 
-// Botão ver agenda
-const verAgenda = document.getElementById("verAgenda");
-
-if (verAgenda) {
-  verAgenda.addEventListener("click", function () {
-    window.location.href = "./../pages/agendaScreen.html";
-  });
-}
+// Botão ver agenda (removido após remover atalhos rápidos)
+// const verAgenda = document.getElementById("verAgenda");
+// if (verAgenda) {
+//   verAgenda.addEventListener("click", function () {
+//     window.location.href = "./../pages/agendaScreen.html";
+//   });
+// }
 
 // ===============================
 // NOTIFICAÇÕES
@@ -450,4 +450,72 @@ async function carregarDashboard() {
       },
     },
   });
+}
+
+// ===============================
+// PRÓXIMAS CONSULTAS
+// ===============================
+
+async function carregarProximasConsultas() {
+  const container = document.getElementById('container-proximas-consultas');
+  
+  if (!container) {
+    console.warn("Container de próximas consultas não encontrado");
+    return;
+  }
+
+  try {
+    // Tentar endpoint de próximas sessões
+    let response = await apiRequest("/proximasSessoes", "GET");
+    
+    // Se não funcionar, tentar o endpoint de hoje
+    if (!response.ok) {
+      const hoje = new Date().toLocaleDateString("en-CA");
+      response = await apiRequest(`/consultasDoDia?data=${hoje}`, "GET");
+    }
+
+    if (!response.ok) {
+      console.error("Erro ao buscar próximas consultas:", response.dados);
+      container.innerHTML = '<p style="text-align: center; padding: 20px; color: #999;">Erro ao carregar consultas</p>';
+      return;
+    }
+
+    const dados = response.dados;
+    const sessoes = dados.sessoes || dados;
+
+    // Limpar container
+    container.innerHTML = '';
+
+    if (!sessoes || sessoes.length === 0) {
+      container.innerHTML = '<p style="text-align: center; padding: 20px; color: #999;">Nenhuma consulta agendada</p>';
+      return;
+    }
+
+    // Adicionar próximas consultas
+    sessoes.forEach((sessao) => {
+      const nomePaciente = sessao.paciente?.usuario?.nome || "Paciente";
+      const hora = sessao.hora_inicio || "--:--";
+
+      const div = document.createElement("div");
+      div.className = "consulta";
+      div.innerHTML = `
+        <div class="iconConsulta">
+          <span class="icone"><ion-icon name="person-outline"></ion-icon></span>
+        </div>
+        <div>
+          <strong>${nomePaciente}</strong>
+          <span class="hora">${hora}</span>
+        </div>
+        <button class="btn">Entrar
+          <img src="../img/open.svg" alt="Ícone Entrar" class="iconeC">
+        </button>
+      `;
+      container.appendChild(div);
+    });
+
+    console.log("Próximas consultas carregadas:", sessoes.length);
+  } catch (error) {
+    console.error("Erro ao carregar próximas consultas:", error);
+    container.innerHTML = '<p style="text-align: center; padding: 20px; color: #999;">Erro ao carregar consultas</p>';
+  }
 }
