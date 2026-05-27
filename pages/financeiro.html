@@ -234,24 +234,31 @@
         </div>
         <div id="modalFinanceiro" class="modal" style="display: none">
           <div class="modal-content">
-            <h2>Detalhes Pagamento</h2>
+            <div class="modal-header modal-header-center">
+              <h2>Detalhes Pagamento</h2>
+            </div>
 
-            <p>
-              Paciente:
-              <span id="modalPaciente"></span>
-            </p>
+            <div class="modal-body">
+              <div class="modal-row">
+                <span>Paciente:</span>
+                <strong id="modalPaciente"></strong>
+              </div>
 
-            <p>
-              Valor:
-              <span id="modalValor"></span>
-            </p>
+              <div class="modal-row">
+                <span>Valor:</span>
+                <strong id="modalValor"></strong>
+              </div>
 
-            <p>
-              Status:
-              <span id="modalStatus"></span>
-            </p>
+              <div class="modal-row">
+                <span>Status:</span>
+                <strong id="modalStatus"></strong>
+              </div>
+            </div>
 
-            <button id="btnMarcarPago">Marcar como pago</button>
+            <div class="modal-actions">
+              <button class="btnCancel" id="btnFecharFinanceiro" type="button">Voltar</button>
+              <button class="btnConfirm" id="btnMarcarPago" type="button">Marcar como pago</button>
+            </div>
           </div>
         </div>
       </section>
