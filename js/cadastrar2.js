@@ -15,7 +15,7 @@ function showModal(message) {
   // Fechar automaticamente em 3 segundos
   setTimeout(() => {
     document.getElementById("modal").style.display = "none";
-  }, 3000);
+  }, 4000);
 }
 
 // Fechar modal

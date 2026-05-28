@@ -118,16 +118,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
   carregarDashboard();
   carregarNotificacoes();
+  carregarProximasConsultas();
 });
 
-// Botão ver agenda
-const verAgenda = document.getElementById("verAgenda");
-
-if (verAgenda) {
-  verAgenda.addEventListener("click", function () {
-    window.location.href = "./../pages/agendaScreen.html";
-  });
-}
+// Botão ver agenda (removido após remover atalhos rápidos)
+// const verAgenda = document.getElementById("verAgenda");
+// if (verAgenda) {
+//   verAgenda.addEventListener("click", function () {
+//     window.location.href = "./../pages/agendaScreen.html";
+//   });
+// }
 
 // ===============================
 // NOTIFICAÇÕES
@@ -187,18 +187,37 @@ async function carregarNotificacoes() {
 
       const div = document.createElement("div");
       div.classList.add("notificacao-item");
+
       let infoExtra = "";
 
+      // REAGENDAMENTO
       if (status === "reagendamento_solicitado") {
         const novaData = sessao.data_solicitada || "--/--/----";
         const novaHora = sessao.hora_solicitada || "--:--";
 
         infoExtra = `
     <span class="notificacao-novo-horario">
-    <span class="icone">
-    <ion-icon name="repeat-outline"></ion-icon>
-    </span>
+      <span class="icone">
+        <ion-icon name="repeat-outline"></ion-icon>
+      </span>
+
       Solicitado para: ${novaData} às ${novaHora}
+    </span>
+  `;
+      }
+
+      // CANCELAMENTO
+      if (status === "cancelamento_solicitado") {
+        const motivo =
+          sessao.observacoes || sessao.motivo || "Motivo não informado";
+
+        infoExtra = `
+    <span class="notificacao-motivo">
+      <span class="icone">
+        <ion-icon name="alert-circle-outline"></ion-icon>
+      </span>
+
+      Motivo: ${motivo}
     </span>
   `;
       }
@@ -315,6 +334,189 @@ async function carregarDashboard() {
   if (!response.ok) {
     console.error(response.dados);
     return;
+  }
+
+  const data = response.dados;
+
+  const pacientes = data.cards.total_pacientes;
+  const consultasMes = data.cards.consultas_mes;
+  const faturamentoTotal = data.cards.faturamentoTotal;
+  const consultasDia = data.cards.consultas_hoje;
+
+  document.getElementById("pacientes").textContent = pacientes;
+  document.getElementById("consultas_mes").textContent = consultasMes;
+  document.getElementById("faturamentoTotal").textContent =
+    "R$" + faturamentoTotal;
+  document.getElementById("consultasHoje").textContent = consultasDia;
+
+  const faturamento = data.graficos.faturamento_mensal;
+
+  new Chart(document.getElementById("faturamentoChart"), {
+    type: "line",
+
+    data: {
+      labels: faturamento.map((item) => nomesMeses[item.mes]),
+
+      datasets: [
+        {
+          data: faturamento.map((item) => item.total),
+
+          borderColor: "#27c7c0",
+          backgroundColor: "rgba(39,199,192,0.08)",
+
+          fill: true,
+          tension: 0.4,
+          pointRadius: 4,
+          pointHoverRadius: 6,
+        },
+      ],
+    },
+
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+
+      plugins: {
+        legend: {
+          display: false,
+        },
+      },
+
+      scales: {
+        x: {
+          grid: {
+            color: "#ececec",
+          },
+        },
+
+        y: {
+          beginAtZero: true,
+
+          grid: {
+            color: "#ececec",
+          },
+        },
+      },
+    },
+  });
+
+  const sessoes = data.graficos.consultas_por_semana;
+
+  new Chart(document.getElementById("sessoesChart"), {
+    type: "bar",
+
+    data: {
+      labels: sessoes.map((item) => nomesDias[item.dia]),
+
+      datasets: [
+        {
+          data: sessoes.map((item) => item.total),
+
+          backgroundColor: "rgba(157,121,255,0.75)",
+          borderRadius: 12,
+          borderSkipped: false,
+        },
+      ],
+    },
+
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+
+      plugins: {
+        legend: {
+          display: false,
+        },
+      },
+
+      scales: {
+        x: {
+          grid: {
+            display: false,
+          },
+        },
+
+        y: {
+          beginAtZero: true,
+
+          ticks: {
+            stepSize: 1,
+          },
+
+          grid: {
+            color: "#ececec",
+          },
+        },
+      },
+    },
+  });
+}
+
+// ===============================
+// PRÓXIMAS CONSULTAS
+// ===============================
+
+async function carregarProximasConsultas() {
+  const container = document.getElementById('container-proximas-consultas');
+  
+  if (!container) {
+    console.warn("Container de próximas consultas não encontrado");
+    return;
+  }
+
+  try {
+    // Tentar endpoint de próximas sessões
+    let response = await apiRequest("/proximasSessoes", "GET");
+    
+    // Se não funcionar, tentar o endpoint de hoje
+    if (!response.ok) {
+      const hoje = new Date().toLocaleDateString("en-CA");
+      response = await apiRequest(`/consultasDoDia?data=${hoje}`, "GET");
+    }
+
+    if (!response.ok) {
+      console.error("Erro ao buscar próximas consultas:", response.dados);
+      container.innerHTML = '<p style="text-align: center; padding: 20px; color: #999;">Erro ao carregar consultas</p>';
+      return;
+    }
+
+    const dados = response.dados;
+    const sessoes = dados.sessoes || dados;
+
+    // Limpar container
+    container.innerHTML = '';
+
+    if (!sessoes || sessoes.length === 0) {
+      container.innerHTML = '<p style="text-align: center; padding: 20px; color: #999;">Nenhuma consulta agendada</p>';
+      return;
+    }
+
+    // Adicionar próximas consultas
+    sessoes.forEach((sessao) => {
+      const nomePaciente = sessao.paciente?.usuario?.nome || "Paciente";
+      const hora = sessao.hora_inicio || "--:--";
+
+      const div = document.createElement("div");
+      div.className = "consulta";
+      div.innerHTML = `
+        <div class="iconConsulta">
+          <span class="icone"><ion-icon name="person-outline"></ion-icon></span>
+        </div>
+        <div>
+          <strong>${nomePaciente}</strong>
+          <span class="hora">${hora}</span>
+        </div>
+        <button class="btn">Entrar
+          <img src="../img/open.svg" alt="Ícone Entrar" class="iconeC">
+        </button>
+      `;
+      container.appendChild(div);
+    });
+
+    console.log("Próximas consultas carregadas:", sessoes.length);
+  } catch (error) {
+    console.error("Erro ao carregar próximas consultas:", error);
+    container.innerHTML = '<p style="text-align: center; padding: 20px; color: #999;">Erro ao carregar consultas</p>';
   }
 
   const data = response.dados;

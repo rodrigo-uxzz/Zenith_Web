@@ -458,3 +458,63 @@ main {
     height: 100% !important;
 }
 
+.card-dashboard {
+    background: #fff;
+
+    border-radius: 12px;
+
+    padding: 16px 18px; /* menor */
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    min-height: 120px; /* menor */
+
+    border: 1px solid #ebe7f5;
+}
+
+.card-dashboard ion-icon {
+    font-size: 32px; /* menor */
+    color: #4b0082;
+
+    margin-bottom: 10px;
+}
+
+.card-dashboard span {
+    font-size: 14px; /* menor */
+    color: #4b0082;
+
+    margin-bottom: 4px;
+}
+
+.card-dashboard h2 {
+    font-size: 1.7rem; /* menor */
+    font-weight: 700;
+    color: #4b0082;
+}
+
+.cards-dashboard {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px; /* menor */
+    margin-top: 20px;
+}
+
+/* RESPONSIVO */
+
+@media (max-width: 1100px) {
+
+    .cards-dashboard {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+@media (max-width: 700px) {
+
+    .cards-dashboard {
+        grid-template-columns: 1fr;
+    }
+
+}
