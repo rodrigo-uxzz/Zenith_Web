@@ -8,13 +8,13 @@
     <link rel="stylesheet" href="../css/sessoes.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
-    <!-- <script>
+    <script>
       const token = localStorage.getItem("token");
 
       if(!token){
         window.location.href = "loginScreen.html";
       }
-    </script> -->
+    </script>
 </head>
 
 <body>
@@ -22,7 +22,7 @@
     <div class="sidebar">
         <ul>
             <li>
-                <a href="#">
+                <a href="./homeScreen.html">
                     <span class="icone"><img src="../img/logo.png" class="logo" alt="logo do site"></span>
                     <span class="titulo">ZENITH</span>
                 </a>
@@ -46,13 +46,13 @@
                 </a>
             </li>
             <li>
-                <a href="#">
+                <a href="./financeiro.html">
                     <span class="icone"><ion-icon name="wallet-outline"></ion-icon></span>
                     <span class="titulo">Financeiro</span>
                 </a>
             </li>
             <li>
-                <a href="#">
+                <a href="./chat.html">
                     <span class="icone"><ion-icon name="chatbubbles-outline"></ion-icon></span>
                     <span class="titulo">Chat</span>
                 </a>
@@ -97,6 +97,41 @@
         <div class="logout-buttons">
           <button class="btnCancel" id="btn-cancel-logout" type="button">Cancelar</button>
           <button class="btnLogout" id="btn-confirm-logout" type="button">Sair</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal de Detalhes da Sessão -->
+    <div id="modal-sessao" class="modal" style="display:none;">
+      <div class="modal-content modal-sessao-content">
+        <span class="modal-close" id="close-modal-sessao">&times;</span>
+        <div class="modal-header">
+          <div>
+            <h2 id="sessao-modal-name">Detalhes da sessão</h2>
+            <p id="sessao-modal-status" class="sessao-status-label">Status</p>
+          </div>
+        </div>
+        <div class="modal-body">
+          <div class="modal-item">
+            <strong>Paciente</strong>
+            <p id="sessao-modal-paciente">-</p>
+          </div>
+          <div class="modal-item">
+            <strong>Psicólogo</strong>
+            <p id="sessao-modal-profissional">-</p>
+          </div>
+          <div class="modal-item">
+            <strong>Data</strong>
+            <p id="sessao-modal-data">-</p>
+          </div>
+          <div class="modal-item">
+            <strong>Hora</strong>
+            <p id="sessao-modal-hora">-</p>
+          </div>
+          <div class="modal-item modal-item-full">
+            <strong>Observações</strong>
+            <p id="sessao-modal-observacoes">-</p>
+          </div>
         </div>
       </div>
     </div>

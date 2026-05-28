@@ -14,21 +14,21 @@
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
       rel="stylesheet"
     />
-    <script>
+    <!-- <script>
       const token = localStorage.getItem("token");
 
       if(!token){
         window.location.href = "loginScreen.html";
       }
 
-    </script>
+    </script> -->
   </head>
 
   <body>
     <div class="sidebar">
       <ul>
         <li>
-          <a href="#">
+          <a href="./homeScreen.html">
             <span class="icone">
               <img src="../img/logo.png" class="logo" />
             </span>
@@ -134,6 +134,17 @@
       </div>
     </div>
 
+    <div id="modal-delete" class="modal" style="display:none;">
+      <div class="modal-content">
+        <h2>Confirmar exclusão</h2>
+        <p>Tem certeza que deseja excluir sua conta?</p>
+        <div class="logout-buttons">
+          <button class="btnCancel" id="btn-cancel-delete" type="button">Cancelar</button>
+          <button class="btnLogout" id="btn-confirm-delete" type="button">Excluir</button>
+        </div>
+      </div>
+    </div>
+
     <main>
       <section class="perfil">
         <div class="topo">
@@ -146,11 +157,6 @@
           <div class="banner-perfil">
             <img id="previewBanner" class="img-banner" />
 
-            <label for="uploadBanner" class="botao-banner">
-              <ion-icon name="camera-outline"></ion-icon>
-            </label>
-
-            <input type="file" id="uploadBanner" accept="image/*" />
           </div>
 
 
@@ -233,7 +239,86 @@
             </textarea
               >
             </div>
-
+            
+            <!-- ESPECIALIDADES -->
+                      
+            <h2 class="titulo-secao">Especialidades</h2>
+                      
+            <div class="campo especialidades-box">
+            
+              <label>Selecione suas especialidades</label>
+            
+              <!-- TAGS SELECIONADAS -->
+              <div class="tags-container" id="tagsContainer">
+              
+                <div class="tag">
+                  Ansiedade
+                  <span>&times;</span>
+                </div>
+              
+                <div class="tag">
+                  Depressão
+                  <span>&times;</span>
+                </div>
+              
+              </div>
+            
+               <!-- PESQUISA -->
+               <div class="input-especialidade">
+                 <ion-icon name="search-outline"></ion-icon>
+                
+                 <input
+                   type="text"
+                   id="pesquisaEspecialidade"
+                   placeholder="Pesquisar especialidade..."
+                 />
+               </div>
+             
+              <!-- LISTA -->
+              <div class="lista-especialidades">
+              
+                <label class="item-especialidade">
+                  <input type="checkbox" value="Ansiedade">
+                  <span>Ansiedade</span>
+                </label>
+              
+                <label class="item-especialidade">
+                  <input type="checkbox" value="Depressão">
+                  <span>Depressão</span>
+                </label>
+              
+                <label class="item-especialidade">
+                  <input type="checkbox" value="Terapia Cognitivo-Comportamental">
+                  <span>Terapia Cognitivo-Comportamental</span>
+                </label>
+              
+                <label class="item-especialidade">
+                  <input type="checkbox" value="Relacionamentos">
+                  <span>Relacionamentos</span>
+                </label>
+              
+                <label class="item-especialidade">
+                  <input type="checkbox" value="Autoestima">
+                  <span>Autoestima</span>
+                </label>
+              
+                <label class="item-especialidade">
+                  <input type="checkbox" value="Burnout">
+                  <span>Burnout</span>
+                </label>
+              
+                <label class="item-especialidade">
+                  <input type="checkbox" value="TEA">
+                  <span>TEA</span>
+                </label>
+              
+                <label class="item-especialidade">
+                  <input type="checkbox" value="TDAH">
+                  <span>TDAH</span>
+                </label>
+              
+              </div>
+            </div>
             <!-- ALTERAR SENHA -->
 
             <div class="alterar-senha-box">
@@ -287,12 +372,8 @@
 
     <script type="module" src="./../js/editarPerfil.js"></script>
 
-    <!-- Modal -->
-    <div id="modal" class="modal">
-      <div class="modal-content">
-        <span class="close">&times;</span>
-        <p id="modal-message"></p>
-      </div>
+    <div id="toast" class="toast">
+      <span id="toast-message"></span>
     </div>
   </body>
 </html>

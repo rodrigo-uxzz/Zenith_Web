@@ -20,7 +20,7 @@
     <div class="sidebar">
         <ul>
             <li>
-                <a href="#">
+                <a href="./homeScreen.html">
                     <span class="icone"><img src="../img/logo.png" class="logo" alt="logo do site"></span>
                     <span class="titulo">ZENITH</span>
                 </a>
@@ -146,51 +146,7 @@
     <div class="painel">
         <h2>Próximas Consultas</h2>
 
-        <div class="consulta">
-            <div class="iconConsulta">
-                <span class="icone"><ion-icon name="person-outline"></ion-icon></span>
-            </div>
-            <div>
-                <strong>Ana Carolina Silva</strong>
-                <span class="hora">09:00</span>
-            </div>
-            <button class="btn">Entrar
-                <img src="../img/open.svg" alt="Ícone Entrar" class="iconeC">
-            </button>
-        </div>
-
-        <div class="consulta">
-            <div class="iconConsulta">
-                <span class="icone"><ion-icon name="person-outline"></ion-icon></span>
-            </div>
-            <div>
-                <strong>Carlos Silva</strong>
-                <span class="hora">11:00</span>
-            </div>
-            <button class="btn secundario">Aguarde</button>
-        </div>
-
-        <div class="consulta">
-            <div class="iconConsulta">
-                <span class="icone"><ion-icon name="person-outline"></ion-icon></span>
-            </div>
-            <div>
-                <strong>Mariana Costa</strong>
-                <span class="hora">14:00</span>
-            </div>
-            <button class="btn secundario">Aguarde</button>
-        </div>
-
-        <div class="consulta">
-            <div class="iconConsulta">
-                <span class="icone"><ion-icon name="person-outline"></ion-icon></span>
-            </div>
-            <div>
-                <strong>Mario Santos</strong>
-                <span class="hora">16:00</span>
-            </div>
-            <button class="btn secundario">Aguarde</button>
-        </div>
+        <div id="container-proximas-consultas"></div>
     </div>
 
     <!-- CENTRAL DE NOTIFICAÇÕES -->
@@ -240,37 +196,6 @@
         <div class="chart-container">
             <canvas id="faturamentoChart"></canvas>
         </div>
-    </div>
-
-    <!-- ATALHOS RÁPIDOS (desceu no lugar das notificações) -->
-    <div class="painelCard atalhosRapidos">
-
-        <h2 class="tituloPainel">Atalhos Rápidos</h2>
-
-        <div class="listaAtalhos">
-
-            <button class="botaoAtalho">
-                <img src="../img/personAdd.svg" alt="Ícone Novo Paciente" class="iconAtalho">
-                <p class="textoAtalho">Novo Paciente</p>
-            </button>
-
-            <button class="botaoAtalho">
-                <img src="../img/editNote.svg" alt="Ícone Nova Consulta" class="iconAtalho">
-                <p class="textoAtalho">Nova Consulta</p>
-            </button>
-
-            <button class="botaoAtalho" id="verAgenda">
-                <img src="../img/calendar.svg" alt="Ícone Ver Agenda" class="iconAtalho">
-                <p class="textoAtalho">Ver Agenda</p>
-            </button>
-
-            <button class="botaoAtalho">
-                <img src="../img/prontuario.svg" alt="Ícone Ver Prontuários" class="iconAtalho">
-                <p class="textoAtalho">Ver Prontuários</p>
-            </button>
-
-        </div>
-
     </div>
 
 </section>

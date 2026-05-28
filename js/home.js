@@ -118,6 +118,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   carregarDashboard();
   carregarNotificacoes();
+  carregarProximasConsultas();
 });
 
 // Botão ver agenda
@@ -450,4 +451,114 @@ async function carregarDashboard() {
       },
     },
   });
+}
+
+// ===============================
+// PRÓXIMAS CONSULTAS
+// ===============================
+
+async function carregarProximasConsultas() {
+  const container = document.getElementById("container-proximas-consultas");
+
+  if (!container) return;
+
+  try {
+    const todasConsultas = [];
+    const hoje = new Date();
+
+    // Buscar consultas dos próximos 7 dias
+    for (let i = 0; i < 7; i++) {
+      const data = new Date(hoje);
+      data.setDate(data.getDate() + i);
+      const dataFormatada = data.toLocaleDateString("en-CA");
+
+      const { ok, dados } = await apiRequest(
+        `/consultasDoDia?data=${dataFormatada}&t=${Date.now()}`,
+      );
+
+      if (ok && dados.sessoes && Array.isArray(dados.sessoes)) {
+        todasConsultas.push(
+          ...dados.sessoes.filter((s) => s.sessao && !s.tipo),
+        );
+      }
+
+      if (todasConsultas.length >= 4) break;
+    }
+
+    const sessoes = todasConsultas.slice(0, 4);
+
+    if (sessoes.length === 0) {
+      container.innerHTML = `
+        <div style="padding: 20px; text-align: center; color: #999;">
+          Nenhuma consulta agendada
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = "";
+
+    sessoes.forEach((item) => {
+      const sessao = item.sessao || {};
+      const nome = sessao.paciente?.usuario?.nome || "Paciente";
+      const hora = item.hora_inicio || "--:--";
+      const link = sessao.link_conferencia || "#";
+      const dataSessao = item.data_sessao || "";
+
+      // Verificar se a consulta é hoje ou em outro dia
+      const hoje = new Date();
+      const hojeFormatada = hoje.toLocaleDateString("en-CA");
+      const ehHoje = dataSessao === hojeFormatada;
+
+      let infoHora = `<span class="hora">${hora.slice(0, 5)}</span>`;
+
+      if (!ehHoje && dataSessao) {
+        // Formatar a data para exibir (ex: "28 Mai")
+        const partes = dataSessao.split("-");
+        const data = new Date(partes[0], partes[1] - 1, partes[2]);
+        const diaFormatado = data.toLocaleDateString("pt-BR", {
+          day: "2-digit",
+          month: "short",
+        });
+
+        infoHora = `
+          <span class="hora">${diaFormatado} ${hora.slice(0, 5)}</span>
+        `;
+      }
+
+      const div = document.createElement("div");
+      div.classList.add("consulta");
+
+      let botaoHTML = `<button class="btn secundario">Aguarde</button>`;
+
+      if (link && link !== "#" && link !== "") {
+        botaoHTML = `
+          <button class="btn" onclick="window.open('${link}', '_blank')">
+            Entrar
+            <img src="../img/open.svg" alt="Ícone Entrar" class="iconeC">
+          </button>
+        `;
+      }
+
+      div.innerHTML = `
+        <div class="iconConsulta">
+          <span class="icone"><ion-icon name="person-outline"></ion-icon></span>
+        </div>
+        <div>
+          <strong>${nome}</strong>
+          ${infoHora}
+        </div>
+        ${botaoHTML}
+      `;
+
+      container.appendChild(div);
+    });
+  } catch (error) {
+    console.error("Erro ao carregar próximas consultas:", error);
+    container.innerHTML = `
+      <div style="padding: 20px; text-align: center; color: #999;">
+        Erro ao carregar consultas
+      </div>
+    `;
+  }
 }

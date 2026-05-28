@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Zenith</title>
+
+    <link rel="icon" type="image/x-icon" href="../img/logo z.PNG">
+    <link rel="stylesheet" href="../css/adminPsi.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+     <!-- <script>
+      const token = localStorage.getItem("token");
+
+      if(!token){
+        window.location.href = "loginScreen.html";
+      }
+    </script> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+</head>
+
+<body>
+
+    <div class="sidebar">
+
+        <ul>
+
+            <li>
+                <a href="./adminHome.html">
+                    <span class="icone">
+                        <img src="../img/logo.png" class="logo" alt="logo do site">
+                    </span>
+
+                    <span class="titulo">ZENITH</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="adminHome.html">
+                    <span class="icone">
+                        <ion-icon name="home-outline"></ion-icon>
+                    </span>
+
+                    <span class="titulo">Home</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="./adminHome.html">
+                    <span class="icone">
+                        <ion-icon name="people-outline"></ion-icon>
+                    </span>
+
+                    <span class="titulo">Pacientes</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="adminPsi.html">
+                    <span class="icone">
+                        <ion-icon name="person-add-outline"></ion-icon>
+                    </span>
+
+                    <span class="titulo">Psicólogos</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="#">
+                    <span class="icone">
+                        <ion-icon name="settings-outline"></ion-icon>
+                    </span>
+
+                    <span class="titulo">Configurações</span>
+                </a>
+            </li>
+
+            <li>
+                <a id="open-Modal-logout" href="#">
+                    <span class="icone">
+                        <ion-icon name="log-out-outline"></ion-icon>
+                    </span>
+
+                    <span class="titulo">Sair</span>
+                </a>
+            </li>
+
+        </ul>
+
+    </div>
+
+    <div class="container">
+
+    <h1>Gestão de Psicólogos</h1>
+
+    <!-- Cards -->
+    <div class="cards">
+
+      <div class="card">
+        <div class="icon">
+          <i class="fa-solid fa-users"></i>
+        </div>
+
+        <div>
+          <span>Total</span>
+          <h2 id="totalCount">0</h2>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="icon">
+          <i class="fa-solid fa-circle-check"></i>
+        </div>
+
+        <div>
+          <span>Ativos</span>
+          <h2 id="activeCount">0</h2>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="icon">
+          <i class="fa-solid fa-circle-exclamation"></i>
+        </div>
+
+        <div>
+          <span>Pendentes</span>
+          <h2 id="pendingCount">0</h2>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="icon">
+          <i class="fa-solid fa-user-group"></i>
+        </div>
+
+        <div>
+          <span>Online</span>
+          <h2 id="onlineCount">0</h2>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Busca -->
+    <div class="search-box">
+
+      <div class="input-search">
+        <i class="fa-solid fa-magnifying-glass"></i>
+
+        <input
+          id="searchInput"
+          type="text"
+          placeholder="Buscar por nome, CRP ou CPF"
+        >
+      </div>
+
+      <div class="buttons">
+        <button class="btn active" data-status="todas">Todos</button>
+        <button class="btn" data-status="pendentes">Pendentes</button>
+      </div>
+
+    </div>
+
+    <!-- Lista -->
+    <section class="psicologos-card">
+      <div class="cardHeader">
+        <div>
+          <h2>Psicólogos Cadastrados</h2>
+        </div>
+      </div>
+
+      <div class="list" id="psychologistsList">
+        <div class="person">
+          <div class="info">
+            <i class="fa-regular fa-user"></i>
+            <div>
+              <h3>Carregando psicólogos...</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <div id="pending-modal" class="modal" style="display:none;">
+    <div class="modal-content pending-modal-content">
+      <span class="close" id="close-pending-modal">&times;</span>
+      <div class="pending-header">
+        <div class="pending-avatar"><i class="fa-regular fa-user"></i></div>
+        <div>
+          <h2 id="pending-modal-name">Nome do psicólogo</h2>
+          <p id="pending-modal-crp">CRP: --</p>
+          <p id="pending-modal-cpf">CPF: --</p>
+        </div>
+      </div>
+
+      <div class="pending-details">
+        <div class="pending-item">
+          <i class="fa-regular fa-envelope"></i>
+          <div>
+            <span>Contato</span>
+            <p id="pending-modal-email">email@exemplo.com</p>
+          </div>
+        </div>
+        <div class="pending-item">
+          <i class="fa-solid fa-phone"></i>
+          <div>
+            <span>Telefone</span>
+            <p id="pending-modal-phone">(00) 00000-0000</p>
+          </div>
+        </div>
+        <div class="pending-item">
+          <i class="fa-solid fa-graduation-cap"></i>
+          <div>
+            <span>Formação</span>
+            <p id="pending-modal-degree">Pós-Graduado</p>
+          </div>
+        </div>
+        <div class="pending-item">
+          <i class="fa-solid fa-briefcase"></i>
+          <div>
+            <span>Experiência</span>
+            <p id="pending-modal-experience">5 anos de experiência</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="pending-bio">
+        <h3>Sobre</h3>
+        <p id="pending-modal-bio">Descrição do psicólogo e experiência clínica.</p>
+      </div>
+
+      <div class="pending-actions">
+        <button class="btn-aceitar" id="pending-accept">Aceitar</button>
+        <button class="btn-recusar" id="pending-reject">Rejeitar</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="../js/adminPsi.js"></script>
+</body>
+</html>

@@ -18,6 +18,7 @@ body {
 
 /* LADO ESQUERDO */
 .left-side {
+    position: relative;
     flex: 1;
     min-height: 100vh;
     background: linear-gradient(135deg, #A383FB, #7B5CF5);
@@ -26,6 +27,32 @@ body {
     justify-content: center;
     color: white;
     padding: 2rem;
+}
+
+.btn-voltar {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.18);
+    color: white;
+    text-decoration: none;
+    transition: background 0.2s ease, transform 0.2s ease;
+    padding-top: 5px;
+}
+
+.btn-voltar:hover {
+    background: rgba(255, 255, 255, 0.28);
+    transform: translateY(-1px);
+}
+
+.btn-voltar .icone {
+    font-size: 1.2rem;
 }
 
 .left-content {

@@ -81,19 +81,21 @@ body {
   width: 100%;
 }
 
-/* Modal de Logout */
+/* Modal (logout / financeiro) */
 .modal {
   display: none;
   position: fixed;
-  z-index: 1000;
+  z-index: 1100;
   left: 0;
   top: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0,0,0,0.5);
+  background-color: rgba(0,0,0,0.45);
   justify-content: center;
   align-items: center;
+  padding: 20px;
 }
+
 
 .modal-content {
   background-color: white;
@@ -103,6 +105,7 @@ body {
   max-width: 400px;
   text-align: center;
   box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  position: relative;
 }
 
 .modal-content h2 {
@@ -112,30 +115,211 @@ body {
 }
 
 .modal-content p {
-  margin-bottom: 25px;
+  margin-bottom: 18px;
   color: #666;
   font-size: 1rem;
 }
 
 .logout-buttons {
   display: flex;
-  gap: 15px;
+  gap: 12px;
   justify-content: center;
 }
 
 .logout-buttons button {
-  padding: 10px 20px;
+  padding: 10px 18px;
   border: none;
-  border-radius: 8px;
-  font-size: 1rem;
+  border-radius: 10px;
+  font-size: 0.95rem;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.18s ease;
 }
 
 .btnCancel { background-color: #f3f3f3; color: #666; }
-.btnCancel:hover { background-color: #e0e0e0; }
+.btnCancel:hover { background-color: #e9e9e9; }
 .btnLogout { background-color: #dc3545; color: white; }
 .btnLogout:hover { background-color: #c82333; }
+
+/* Financeiro modal specific layout */
+.modal-body {
+  display: grid;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.modal-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: #fbfbfd;
+  border-radius: 8px;
+}
+
+.modal-row span {
+  color: #666;
+  font-size: 0.95rem;
+}
+
+.modal-row strong {
+  color: #222;
+  font-weight: 700;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.btnConfirm {
+  background: #28a745;
+  color: #fff;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.btnConfirm:hover { opacity: 0.95; transform: translateY(-1px); }
+
+/* close X in modal corner */
+.modal-close {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  background: transparent;
+  border: none;
+  font-size: 1.35rem;
+  line-height: 1;
+  cursor: pointer;
+  color: #666;
+  padding: 4px 8px;
+}
+
+.modal-close:hover { color: #333; }
+
+/* Melhorias visuais gerais do modal */
+.modal {
+  transition: opacity 180ms ease;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Quando aberto via style="display: flex" (uso atual no JS), ativa visibilidade */
+.modal[style*="display: flex"] {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-content {
+  transition: transform 180ms ease, opacity 180ms ease;
+  transform: translateY(-8px);
+  opacity: 0;
+}
+
+.modal[style*="display: flex"] .modal-content {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.modal-header {
+  padding-bottom: 6px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #f3f3f3;
+}
+
+.modal-header-center h2 {
+  margin: 0;
+  font-weight: 700;
+  color: #290041;
+}
+
+.modal-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: #fff;
+  border: 1px solid #f1f1f4;
+  border-radius: 8px;
+}
+
+.modal-row + .modal-row { margin-top: 8px; }
+
+.badge {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-weight: 500;
+  font-size: 0.85rem;
+  text-transform: capitalize;
+}
+
+.badge.pendente {
+  background: #fff3cd;
+  color: #856404;
+  border: 1px solid #ffeeba;
+}
+
+.badge.pago, .badge.pagas {
+  background: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.btn-acao {
+  background: transparent;
+  border: 1px solid transparent;
+  color: #290041;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn-acao:hover { background: #f6f5fb; }
+
+.btnCancel {
+  background-color: #f3f3f3;
+  color: #333;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: 1px solid #e6e6e6;
+  cursor: pointer;
+}
+
+.btnCancel:hover { background-color: #e9e9e9; }
+
+.btnConfirm {
+  background: #28a745;
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: none;
+}
+
+.btnConfirm[disabled] { opacity: 0.6; cursor: not-allowed; }
+
+/* foco acessível */
+button:focus, .btn-acao:focus, .modal-close:focus { outline: 3px solid rgba(41,0,65,0.12); outline-offset: 2px; }
+
+/* adaptações mobile */
+@media (max-width: 480px) {
+  .modal-content { padding: 20px; max-width: 92%; }
+  .modal-row { padding: 10px; }
+  .modal-close { top: 8px; right: 10px; }
+}
+
+/* small screens */
+@media (max-width: 420px) {
+  .modal-content { padding: 18px; }
+  .modal-row { flex-direction: column; align-items: flex-start; }
+  .modal-row strong { margin-top: 6px; }
+}
 
 /* ═══════════════════════════════════════════
    MAIN CONTENT
@@ -150,6 +334,11 @@ body {
 /* Header */
 .page-header {
   margin-bottom: 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
 }
 
 .page-header h1 {
@@ -163,6 +352,56 @@ body {
   color: var(--text-muted);
   margin-top: 4px;
 }
+
+.controle-data {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--bg-card);
+  padding: 10px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+#voltarDia,
+#avancarDia {
+  width: 40px;
+  height: 40px;
+  padding-top: 6px;
+  border: 2px solid var(--primary);
+  background: transparent;
+  border-radius: 8px;
+  font-size: 1.2rem;
+  color: var(--primary);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#voltarDia:hover,
+#avancarDia:hover {
+  background: var(--primary);
+  color: white;
+  box-shadow: 0 4px 12px rgba(91, 60, 196, 0.3);
+}
+
+#voltarDia:active,
+#avancarDia:active {
+  transform: scale(0.95);
+}
+
+#diaFinanceiro {
+  font-weight: 600;
+  color: var(--text-dark);
+  min-width: 80px;
+  text-align: center;
+  font-size: 0.95rem;
+}
+
 
 /* Cards de Resumo */
 .cards-resumo {
@@ -268,9 +507,10 @@ body {
 .search-box {
   display: flex;
   align-items: center;
+  width: 600px;
   gap: 8px;
   background: var(--bg-main);
-  padding: 8px 16px;
+  padding: 8px 200px 8px 16px;
   border-radius: 20px;
   border: 1px solid var(--border);
 }
@@ -318,7 +558,22 @@ body {
 
 /* Tabela */
 .tabela-container {
-  overflow-x: auto;
+  max-height: 300px;
+  overflow-y: auto;
+  padding-right: 5px;
+}
+
+.tabela-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.tabela-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.tabela-container::-webkit-scrollbar-thumb {
+    background: rgba(95, 63, 209, 0.3);
+    border-radius: 999px;
 }
 
 table {

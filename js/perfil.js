@@ -81,7 +81,54 @@ async function carregarPerfil() {
             document.getElementById("biografia").textContent =
             dados.psicologo.biografia;
         }
+
+        renderEspecialidades(dados);
   } catch (error) {
     console.error("Erro ao carregar perfil:", error);
   }
+}
+
+function getStoredEspecialidades() {
+  try {
+    const json = localStorage.getItem("especialidadesSelecionadas");
+    return json ? JSON.parse(json) : [];
+  } catch {
+    return [];
+  }
+}
+
+function renderEspecialidades(dados) {
+  const container = document.querySelector(".especialidades-lista");
+  if (!container) return;
+
+  let especialidades = [];
+
+  if (dados.psicologo) {
+    if (Array.isArray(dados.psicologo.especialidades)) {
+      especialidades = dados.psicologo.especialidades;
+    } else if (typeof dados.psicologo.especialidades === "string") {
+      try {
+        especialidades = JSON.parse(dados.psicologo.especialidades);
+      } catch {
+        especialidades = [dados.psicologo.especialidades];
+      }
+    } else if (typeof dados.psicologo.especialidade === "string") {
+      especialidades = [dados.psicologo.especialidade];
+    }
+  }
+
+  const stored = getStoredEspecialidades();
+  if (stored.length) {
+    especialidades = stored;
+  }
+
+  if (!especialidades || especialidades.length === 0) {
+    container.innerHTML =
+      '<span class="especialidade-card">Nenhuma especialidade selecionada</span>';
+    return;
+  }
+
+  container.innerHTML = especialidades
+    .map((item) => `<span class="especialidade-card">${item}</span>`)
+    .join("");
 }

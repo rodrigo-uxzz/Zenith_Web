@@ -23,7 +23,7 @@
     <div class="sidebar">
       <ul>
         <li>
-          <a href="#">
+          <a href="./homeScreen.html">
             <span class="icone"
               ><img src="../img/logo.png" class="logo" alt="logo do site"
             /></span>
@@ -111,7 +111,7 @@
       </div>
     </div>
 
-    <!-- Main Content -->
+     <!-- Main Content -->
     <main class="main-content">
       <!-- Header -->
       <header class="page-header">
@@ -121,11 +121,19 @@
         </div>
 
         <div class="controle-data">
-          <button id="voltarDia">←</button>
+          <button id="voltarDia">
+            <span class="icone">
+                <ion-icon name="chevron-back-outline"></ion-icon>
+            </span>
+          </button>
 
           <span id="diaFinanceiro"> Hoje </span>
 
-          <button id="avancarDia">→</button>
+          <button id="avancarDia">
+            <span class="icone">
+                <ion-icon name="chevron-forward-outline"></ion-icon>
+            </span>
+          </button>
         </div>
       </header>
 
@@ -187,10 +195,6 @@
               <input type="text" placeholder="Buscar paciente" />
             </div>
 
-            <button class="btn-status">
-              <ion-icon name="funnel-outline"></ion-icon>
-              Todos os Status
-            </button>
           </div>
         </div>
 
@@ -226,24 +230,33 @@
         </div>
         <div id="modalFinanceiro" class="modal" style="display: none">
           <div class="modal-content">
-            <h2>Detalhes Pagamento</h2>
+            <div class="modal-header modal-header-center">
+              <h2>Detalhes Pagamento</h2>
+            </div>
 
-            <p>
-              Paciente:
-              <span id="modalPaciente"></span>
-            </p>
+            <button class="modal-close" id="btnCloseModalFinanceiro" aria-label="Fechar modal">×</button>
 
-            <p>
-              Valor:
-              <span id="modalValor"></span>
-            </p>
+            <div class="modal-body">
+              <div class="modal-row">
+                <span>Paciente:</span>
+                <strong id="modalPaciente"></strong>
+              </div>
 
-            <p>
-              Status:
-              <span id="modalStatus"></span>
-            </p>
+              <div class="modal-row">
+                <span>Valor:</span>
+                <strong id="modalValor"></strong>
+              </div>
 
-            <button id="btnMarcarPago">Marcar como pago</button>
+              <div class="modal-row">
+                <span>Status:</span>
+                <strong id="modalStatus"></strong>
+              </div>
+            </div>
+
+            <div class="modal-actions">
+              <button class="btnCancel" id="btnFecharFinanceiro" type="button">Fechar</button>
+              <button class="btnConfirm" id="btnMarcarPago" type="button">Marcar como pago</button>
+            </div>
           </div>
         </div>
       </section>

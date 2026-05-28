@@ -2,19 +2,6 @@ import { apiRequest } from "./api.js";
 
 document.addEventListener("DOMContentLoaded", function () {
   carregarPerfil();
-
-  const modal = document.getElementById("modal");
-  const modalClose = document.querySelector(".close");
-
-  if (modalClose) {
-    modalClose.addEventListener("click", hideModal);
-  }
-
-  window.addEventListener("click", function (event) {
-    if (event.target === modal) {
-      hideModal();
-    }
-  });
 });
 
 document
@@ -23,30 +10,99 @@ document
     atualizarPerfil();
   });
 
-function showModal(message) {
-  const modal = document.getElementById("modal");
-  const modalMessage = document.getElementById("modal-message");
+function showToast(message) {
+  const toast = document.getElementById("toast");
+  const toastMessage = document.getElementById("toast-message");
 
-  if (modalMessage) {
-    modalMessage.textContent = message;
-  }
+  if (toast && toastMessage) {
+    toastMessage.textContent = message;
+    toast.classList.add("show");
 
-  if (modal) {
-    modal.style.display = "block";
-  }
-}
-
-function hideModal() {
-  const modal = document.getElementById("modal");
-
-  if (modal) {
-    modal.style.display = "none";
+    setTimeout(() => {
+      toast.classList.remove("show");
+    }, 3000);
   }
 }
 
 let dadosOriginais = {};
 let fotoOriginal = null;
 let novaFoto = null;
+let especialidadesSelecionadas = [];
+
+function getStoredEspecialidades() {
+  try {
+    const json = localStorage.getItem("especialidadesSelecionadas");
+    return json ? JSON.parse(json) : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveStoredEspecialidades(especialidades) {
+  localStorage.setItem(
+    "especialidadesSelecionadas",
+    JSON.stringify(especialidades),
+  );
+}
+
+function renderEspecialidadesSelecionadas() {
+  const container = document.getElementById("tagsContainer");
+  const lista = document.querySelector(".lista-especialidades");
+
+  if (!container || !lista) return;
+
+  container.innerHTML = "";
+
+  especialidadesSelecionadas.forEach((nome) => {
+    const tag = document.createElement("div");
+    tag.className = "tag";
+    tag.innerHTML = `${nome} <span data-value="${nome}">&times;</span>`;
+    container.appendChild(tag);
+  });
+
+  container.querySelectorAll(".tag span").forEach((btn) => {
+    btn.addEventListener("click", function () {
+      const value = this.dataset.value;
+      toggleEspecialidade(value, false);
+    });
+  });
+}
+
+function setCheckboxesFromSelection() {
+  const checkboxes = document.querySelectorAll(
+    ".item-especialidade input[type='checkbox']",
+  );
+
+  checkboxes.forEach((checkbox) => {
+    checkbox.checked = especialidadesSelecionadas.includes(checkbox.value);
+  });
+}
+
+function toggleEspecialidade(value, checked) {
+  if (checked) {
+    if (!especialidadesSelecionadas.includes(value)) {
+      especialidadesSelecionadas.push(value);
+    }
+  } else {
+    especialidadesSelecionadas = especialidadesSelecionadas.filter(
+      (item) => item !== value,
+    );
+  }
+
+  saveStoredEspecialidades(especialidadesSelecionadas);
+  renderEspecialidadesSelecionadas();
+  setCheckboxesFromSelection();
+}
+
+function filterEspecialidades() {
+  const filtro =
+    document.getElementById("pesquisaEspecialidade")?.value.toLowerCase() || "";
+
+  document.querySelectorAll(".item-especialidade").forEach((item) => {
+    const label = item.querySelector("span").textContent.toLowerCase();
+    item.style.display = label.includes(filtro) ? "flex" : "none";
+  });
+}
 
 //função mostrar perfil
 async function carregarPerfil() {
@@ -84,7 +140,26 @@ async function carregarPerfil() {
     if (dados.psicologo) {
       document.getElementById("crp").value = dados.psicologo.crp;
       document.getElementById("biografia").value = dados.psicologo.biografia;
+
+      if (Array.isArray(dados.psicologo.especialidades)) {
+        especialidadesSelecionadas = dados.psicologo.especialidades;
+      } else if (typeof dados.psicologo.especialidade === "string") {
+        especialidadesSelecionadas = [dados.psicologo.especialidade];
+      } else if (typeof dados.psicologo.especialidades === "string") {
+        try {
+          especialidadesSelecionadas = JSON.parse(dados.psicologo.especialidades);
+        } catch {
+          especialidadesSelecionadas = [dados.psicologo.especialidades];
+        }
+      }
     }
+
+    const stored = getStoredEspecialidades();
+    if (stored.length) {
+      especialidadesSelecionadas = stored;
+    }
+
+    setupEspecialidades();
   } catch (error) {
     console.error("Erro ao carregar perfil:", error);
   }
@@ -110,6 +185,18 @@ async function atualizarPerfil() {
     formData.append(key, value);
   });
 
+  const savedEspecialidades = getStoredEspecialidades();
+
+  if (savedEspecialidades.length > 0) {
+    savedEspecialidades.forEach((especialidade) => {
+      formData.append("especialidades[]", especialidade);
+    });
+    formData.append(
+      "especialidades",
+      JSON.stringify(savedEspecialidades),
+    );
+  }
+
   if (novaFoto) {
     formData.append("foto_perfil", novaFoto);
   }
@@ -120,18 +207,37 @@ async function atualizarPerfil() {
     const { ok, dados } = await apiRequest("/update", "POST", formData);
 
     if (ok) {
-      showModal("✅ Dados atualizados com sucesso!");
+      showToast("✅ Dados atualizados com sucesso!");
       setTimeout(() => {
-        hideModal();
         window.location.href = "perfilScreen.html";
       }, 1500);
     } else {
       console.error(dados);
-      showModal("❌ Erro ao atualizar perfil. Tente novamente.");
+      showToast("❌ Erro ao atualizar perfil. Tente novamente.");
     }
   } catch (error) {
     console.error(error);
   }
+}
+
+function setupEspecialidades() {
+  const checkboxes = document.querySelectorAll(
+    ".item-especialidade input[type='checkbox']",
+  );
+
+  checkboxes.forEach((checkbox) => {
+    checkbox.addEventListener("change", function () {
+      toggleEspecialidade(this.value, this.checked);
+    });
+  });
+
+  const pesquisa = document.getElementById("pesquisaEspecialidade");
+  if (pesquisa) {
+    pesquisa.addEventListener("input", filterEspecialidades);
+  }
+
+  renderEspecialidadesSelecionadas();
+  setCheckboxesFromSelection();
 }
 
 const inputFoto = document.getElementById("fotoPerfil");
@@ -148,33 +254,60 @@ inputFoto.addEventListener("change", function () {
 });
 
 //função de excluir conta
-document.getElementById("deletar").addEventListener("click", async function () {
-  const confirmar = confirm("Tem certeza que deseja excluir essa conta ?");
+const deletarBtn = document.getElementById("deletar");
+const deleteModal = document.getElementById("modal-delete");
+const cancelDeleteBtn = document.getElementById("btn-cancel-delete");
+const confirmDeleteBtn = document.getElementById("btn-confirm-delete");
 
-  if (!confirmar) return;
+if (deletarBtn) {
+  deletarBtn.addEventListener("click", function (e) {
+    e.preventDefault();
+    if (deleteModal) {
+      deleteModal.style.display = "flex";
+    }
+  });
+}
 
+if (cancelDeleteBtn) {
+  cancelDeleteBtn.addEventListener("click", function () {
+    if (deleteModal) {
+      deleteModal.style.display = "none";
+    }
+  });
+}
+
+if (confirmDeleteBtn) {
+  confirmDeleteBtn.addEventListener("click", async function () {
+    if (deleteModal) {
+      deleteModal.style.display = "none";
+    }
+    await deleteAccount();
+  });
+}
+
+async function deleteAccount() {
   const token = localStorage.getItem("token");
 
   if (!token) {
     window.location.href = "loginScreen.html";
-    alert("realize o login");
+    return;
   }
 
   try {
     const { ok, dados } = await apiRequest("/delete", "DELETE");
 
     if (ok) {
-      alert("conta excluido com sucesso");
       localStorage.removeItem("token");
       window.location.href = "index.html";
     } else {
-      alert("erro ao excluir conta");
       console.error(dados);
+      showToast("Erro ao excluir conta. Tente novamente.");
     }
   } catch (error) {
     console.error("Erro: ", error);
+    showToast("Erro ao excluir conta. Tente novamente.");
   }
-});
+}
 
 // Modal de logout
 document.addEventListener("DOMContentLoaded", function () {
@@ -221,6 +354,9 @@ document.addEventListener("DOMContentLoaded", function () {
   window.addEventListener("click", function (event) {
     if (event.target === modal) {
       modal.style.display = "none";
+    }
+    if (event.target === deleteModal) {
+      deleteModal.style.display = "none";
     }
   });
 });
