@@ -22,7 +22,7 @@
     <div class="sidebar">
         <ul>
             <li>
-                <a href="#">
+                <a href="./homeScreen.html">
                     <span class="icone"><img src="../img/logo.png" class="logo" alt="logo do site"></span>
                     <span class="titulo">ZENITH</span>
                 </a>
@@ -97,6 +97,41 @@
         <div class="logout-buttons">
           <button class="btnCancel" id="btn-cancel-logout" type="button">Cancelar</button>
           <button class="btnLogout" id="btn-confirm-logout" type="button">Sair</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal de Detalhes da Sessão -->
+    <div id="modal-sessao" class="modal" style="display:none;">
+      <div class="modal-content modal-sessao-content">
+        <span class="modal-close" id="close-modal-sessao">&times;</span>
+        <div class="modal-header">
+          <div>
+            <h2 id="sessao-modal-name">Detalhes da sessão</h2>
+            <p id="sessao-modal-status" class="sessao-status-label">Status</p>
+          </div>
+        </div>
+        <div class="modal-body">
+          <div class="modal-item">
+            <strong>Paciente</strong>
+            <p id="sessao-modal-paciente">-</p>
+          </div>
+          <div class="modal-item">
+            <strong>Psicólogo</strong>
+            <p id="sessao-modal-profissional">-</p>
+          </div>
+          <div class="modal-item">
+            <strong>Data</strong>
+            <p id="sessao-modal-data">-</p>
+          </div>
+          <div class="modal-item">
+            <strong>Hora</strong>
+            <p id="sessao-modal-hora">-</p>
+          </div>
+          <div class="modal-item modal-item-full">
+            <strong>Observações</strong>
+            <p id="sessao-modal-observacoes">-</p>
+          </div>
         </div>
       </div>
     </div>

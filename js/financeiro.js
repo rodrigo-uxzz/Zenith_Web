@@ -1,6 +1,6 @@
 import { apiRequest } from "./api.js";
 
-const modalFinanceiro = document.getElementById("modalFinanceiro");
+let modalFinanceiro = null;
 
 let dataAtual = new Date();
 
@@ -11,6 +11,46 @@ document.addEventListener("DOMContentLoaded", () => {
   const openModalBtn = document.getElementById("open-Modal-logout");
   const cancelBtn = document.getElementById("btn-cancel-logout");
   const confirmBtn = document.getElementById("btn-confirm-logout");
+
+  // modal financeiro (inicializa aqui para garantir elemento disponível)
+  modalFinanceiro = document.getElementById("modalFinanceiro");
+
+  // botão fechar modal financeiro
+  const btnFecharFinanceiro = document.getElementById("btnFecharFinanceiro");
+  if (btnFecharFinanceiro) {
+    btnFecharFinanceiro.addEventListener("click", () => {
+      if (modalFinanceiro) modalFinanceiro.style.display = "none";
+      if (modalFinanceiro) modalFinanceiro.dataset.id = "";
+    });
+  }
+
+  // botão fechar (X) canto superior
+  const btnCloseModalFinanceiro = document.getElementById("btnCloseModalFinanceiro");
+  if (btnCloseModalFinanceiro) {
+    btnCloseModalFinanceiro.addEventListener("click", () => {
+      if (modalFinanceiro) modalFinanceiro.style.display = "none";
+      if (modalFinanceiro) modalFinanceiro.dataset.id = "";
+    });
+  }
+
+  // botão marcar como pago
+  const btnMarcarPago = document.getElementById("btnMarcarPago");
+  if (btnMarcarPago) {
+    btnMarcarPago.addEventListener("click", async () => {
+      const id = modalFinanceiro?.dataset.id;
+      if (!id) return;
+
+      const { ok, dados } = await apiRequest(`/marcarComoPago/${id}`, "POST");
+
+      if (!ok) {
+        console.error(dados);
+        return;
+      }
+
+      if (modalFinanceiro) modalFinanceiro.style.display = "none";
+      await atualizarFinanceiro();
+    });
+  }
 
   atualizarFinanceiro();
 
@@ -40,8 +80,9 @@ document.addEventListener("DOMContentLoaded", () => {
       modalLogout.style.display = "none";
     }
 
-    if (event.target === modalFinanceiro) {
+    if (modalFinanceiro && event.target === modalFinanceiro) {
       modalFinanceiro.style.display = "none";
+      modalFinanceiro.dataset.id = "";
     }
   });
 });
@@ -215,27 +256,24 @@ document
     document.getElementById("modalStatus").textContent =
       pagamento.status_pagamento;
 
-    modalFinanceiro.dataset.id = pagamento.id_pagamento;
+    // mostrar/ocultar ações conforme status
+    const btnMarcar = document.getElementById("btnMarcarPago");
+    const btnFechar = document.getElementById("btnFecharFinanceiro");
 
-    modalFinanceiro.style.display = "flex";
+    const status = (pagamento.status_pagamento || "").toString().toLowerCase();
+
+    if (status.includes("paga") || status.includes("pago")) {
+      if (btnMarcar) btnMarcar.style.display = "none";
+      if (btnFechar) btnFechar.focus();
+    } else {
+      if (btnMarcar) btnMarcar.style.display = "inline-block";
+    }
+
+    modalFinanceiro.dataset.id = pagamento.id_pagamento;
+    if (modalFinanceiro) modalFinanceiro.dataset.id = pagamento.id_pagamento;
+
+    if (modalFinanceiro) modalFinanceiro.style.display = "flex";
   });
 
 // ===== MARCAR COMO PAGO =====
 
-document
-  .getElementById("btnMarcarPago")
-  ?.addEventListener("click", async () => {
-    const id = modalFinanceiro.dataset.id;
-
-    const { ok, dados } = await apiRequest(`/marcarComoPago/${id}`, "POST");
-
-    if (!ok) {
-      console.error(dados);
-
-      return;
-    }
-
-    modalFinanceiro.style.display = "none";
-
-    atualizarFinanceiro();
-  });

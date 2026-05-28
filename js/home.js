@@ -457,179 +457,107 @@ async function carregarDashboard() {
 // ===============================
 
 async function carregarProximasConsultas() {
-  const container = document.getElementById('container-proximas-consultas');
-  
-  if (!container) {
-    console.warn("Container de próximas consultas não encontrado");
-    return;
-  }
+  const container = document.getElementById("container-proximas-consultas");
+
+  if (!container) return;
 
   try {
-    // Tentar endpoint de próximas sessões
-    let response = await apiRequest("/proximasSessoes", "GET");
-    
-    // Se não funcionar, tentar o endpoint de hoje
-    if (!response.ok) {
-      const hoje = new Date().toLocaleDateString("en-CA");
-      response = await apiRequest(`/consultasDoDia?data=${hoje}`, "GET");
+    const todasConsultas = [];
+    const hoje = new Date();
+
+    // Buscar consultas dos próximos 7 dias
+    for (let i = 0; i < 7; i++) {
+      const data = new Date(hoje);
+      data.setDate(data.getDate() + i);
+      const dataFormatada = data.toLocaleDateString("en-CA");
+
+      const { ok, dados } = await apiRequest(
+        `/consultasDoDia?data=${dataFormatada}&t=${Date.now()}`,
+      );
+
+      if (ok && dados.sessoes && Array.isArray(dados.sessoes)) {
+        todasConsultas.push(
+          ...dados.sessoes.filter((s) => s.sessao && !s.tipo),
+        );
+      }
+
+      if (todasConsultas.length >= 4) break;
     }
 
-    if (!response.ok) {
-      console.error("Erro ao buscar próximas consultas:", response.dados);
-      container.innerHTML = '<p style="text-align: center; padding: 20px; color: #999;">Erro ao carregar consultas</p>';
+    const sessoes = todasConsultas.slice(0, 4);
+
+    if (sessoes.length === 0) {
+      container.innerHTML = `
+        <div style="padding: 20px; text-align: center; color: #999;">
+          Nenhuma consulta agendada
+        </div>
+      `;
       return;
     }
 
-    const dados = response.dados;
-    const sessoes = dados.sessoes || dados;
+    container.innerHTML = "";
 
-    // Limpar container
-    container.innerHTML = '';
+    sessoes.forEach((item) => {
+      const sessao = item.sessao || {};
+      const nome = sessao.paciente?.usuario?.nome || "Paciente";
+      const hora = item.hora_inicio || "--:--";
+      const link = sessao.link_conferencia || "#";
+      const dataSessao = item.data_sessao || "";
 
-    if (!sessoes || sessoes.length === 0) {
-      container.innerHTML = '<p style="text-align: center; padding: 20px; color: #999;">Nenhuma consulta agendada</p>';
-      return;
-    }
+      // Verificar se a consulta é hoje ou em outro dia
+      const hoje = new Date();
+      const hojeFormatada = hoje.toLocaleDateString("en-CA");
+      const ehHoje = dataSessao === hojeFormatada;
 
-    // Adicionar próximas consultas
-    sessoes.forEach((sessao) => {
-      const nomePaciente = sessao.paciente?.usuario?.nome || "Paciente";
-      const hora = sessao.hora_inicio || "--:--";
+      let infoHora = `<span class="hora">${hora.slice(0, 5)}</span>`;
+
+      if (!ehHoje && dataSessao) {
+        // Formatar a data para exibir (ex: "28 Mai")
+        const partes = dataSessao.split("-");
+        const data = new Date(partes[0], partes[1] - 1, partes[2]);
+        const diaFormatado = data.toLocaleDateString("pt-BR", {
+          day: "2-digit",
+          month: "short",
+        });
+
+        infoHora = `
+          <span class="hora">${diaFormatado} ${hora.slice(0, 5)}</span>
+        `;
+      }
 
       const div = document.createElement("div");
-      div.className = "consulta";
+      div.classList.add("consulta");
+
+      let botaoHTML = `<button class="btn secundario">Aguarde</button>`;
+
+      if (link && link !== "#" && link !== "") {
+        botaoHTML = `
+          <button class="btn" onclick="window.open('${link}', '_blank')">
+            Entrar
+            <img src="../img/open.svg" alt="Ícone Entrar" class="iconeC">
+          </button>
+        `;
+      }
+
       div.innerHTML = `
         <div class="iconConsulta">
           <span class="icone"><ion-icon name="person-outline"></ion-icon></span>
         </div>
         <div>
-          <strong>${nomePaciente}</strong>
-          <span class="hora">${hora}</span>
+          <strong>${nome}</strong>
+          ${infoHora}
         </div>
-        <button class="btn">Entrar
-          <img src="../img/open.svg" alt="Ícone Entrar" class="iconeC">
-        </button>
+        ${botaoHTML}
       `;
+
       container.appendChild(div);
     });
-
-    console.log("Próximas consultas carregadas:", sessoes.length);
   } catch (error) {
     console.error("Erro ao carregar próximas consultas:", error);
-    container.innerHTML = '<p style="text-align: center; padding: 20px; color: #999;">Erro ao carregar consultas</p>';
+    container.innerHTML = `
+      <div style="padding: 20px; text-align: center; color: #999;">
+        Erro ao carregar consultas
+      </div>
+    `;
   }
-
-  const data = response.dados;
-
-  const pacientes = data.cards.total_pacientes;
-  const consultasMes = data.cards.consultas_mes;
-  const faturamentoTotal = data.cards.faturamentoTotal;
-  const consultasDia = data.cards.consultas_hoje;
-
-  document.getElementById("pacientes").textContent = pacientes;
-  document.getElementById("consultas_mes").textContent = consultasMes;
-  document.getElementById("faturamentoTotal").textContent = ("R$")+faturamentoTotal;
-  document.getElementById("consultasHoje").textContent = consultasDia;
-
-  const faturamento = data.graficos.faturamento_mensal;
-
-  new Chart(document.getElementById("faturamentoChart"), {
-    type: "line",
-
-    data: {
-      labels: faturamento.map((item) => nomesMeses[item.mes]),
-
-      datasets: [
-        {
-          data: faturamento.map((item) => item.total),
-
-          borderColor: "#27c7c0",
-          backgroundColor: "rgba(39,199,192,0.08)",
-
-          fill: true,
-          tension: 0.4,
-          pointRadius: 4,
-          pointHoverRadius: 6,
-        },
-      ],
-    },
-
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-
-      plugins: {
-        legend: {
-          display: false,
-        },
-      },
-
-      scales: {
-        x: {
-          grid: {
-            color: "#ececec",
-          },
-        },
-
-        y: {
-          beginAtZero: true,
-
-          grid: {
-            color: "#ececec",
-          },
-        },
-      },
-    },
-  });
-
-  const sessoes = data.graficos.consultas_por_semana;
-
-  new Chart(document.getElementById("sessoesChart"), {
-    type: "bar",
-
-    data: {
-      labels: sessoes.map((item) => nomesDias[item.dia]),
-
-      datasets: [
-        {
-          data: sessoes.map((item) => item.total),
-
-          backgroundColor: "rgba(157,121,255,0.75)",
-          borderRadius: 12,
-          borderSkipped: false,
-        },
-      ],
-    },
-
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-
-      plugins: {
-        legend: {
-          display: false,
-        },
-      },
-
-      scales: {
-        x: {
-          grid: {
-            display: false,
-          },
-        },
-
-        y: {
-          beginAtZero: true,
-
-          ticks: {
-            stepSize: 1,
-          },
-
-          grid: {
-            color: "#ececec",
-          },
-        },
-      },
-    },
-  });
 }

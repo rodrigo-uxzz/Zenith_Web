@@ -21,7 +21,7 @@
     <div class="sidebar">
         <ul>
             <li>
-                <a href="#">
+                <a href="./homeScreen.html">
                     <span class="icone"><img src="../img/logo.png" class="logo" alt="logo do site"></span>
                     <span class="titulo">ZENITH</span>
                 </a>
@@ -137,21 +137,20 @@
         <!-- FILTROS -->
         <section class="filtrosAgenda">
 
-            <div class="tabsAgenda">
-                <button class="tabAtiva">Diário</button>
-                <button>Semanal</button>
+            <div class="filtros-bar">
+          <div class="filtros-left">
+            <button class="btn-filtro active">Diário</button>
+            <button class="btn-filtro">Semanal</button>
+          </div>
+
+          <div class="filtros-right">
+            <div class="search-box">
+              <ion-icon name="search-outline"></ion-icon>
+              <input type="text" placeholder="Buscar paciente" />
             </div>
 
-            <input
-                type="text"
-                placeholder="Buscar paciente"
-                class="inputBusca"
-            >
-
-            <button class="btnFiltro">
-                <ion-icon name="funnel-outline"  class="iconConfig"></ion-icon>
-                Todos os Status
-            </button>
+          </div>
+        </div>
 
         </section>
 

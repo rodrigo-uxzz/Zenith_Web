@@ -28,7 +28,7 @@
         <ul>
 
             <li>
-                <a href="#">
+                <a href="./adminHome.html">
                     <span class="icone">
                         <img src="../img/logo.png" class="logo" alt="logo do site">
                     </span>
@@ -58,7 +58,7 @@
             </li>
 
             <li>
-                <a href="adminPsi.html">
+                <a href="./adminPsi.html">
                     <span class="icone">
                         <ion-icon name="person-add-outline"></ion-icon>
                     </span>
@@ -95,6 +95,43 @@
 
             <h1 class="tituloAgenda">Dashboard Administrativo</h1>
 
+            <div class="cards-dashboard">
+
+    <div class="card-dashboard">
+                <ion-icon name="people-outline"></ion-icon>
+
+                <span>Total de Pacientes</span>
+
+                <h2 id="totalPatientsCount">0</h2>
+            </div>
+        
+            <div class="card-dashboard">
+                <ion-icon name="person-add-outline"></ion-icon>
+            
+                <span>Total de psicólogos</span>
+            
+                <h2 id="totalPsychologistsCount">0</h2>
+            </div>
+        
+            <div class="card-dashboard">
+                <ion-icon name="checkmark-circle-outline"></ion-icon>
+            
+                <span>Sessões Realizadas</span>
+            
+                <h2 id="sessionsDoneCount">0</h2>
+            </div>
+        
+            <div class="card-dashboard">
+                <ion-icon name="cash-outline"></ion-icon>
+            
+                <span>Receita Total</span>
+            
+                <h2 id="revenueCount">R$0</h2>
+            </div>
+        
+        </div>
+
+        <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
         <section class="dashboardCards">
 
             <article class="cardGrafico cardDestaque">

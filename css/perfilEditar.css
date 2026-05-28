@@ -126,9 +126,31 @@ body {
 
 main {
   margin-left: 60px;
-  padding: 40px;
+  padding: 24px;
   transition: 0.5s;
   z-index: 1;
+}
+
+.toast {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #ffffff;
+  color: #2f2f2f;
+  padding: 12px 18px;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  font-size: 14px;
+  z-index: 10000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+
+.toast.show {
+  opacity: 1;
+  visibility: visible;
 }
 
 a {
@@ -143,11 +165,12 @@ a {
 }
 
 .perfil h1 {
-  font-size: 2rem;
+  font-size: 1.8rem;
 }
 
 .perfil h3 {
-    font-weight: 500;
+  font-size: 1rem;
+  font-weight: 500;
 }
 
 
@@ -156,13 +179,13 @@ a {
 .container-perfil {
   background: white;
   border-radius: 10px;
-  padding: 30px;
+  padding: 24px;
   position: relative;
 }
 
 .banner-perfil{
   width:100%;
-  height:150px;
+  height:120px;
   background:#a383fb;
   border-radius:12px;
   position:relative;
@@ -202,15 +225,15 @@ a {
 .perfil-topo {
   display: flex;
   align-items: center;
-  gap: 20px;
-  margin-top: -50px;
-  padding-left: 20px;
+  gap: 16px;
+  margin-top: -40px;
+  padding-left: 16px;
 }
 
 .avatar-container {
   position: relative;
-  width: 100px;
-  height: 100px;
+  width: 82px;
+  height: 82px;
 }
 
 .avatar-img {
@@ -218,7 +241,7 @@ a {
   height: 100%;
   border-radius: 50%;
   object-fit: cover;
-  border: 5px solid white;
+  border: 4px solid white;
   background: #c2acff;
   color: #ffff;
 
@@ -226,7 +249,7 @@ a {
   justify-content: center;
   align-items: center;
 
-  font-size: 2rem;
+  font-size: 1.8rem;
 }
 
 #fotoPerfil {
@@ -257,16 +280,16 @@ a {
 
 .dados-psicologo h2 {
   margin-bottom: 3px;
-  margin-top: 55px;
+  margin-top: 40px;
 }
 
 .dados-psicologo span {
   color: #777;
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .crp {
-  font-size: 13px;
+  font-size: 12px;
   color: #555;
 }
 
@@ -280,10 +303,10 @@ a {
 /* TITULOS */
 
 .titulo-secao {
-  margin-top: 30px;
-  padding-bottom: 10px;
+  margin-top: 24px;
+  padding-bottom: 8px;
   border-bottom: 2px solid #a383fb;
-  font-size: 18px;
+  font-size: 16px;
 }
 
 /* GRID CAMPOS */
@@ -291,8 +314,8 @@ a {
 .grid-perfil {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 20px;
-  margin-top: 20px;
+  gap: 16px;
+  margin-top: 16px;
 }
 
 /* CAMPOS */
@@ -300,7 +323,7 @@ a {
 .campo {
   display: flex;
   flex-direction: column;
-  margin-top: 15px;
+  margin-top: 12px;
 }
 
 .linha{
@@ -325,15 +348,15 @@ a {
 input,
 textarea {
   width: 100%;
-  padding: 12px;
+  padding: 10px;
   border-radius: 8px;
   border: 1px solid #ddd;
-  font-size: 14px;
+  font-size: 13px;
   background: #fafafa;
 }
 
 textarea {
-  min-height: 90px;
+  min-height: 80px;
   resize: none;
 }
 
@@ -369,12 +392,12 @@ textarea {
 .salvar {
   display: flex;
   align-items: center;
-  font-size: medium;
+  font-size: 0.95rem;
   gap: 8px;
   background: #8b6ce6;
   color: white;
   border: none;
-  padding: 14px 20px;
+  padding: 12px 18px;
   border-radius: 8px;
   cursor: pointer;
   font-weight: 500;
@@ -383,10 +406,10 @@ textarea {
 /* BOTÃO CANCELAR */
 
 .cancelar {
-  font-size: medium;
+  font-size: 0.95rem;
   background: #e5e5e5;
   border: none;
-  padding: 14px 18px;
+  padding: 12px 16px;
   border-radius: 8px;
   cursor: pointer;
 }
@@ -394,18 +417,18 @@ textarea {
 .form-senha {
   display: flex;
   align-items: center;
-  gap: 20px;
-  margin-top: 25px;
+  gap: 14px;
+  margin-top: 18px;
   flex-wrap: wrap;
 }
 
 .form-senha .excluir {
   margin-left: auto;
-  font-size: medium;
+  font-size: 0.95rem;
   background: transparent;
   color: #d80000;
   border: none;
-  padding: 14px 18px;
+  padding: 12px 16px;
   border-radius: 8px;
   cursor: pointer;
 }
@@ -517,4 +540,138 @@ textarea {
     background-color: #c82333;
 }
 
+/* ESPECIALIDADES */
 
+.especialidades-box {
+  margin-top: 20px;
+}
+
+.tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.tag {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  background: #8b6ce6;
+  color: white;
+
+  padding: 8px 12px;
+  border-radius: 10px;
+
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.tag span {
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.input-especialidade {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  margin-top: 12px;
+
+  border: 2px solid #a383fb;
+  border-radius: 10px;
+
+  padding: 0 12px;
+  background: white;
+}
+
+.input-especialidade ion-icon {
+  font-size: 18px;
+  color: #777;
+}
+
+.input-especialidade input {
+  border: none;
+  background: transparent;
+}
+
+.input-especialidade input:focus {
+  outline: none;
+}
+
+.lista-especialidades {
+  margin-top: 15px;
+  border: 1px solid rgba(95, 63, 209, 0.16);
+  border-radius: 16px;
+  max-height: 220px;
+  overflow-y: auto;
+  background: #ffffff;
+  box-shadow: 0 14px 30px rgba(95, 63, 209, 0.08);
+}
+
+.lista-especialidades::-webkit-scrollbar {
+  width: 6px;
+}
+
+.lista-especialidades::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.lista-especialidades::-webkit-scrollbar-thumb {
+  background: rgba(95, 63, 209, 0.3);
+  border-radius: 999px;
+}
+
+.item-especialidade {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  border-bottom: 1px solid #f2efff;
+}
+
+.item-especialidade:last-child {
+  border-bottom: none;
+}
+
+.item-especialidade:hover {
+  background: #f7f4ff;
+}
+
+.item-especialidade input {
+  width: 18px;
+  height: 18px;
+  appearance: none;
+  -webkit-appearance: none;
+  border: 2px solid #c8c1ff;
+  border-radius: 6px;
+  background: #ffffff;
+  position: relative;
+  cursor: pointer;
+}
+
+.item-especialidade input:checked {
+  background: #8b6ce6;
+  border-color: #8b6ce6;
+}
+
+.item-especialidade input:checked::after {
+  content: "";
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  width: 5px;
+  height: 9px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.item-especialidade span {
+  font-size: 14px;
+  color: #333;
+}
