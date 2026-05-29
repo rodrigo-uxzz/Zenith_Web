@@ -40,17 +40,65 @@ document.getElementById("telefone").addEventListener("input", function (e) {
 });
 
 // ===== CPF =====
-document.getElementById("cpf").addEventListener("input", function (e) {
-  let value = e.target.value.replace(/\D/g, "");
+const cpfInput = document.getElementById("cpf");
+let cpfValido = false;
 
-  value = value.slice(0, 11);
+function marcarCpfInvalido() {
+  if (!cpfInput) return;
+  cpfInput.style.border = "1px solid red";
+  cpfInput.style.boxShadow = "0 0 5px rgba(255,0,0,0.3)";
+  cpfValido = false;
+}
 
-  value = value.replace(/(\d{3})(\d)/, "$1.$2");
-  value = value.replace(/(\d{3})(\d)/, "$1.$2");
-  value = value.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+function limparErroCpf() {
+  if (!cpfInput) return;
+  cpfInput.style.border = "";
+  cpfInput.style.boxShadow = "";
+}
 
-  e.target.value = value;
-});
+async function validarCpf(cpfLimpo) {
+  if (!cpfLimpo || cpfLimpo.length !== 11) {
+    return false;
+  }
+
+  const verificar = await verificarCPF(cpfLimpo);
+  return verificar?.ok === true;
+}
+
+if (cpfInput) {
+  cpfInput.addEventListener("input", function (e) {
+    let value = e.target.value.replace(/\D/g, "");
+
+    value = value.slice(0, 11);
+
+    value = value.replace(/(\d{3})(\d)/, "$1.$2");
+    value = value.replace(/(\d{3})(\d)/, "$1.$2");
+    value = value.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+
+    e.target.value = value;
+    limparErroCpf();
+    cpfValido = false;
+  });
+
+  cpfInput.addEventListener("blur", async function () {
+    const cpfLimpo = cpfInput.value.replace(/\D/g, "");
+
+    if (!cpfLimpo || cpfLimpo.length !== 11) {
+      marcarCpfInvalido();
+      return;
+    }
+
+    const valido = await validarCpf(cpfLimpo);
+
+    if (!valido) {
+      marcarCpfInvalido();
+      return;
+    }
+
+    limparErroCpf();
+    cpfValido = true;
+  });
+}
 
 // ===== CRP =====
 document.getElementById("crp").addEventListener("input", function (e) {
@@ -71,9 +119,10 @@ document.getElementById("crp").addEventListener("input", function (e) {
 
 async function verificarCPF(cpf) {
   try {
-    const response = await apiRequest("/verificarUserCPF", "POST", {
-      cpf: cpf,
-    });
+    const formData = new FormData();
+    formData.append("cpf", cpf);
+
+    const response = await apiRequest("/verificarUserCPF", "POST", formData);
 
     return response;
   } catch (error) {
@@ -103,24 +152,12 @@ async function validarProximo() {
   const telefoneLimpo = telefone.replace(/\D/g, "");
   const crpLimpo = crp.replace(/\D/g, "");
 
-  // valida tamanho
-  // if (cpfLimpo.length !== 11) {
-  //   showModal("CPF inválido!");
-  //   return;
-  // }
+  if (!cpfLimpo || cpfLimpo.length !== 11 || !cpfValido) {
+    marcarCpfInvalido();
+    return;
+  }
 
-  // // verifica na API
-  // const verificar = await verificarCPF(cpfLimpo);
-
-  // console.log(verificar);
-
-  // // se backend retornar erro
-  // if (!verificar.ok) {
-  //   showModal(verificar.dados.error || "CPF inválido!");
-  //   return;
-  // }
-
-  // Se tudo preenchido, salva no localStorage
+  // Se tudo preenchido e CPF validado, salva no localStorage
 
   localStorage.setItem("nome", nome);
   localStorage.setItem("telefone", telefoneLimpo);

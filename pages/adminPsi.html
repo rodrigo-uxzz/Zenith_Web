@@ -10,15 +10,16 @@
     <link rel="stylesheet" href="../css/adminPsi.css">
 
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
 
-    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-     <!-- <script>
+    <!-- Usando Font Awesome para os ícones (ionicons removido) -->
+     <script>
       const token = localStorage.getItem("token");
 
       if(!token){
         window.location.href = "loginScreen.html";
       }
-    </script> -->
+    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
 </head>
 
@@ -49,7 +50,7 @@
             </li>
 
             <li>
-                <a href="./adminHome.html">
+                <a href="#">
                     <span class="icone">
                         <ion-icon name="people-outline"></ion-icon>
                     </span>
@@ -59,7 +60,7 @@
             </li>
 
             <li>
-                <a href="adminPsi.html">
+                <a href="./adminPsi.html">
                     <span class="icone">
                         <ion-icon name="person-add-outline"></ion-icon>
                     </span>
@@ -245,6 +246,23 @@
       </div>
     </div>
   </div>
+
+   <!-- Modal de Logout -->
+    <div id="modal-logout" class="modal" style="display:none;">
+      <div class="modal-content">
+        <span class="close" id="close-logout">&times;</span>
+        <h2>Confirmar Logout</h2>
+        <p>Tem certeza de que deseja sair?</p>
+        <div class="logout-buttons">
+          <button class="btnCancel" id="btn-cancel-logout" type="button">Cancelar</button>
+          <button class="btnLogout" id="btn-confirm-logout" type="button">Sair</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="toast" class="toast">
+        <span id="toast-message"></span>
+    </div>
 
   <script type="module" src="../js/adminPsi.js"></script>
 </body>

@@ -109,7 +109,10 @@ function renderEspecialidades(dados) {
       try {
         especialidades = JSON.parse(dados.psicologo.especialidades);
       } catch {
-        especialidades = [dados.psicologo.especialidades];
+        especialidades = dados.psicologo.especialidades
+          .split(",")
+          .map((item) => item.trim())
+          .filter(Boolean);
       }
     } else if (typeof dados.psicologo.especialidade === "string") {
       especialidades = [dados.psicologo.especialidade];
@@ -117,7 +120,7 @@ function renderEspecialidades(dados) {
   }
 
   const stored = getStoredEspecialidades();
-  if (stored.length) {
+  if ((!especialidades || especialidades.length === 0) && stored.length) {
     especialidades = stored;
   }
 
@@ -128,6 +131,14 @@ function renderEspecialidades(dados) {
   }
 
   container.innerHTML = especialidades
-    .map((item) => `<span class="especialidade-card">${item.nome}</span>`)
+    .map((item) => {
+      if (item && typeof item === "object") {
+        return item.nome || item.especialidade || item.title || item.name || "";
+      }
+
+      return String(item || "");
+    })
+    .filter(Boolean)
+    .map((name) => `<span class="especialidade-card">${name}</span>`)
     .join("");
 }

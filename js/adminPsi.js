@@ -5,6 +5,7 @@ const state = {
   filtroStatus: "todas",
   busca: "",
   psicologoAberto: null,
+  especialidadesMap: {},
 };
 
 const elementos = {
@@ -177,6 +178,8 @@ function configurarEventos() {
 }
 
 async function carregarPsicologos() {
+  await carregarEspecialidades();
+
   let dados = [];
 
   try {
@@ -191,7 +194,7 @@ async function carregarPsicologos() {
 
     dados = Array.isArray(payload) ? payload : [];
   } catch (error) {
-    console.warn("Erro API:", error);
+    console.warn("Erro API ao carregar psicólogos:", error);
   }
 
   const lista = dados.length ? dados : dadosMock;
@@ -199,6 +202,35 @@ async function carregarPsicologos() {
 
   atualizarContadores();
   renderizarLista();
+}
+
+async function carregarEspecialidades() {
+  try {
+    const resposta = await apiRequest("/especialidades", "GET");
+    const payload =
+      resposta.dados?.especialidades?.data ||
+      resposta.dados?.especialidades ||
+      resposta.dados?.data ||
+      resposta.dados ||
+      [];
+
+    const especialidades = Array.isArray(payload) ? payload : [];
+
+    state.especialidadesMap = especialidades.reduce((map, item) => {
+      const id = item.id_especialidade || item.id;
+      if (id != null) {
+        map[id] =
+          item.nome ||
+          item.nome_especialidade ||
+          item.especialidade ||
+          item.title;
+      }
+      return map;
+    }, {});
+  } catch (error) {
+    console.warn("Erro API ao carregar especialidades:", error);
+    state.especialidadesMap = {};
+  }
 }
 
 function mapearPsicologo(item) {
@@ -229,9 +261,7 @@ function mapearPsicologo(item) {
     formacao: item.grau_formacao || "Não informado",
 
     // 🔥 especialidades (ARRAY)
-    especialidade: item.especialidades?.length
-      ? item.especialidades.map((e) => e.nome).join(", ")
-      : "Sem especialidade",
+    especialidade: formatarEspecialidades(item.especialidades),
 
     email: item.usuario?.email || "Não informado",
     telefone: item.usuario?.telefone || "Não informado",
@@ -240,6 +270,123 @@ function mapearPsicologo(item) {
 
     sobre: item.biografia || "Sem descrição adicional.",
   };
+}
+
+function formatarEspecialidades(especialidades) {
+  if (!especialidades) {
+    return "Sem especialidade";
+  }
+
+  if (typeof especialidades === "string") {
+    try {
+      especialidades = JSON.parse(especialidades);
+    } catch {
+      return especialidades || "Sem especialidade";
+    }
+  }
+
+  if (!Array.isArray(especialidades)) {
+    return "Sem especialidade";
+  }
+
+  const nomes = especialidades
+    .map((item) => {
+      if (!item && item !== 0) return null;
+
+      if (typeof item === "string" || typeof item === "number") {
+        return (
+          state.especialidadesMap[item] ||
+          state.especialidadesMap[String(item)] ||
+          String(item)
+        );
+      }
+
+      const id = item.id_especialidade || item.id;
+      const nome = item.nome || item.especialidade || item.nome_especialidade;
+
+      if (nome) {
+        return nome;
+      }
+
+      if (id != null) {
+        return (
+          state.especialidadesMap[id] ||
+          state.especialidadesMap[String(id)] ||
+          null
+        );
+      }
+
+      return null;
+    })
+    .filter(Boolean);
+
+  return nomes.length ? nomes.join(", ") : "Sem especialidade";
+}
+
+function showToast(message) {
+  const toast = document.getElementById("toast");
+  const toastMessage = document.getElementById("toast-message");
+  if (toast && toastMessage) {
+    toastMessage.textContent = message;
+    toast.classList.add("show");
+    setTimeout(() => {
+      toast.classList.remove("show");
+    }, 3000);
+  }
+}
+
+async function apiAprovarPsicologo(psicologo) {
+  if (!psicologo?.id) {
+    showToast("ID do psicólogo não encontrado.");
+    return false;
+  }
+
+  try {
+    const { ok, dados } = await apiRequest(
+      `/aprovarPsicologo/${encodeURIComponent(psicologo.id)}`,
+      "POST",
+    );
+
+    if (!ok) {
+      showToast(dados?.error || "Erro ao aprovar psicólogo.");
+      return false;
+    }
+
+    aceitarPsicologo(psicologo);
+    showToast("Psicólogo aprovado com sucesso!");
+    return true;
+  } catch (error) {
+    console.error("Erro API ao aprovar psicólogo:", error);
+    showToast("Erro ao aprovar psicólogo.");
+    return false;
+  }
+}
+
+async function apiRejeitarPsicologo(psicologo) {
+  if (!psicologo?.id) {
+    showToast("ID do psicólogo não encontrado.");
+    return false;
+  }
+
+  try {
+    const { ok, dados } = await apiRequest(
+      `/rejeitarPsicologo/${encodeURIComponent(psicologo.id)}`,
+      "POST",
+    );
+
+    if (!ok) {
+      showToast(dados?.error || "Erro ao rejeitar psicólogo.");
+      return false;
+    }
+
+    rejeitarPsicologo(psicologo);
+    showToast("Psicólogo rejeitado com sucesso!");
+    return true;
+  } catch (error) {
+    console.error("Erro API ao rejeitar psicólogo:", error);
+    showToast("Erro ao rejeitar psicólogo.");
+    return false;
+  }
 }
 
 function atualizarContadores() {
@@ -416,18 +563,18 @@ function rejeitarPsicologo(psicologo) {
   fecharModalPendente();
 }
 
-function handleModalAccept(psicologo) {
+async function handleModalAccept(psicologo) {
   if (psicologo.status === "pendente") {
-    aceitarPsicologo(psicologo);
+    await apiAprovarPsicologo(psicologo);
     return;
   }
 
   fecharModalPendente();
 }
 
-function handleModalReject(psicologo) {
+async function handleModalReject(psicologo) {
   if (psicologo.status === "pendente") {
-    rejeitarPsicologo(psicologo);
+    await apiRejeitarPsicologo(psicologo);
     return;
   }
 
@@ -441,3 +588,52 @@ function inicializarPagina() {
 }
 
 document.addEventListener("DOMContentLoaded", inicializarPagina);
+
+document.addEventListener("DOMContentLoaded", function () {
+  const modal = document.getElementById("modal-logout");
+  const openModalBtn = document.getElementById("open-Modal-logout");
+  const cancelBtn = document.getElementById("btn-cancel-logout");
+  const confirmBtn = document.getElementById("btn-confirm-logout");
+  const closeLogout = document.getElementById("close-logout");
+
+  // Abrir modal
+  if (openModalBtn) {
+    openModalBtn.addEventListener("click", function (e) {
+      e.preventDefault();
+      modal.style.display = "flex";
+    });
+  }
+
+  // Fechar modal ao clicar em cancelar
+  if (cancelBtn) {
+    cancelBtn.addEventListener("click", function () {
+      modal.style.display = "none";
+    });
+  }
+
+  // Fechar modal ao clicar no X
+  if (closeLogout) {
+    closeLogout.addEventListener("click", function () {
+      modal.style.display = "none";
+    });
+  }
+
+  // Confirmar logout
+  if (confirmBtn) {
+    confirmBtn.addEventListener("click", async function () {
+      try {
+        const { ok, dados } = await apiRequest("/logoutAdmin", "POST");
+
+        if (!ok) {
+          console.warn("Erro ao deslogar da API", dados);
+        }
+      } catch (error) {
+        console.error("Erro ao fazer logout:", error);
+      }
+
+      // Limpar token e redirecionar
+      localStorage.removeItem("token");
+      window.location.href = "./../pages/adminLogin.html";
+    });
+  }
+});

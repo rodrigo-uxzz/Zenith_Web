@@ -92,7 +92,7 @@ async function carregarEspecialidadesLista() {
   container.innerHTML = "";
 
   dados.forEach((esp) => {
-  const label = document.createElement("label");
+    const label = document.createElement("label");
     label.className = "item-especialidade";
 
     label.innerHTML = `
@@ -102,7 +102,6 @@ async function carregarEspecialidadesLista() {
 
     container.appendChild(label);
   });
-
 }
 
 function toggleEspecialidade(id, checked) {
@@ -196,10 +195,9 @@ async function carregarPerfil() {
       }
     }
 
-    const stored = getStoredEspecialidades();
-
-    if (stored.length && !dados.psicologo?.especialidades?.length) {
-      especialidadesSelecionadas = stored;
+    if (!dados.psicologo?.especialidades?.length) {
+      especialidadesSelecionadas = [];
+      localStorage.removeItem("especialidadesSelecionadas");
     }
 
     setupEspecialidades();

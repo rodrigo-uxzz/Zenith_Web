@@ -162,7 +162,7 @@ async function carregarDashboard() {
   const cards = data.cards || {};
   const faturamento = data.graficos.faturamento_mensal;
   const receitaTotal = cards.receita_total ?? 0;
-  const totalPacientes = cards.total_pacientes ?? cards.pacientes_total ?? 0;
+  const totalPacientes = cards.usuarios_total ?? cards.usuarios_total ?? 0;
   const totalPsicologos = cards.total_psicologos ?? cards.psicologos_total ?? 0;
   const sessoesRealizadas = cards.sessoes_realizadas ?? cards.realizadas ?? 0;
 

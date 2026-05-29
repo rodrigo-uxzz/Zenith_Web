@@ -510,3 +510,41 @@ h1 {
     }
 
 }
+
+
+/* Logout modal uses shared .modal and .modal-content (centralized styles above) */
+
+/* TOAST (SEU ORIGINAL) */
+.toast {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #ff4d4d;
+    color: white;
+    padding: 15px 20px;
+    border-radius: 8px;
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.5s;
+}
+
+.toast.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* RESPONSIVO */
+@media (max-width: 900px) {
+    .split-container {
+        flex-direction: column;
+    }
+
+    .left-side {
+        display: none;
+    }
+    
+    .right-side {
+        flex: 1;
+    }
+}
