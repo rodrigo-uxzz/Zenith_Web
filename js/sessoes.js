@@ -4,6 +4,7 @@ let todasSessoes = [];
 let filtroAtual = "todas";
 let buscaPaciente = "";
 let filtroData = "";
+let sessaoAberta = null;
 
 /* =========================
    INICIALIZAÇÃO
@@ -13,6 +14,7 @@ document.addEventListener("DOMContentLoaded", function () {
   configurarLogout();
   configurarFiltros();
   configurarBusca();
+  configurarModalSessao();
   carregarHistoricoSessoes();
 });
 
@@ -103,6 +105,44 @@ function configurarFiltros() {
 
       filtrarSessoes();
     });
+  });
+}
+
+function configurarModalSessao() {
+  const modal = document.getElementById("modal-sessao");
+  const closeBtn = document.getElementById("close-modal-sessao");
+  const fecharBtn = document.getElementById("btn-fechar-sessao");
+  const editarBtn = document.getElementById("btn-editar-sessao");
+
+  if (!modal) return;
+
+  if (closeBtn) {
+    closeBtn.addEventListener("click", function () {
+      modal.style.display = "none";
+      sessaoAberta = null;
+    });
+  }
+
+  if (fecharBtn) {
+    fecharBtn.addEventListener("click", function () {
+      modal.style.display = "none";
+      sessaoAberta = null;
+    });
+  }
+
+  if (editarBtn) {
+    editarBtn.addEventListener("click", function () {
+      // Implementar lógica de edição futura
+      console.log("Editar sessão:", sessaoAberta);
+      // window.location.href = "./editarSessao.html?id=" + sessaoAberta.id;
+    });
+  }
+
+  window.addEventListener("click", function (event) {
+    if (event.target === modal) {
+      modal.style.display = "none";
+      sessaoAberta = null;
+    }
   });
 }
 
@@ -362,5 +402,102 @@ function criarCardSessao(sessao) {
     </div>
   `;
 
+  card.addEventListener("click", function () {
+    abrirModalSessao(sessao);
+  });
+
   return card;
+}
+
+function abrirModalSessao(sessao) {
+  sessaoAberta = sessao;
+  const modal = document.getElementById("modal-sessao");
+  if (!modal) return;
+
+  const pacienteNome =
+    sessao.paciente?.usuario?.name ||
+    sessao.paciente?.usuario?.nome ||
+    "Paciente não informado";
+
+  const profissionalNome =
+    sessao.psicologo?.usuario?.name ||
+    sessao.psicologo?.usuario?.nome ||
+    sessao.psicologo?.nome ||
+    sessao.usuario?.name ||
+    sessao.usuario?.nome ||
+    "Profissional não informado";
+
+  const dataObj = new Date(`${sessao.data_sessao} ${sessao.hora_inicio}`);
+  const dataFormatada = isNaN(dataObj.getTime())
+    ? "-"
+    : dataObj.toLocaleDateString("pt-BR");
+
+  const horaFormatada = isNaN(dataObj.getTime())
+    ? "-"
+    : dataObj.toLocaleTimeString("pt-BR", {
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+
+  const horaFim = sessao.hora_fim
+    ? sessao.hora_fim
+    : sessao.hora_final || "-";
+
+  const tipo =
+    sessao.tipo ||
+    sessao.tipo_sessao ||
+    sessao.modalidade ||
+    sessao.especialidade ||
+    "Consulta";
+
+  const local =
+    sessao.local ||
+    sessao.sala ||
+    sessao.endereco ||
+    "Não informado";
+
+  const observacoes =
+    sessao.observacoes ||
+    sessao.observacao ||
+    sessao.notas ||
+    sessao.descricao ||
+    "Sem observações.";
+
+  const statusBruto = (sessao.status_sessao || "").toLowerCase();
+  let statusTexto = "Agendada";
+
+  if (statusBruto === "realizada") {
+    statusTexto = "Realizada";
+  } else if (statusBruto === "cancelada") {
+    statusTexto = "Cancelada";
+  } else if (
+    statusBruto === "reagendamento_solicitado" ||
+    statusBruto === "reagendada"
+  ) {
+    statusTexto = "Reagendada";
+  }
+
+  const horaRange = horaFim && horaFim !== "-" ? `${horaFormatada} - ${horaFim}` : horaFormatada;
+
+  const titleElement = document.getElementById("sessao-modal-name");
+  const statusElement = document.getElementById("sessao-modal-status");
+  const pacienteElement = document.getElementById("sessao-modal-paciente");
+  const profissionalElement = document.getElementById("sessao-modal-profissional");
+  const dataElement = document.getElementById("sessao-modal-data");
+  const horaElement = document.getElementById("sessao-modal-hora");
+  const tipoElement = document.getElementById("sessao-modal-tipo");
+  const localElement = document.getElementById("sessao-modal-local");
+  const observacoesElement = document.getElementById("sessao-modal-observacoes");
+
+  if (titleElement) titleElement.textContent = `Sessão de ${pacienteNome}`;
+  if (statusElement) statusElement.textContent = statusTexto;
+  if (pacienteElement) pacienteElement.textContent = pacienteNome;
+  if (profissionalElement) profissionalElement.textContent = profissionalNome;
+  if (dataElement) dataElement.textContent = dataFormatada;
+  if (horaElement) horaElement.textContent = horaRange;
+  if (tipoElement) tipoElement.textContent = tipo;
+  if (localElement) localElement.textContent = local;
+  if (observacoesElement) observacoesElement.textContent = observacoes;
+
+  modal.style.display = "flex";
 }

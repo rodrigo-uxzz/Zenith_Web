@@ -1,30 +1,73 @@
 import { apiRequest } from "./api.js";
 
+const inputs = {
+  nome: document.getElementById("fullName"),
+  telefone: document.getElementById("telefone"),
+  data: document.getElementById("dataNascimento"),
+  genero: document.getElementById("genero"),
+  cpf: document.getElementById("cpf"),
+  crp: document.getElementById("crp"),
+};
+
+function showToast(message) {
+  const toast = document.getElementById("toast");
+  const toastMessage = document.getElementById("toast-message");
+
+  if (!toast || !toastMessage) return;
+
+  toastMessage.textContent = message;
+  toast.classList.add("show");
+
+  setTimeout(() => {
+    toast.classList.remove("show");
+  }, 3000);
+}
+
+function setInputError(input, hasError) {
+  if (!input) return;
+  input.classList.toggle("input-error", hasError);
+}
+
+function restoreFormValues() {
+  const fields = [
+    "nome",
+    "telefone",
+    "data",
+    "genero",
+    "cpf",
+    "crp",
+    "foto",
+  ];
+
+  fields.forEach((key) => {
+    const value = localStorage.getItem(key);
+
+    if (key === "foto") {
+      const preview = document.getElementById("preview");
+      const placeholder = document.getElementById("placeholder");
+      if (value && preview && placeholder) {
+        preview.src = value;
+        preview.style.display = "block";
+        placeholder.style.display = "none";
+      }
+      return;
+    }
+
+    const input = inputs[key] || document.getElementById(key);
+    if (!input || value === null) return;
+
+    if (input.tagName === "SELECT") {
+      input.value = value;
+    } else {
+      input.value = value;
+    }
+  });
+}
+
 //Botoes pra ativar as funções
 document.getElementById("proximaTela").addEventListener("click", function () {
   validarProximo();
 });
-
-// Função para validar e ir pra próxima tela
-function showModal(message) {
-  document.getElementById("modal-message").textContent = message;
-  document.getElementById("modal").style.display = "flex";
-  // Fechar automaticamente em 3 segundos
-  setTimeout(() => {
-    document.getElementById("modal").style.display = "none";
-  }, 3000);
-}
-
-// Fechar modal
-// document.querySelector(".close").onclick = function () {
-//   document.getElementById("modal").style.display = "none";
-// };
-
-window.onclick = function (event) {
-  if (event.target == document.getElementById("modal")) {
-    document.getElementById("modal").style.display = "none";
-  }
-};
 
 // ===== TELEFONE =====
 document.getElementById("telefone").addEventListener("input", function (e) {
@@ -37,20 +80,101 @@ document.getElementById("telefone").addEventListener("input", function (e) {
   value = value.replace(/(\d{5})(\d)/, "$1-$2");
 
   e.target.value = value;
+  localStorage.setItem("telefone", value);
+  setInputError(e.target, false);
 });
 
 // ===== CPF =====
-document.getElementById("cpf").addEventListener("input", function (e) {
-  let value = e.target.value.replace(/\D/g, "");
+const cpfInput = document.getElementById("cpf");
+let cpfValido = false;
 
-  value = value.slice(0, 11);
+function marcarCpfInvalido() {
+  if (!cpfInput) return;
+  cpfInput.style.border = "1px solid red";
+  cpfInput.style.boxShadow = "0 0 5px rgba(255,0,0,0.3)";
+  cpfValido = false;
+}
 
-  value = value.replace(/(\d{3})(\d)/, "$1.$2");
-  value = value.replace(/(\d{3})(\d)/, "$1.$2");
-  value = value.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+function limparErroCpf() {
+  if (!cpfInput) return;
+  cpfInput.style.border = "";
+  cpfInput.style.boxShadow = "";
+}
 
-  e.target.value = value;
-});
+function validarDigitosCpf(cpf) {
+  if (!/^\d{11}$/.test(cpf)) return false;
+  if (/^(\d)\1{10}$/.test(cpf)) return false;
+
+  let soma = 0;
+  for (let i = 0; i < 9; i++) {
+    soma += Number(cpf[i]) * (10 - i);
+  }
+  let resto = (soma * 10) % 11;
+  if (resto === 10) resto = 0;
+  if (resto !== Number(cpf[9])) return false;
+
+  soma = 0;
+  for (let i = 0; i < 10; i++) {
+    soma += Number(cpf[i]) * (11 - i);
+  }
+  resto = (soma * 10) % 11;
+  if (resto === 10) resto = 0;
+  return resto === Number(cpf[10]);
+}
+
+async function validarCpf(cpfLimpo) {
+  if (!cpfLimpo || cpfLimpo.length !== 11 || !validarDigitosCpf(cpfLimpo)) {
+    return false;
+  }
+
+  const verificar = await verificarCPF(cpfLimpo);
+  const payload = verificar?.dados ?? verificar;
+
+  return (
+    verificar?.ok === true ||
+    payload?.ok === true ||
+    payload?.success === true ||
+    payload?.valid === true ||
+    payload?.disponivel === true ||
+    payload?.status === "ok"
+  );
+}
+
+if (cpfInput) {
+  cpfInput.addEventListener("input", function (e) {
+    let value = e.target.value.replace(/\D/g, "");
+
+    value = value.slice(0, 11);
+
+    value = value.replace(/(\d{3})(\d)/, "$1.$2");
+    value = value.replace(/(\d{3})(\d)/, "$1.$2");
+    value = value.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+
+    e.target.value = value;
+    localStorage.setItem("cpf", value);
+    limparErroCpf();
+    cpfValido = false;
+  });
+
+  cpfInput.addEventListener("blur", async function () {
+    const cpfLimpo = cpfInput.value.replace(/\D/g, "");
+
+    if (!cpfLimpo || cpfLimpo.length !== 11) {
+      marcarCpfInvalido();
+      return;
+    }
+
+    const valido = await validarCpf(cpfLimpo);
+
+    if (!valido) {
+      marcarCpfInvalido();
+      return;
+    }
+
+    limparErroCpf();
+    cpfValido = true;
+  });
+}
 
 // ===== CRP =====
 document.getElementById("crp").addEventListener("input", function (e) {
@@ -67,13 +191,16 @@ document.getElementById("crp").addEventListener("input", function (e) {
   }
 
   e.target.value = value;
+  localStorage.setItem("crp", value);
+  setInputError(e.target, false);
 });
 
 async function verificarCPF(cpf) {
   try {
-    const response = await apiRequest("/verificarUserCPF", "POST", {
-      cpf: cpf,
-    });
+    const formData = new FormData();
+    formData.append("cpf", cpf);
+
+    const response = await apiRequest("/verificarUserCPF", "POST", formData);
 
     return response;
   } catch (error) {
@@ -84,43 +211,63 @@ async function verificarCPF(cpf) {
 
 // Função para validar e ir pra próxima tela
 async function validarProximo() {
-  // Pegando os valores dos campos
-  console.log(document.getElementById("fullName"));
-  let nome = document.getElementById("fullName").value;
-  let telefone = document.getElementById("telefone").value;
-  let data = document.getElementById("dataNascimento").value;
-  let genero = document.getElementById("genero").value;
-  let cpf = document.getElementById("cpf").value;
-  let crp = document.getElementById("crp").value;
-
-  // Validando se algum campo está vazio
-  if (!nome || !telefone || !data || !genero || !cpf || !crp) {
-    showModal("Preencha todos os campos!");
-    return;
-  }
+  const nome = document.getElementById("fullName").value.trim();
+  const telefone = document.getElementById("telefone").value.trim();
+  const data = document.getElementById("dataNascimento").value;
+  const genero = document.getElementById("genero").value;
+  const cpf = document.getElementById("cpf").value.trim();
+  const crp = document.getElementById("crp").value.trim();
 
   const cpfLimpo = cpf.replace(/\D/g, "");
   const telefoneLimpo = telefone.replace(/\D/g, "");
-  const crpLimpo = crp.replace(/\D/g, "");
+  const crpLimpo = crp.replace(/[^A-Z0-9]/gi, "");
+  const cpfLocalValido = validarDigitosCpf(cpfLimpo);
 
-  // valida tamanho
-  // if (cpfLimpo.length !== 11) {
-  //   showModal("CPF inválido!");
-  //   return;
-  // }
+  let temErro = false;
 
-  // // verifica na API
-  // const verificar = await verificarCPF(cpfLimpo);
+  setInputError(inputs.nome, !nome);
+  setInputError(inputs.telefone, !telefoneLimpo || telefoneLimpo.length !== 11);
+  setInputError(inputs.data, !data);
+  setInputError(inputs.genero, !genero);
+  setInputError(inputs.cpf, !cpfLocalValido);
+  setInputError(inputs.crp, !crp || crp.length < 6);
 
-  // console.log(verificar);
+  if (!nome) {
+    showToast("Informe seu nome completo.");
+    temErro = true;
+  }
+  if (!telefoneLimpo || telefoneLimpo.length !== 11) {
+    showToast("Telefone inválido. Use o formato (00) 00000-0000.");
+    temErro = true;
+  }
+  if (!data) {
+    showToast("Selecione sua data de nascimento.");
+    temErro = true;
+  }
+  if (!genero) {
+    showToast("Selecione um gênero.");
+    temErro = true;
+  }
+  if (!cpfLocalValido) {
+    showToast("CPF inválido.");
+    temErro = true;
+  } else {
+    const cpfServidorValido = await validarCpf(cpfLimpo);
+    if (!cpfServidorValido) {
+      setInputError(inputs.cpf, true);
+      showToast("CPF não pôde ser validado.");
+      temErro = true;
+    } else {
+      cpfValido = true;
+      setInputError(inputs.cpf, false);
+    }
+  }
+  if (!crp || crp.length < 6) {
+    showToast("CRP inválido.");
+    temErro = true;
+  }
 
-  // // se backend retornar erro
-  // if (!verificar.ok) {
-  //   showModal(verificar.dados.error || "CPF inválido!");
-  //   return;
-  // }
-
-  // Se tudo preenchido, salva no localStorage
+  if (temErro) return;
 
   localStorage.setItem("nome", nome);
   localStorage.setItem("telefone", telefoneLimpo);
@@ -129,11 +276,11 @@ async function validarProximo() {
   localStorage.setItem("cpf", cpfLimpo);
   localStorage.setItem("crp", crpLimpo);
 
-  showModal("✅ Dados salvos! Continuando...");
+  showToast("Dados salvos! Continuando...");
 
   setTimeout(() => {
     window.location.href = "./../pages/criarScreen2.html";
-  }, 2000);
+  }, 1000);
 }
 
 // Variável global para guardar a foto entre telas
@@ -152,16 +299,31 @@ if (inputFoto) {
       reader.onload = function (e) {
         const base64 = e.target.result;
 
-        // salva no localStorage
         localStorage.setItem("foto", base64);
 
-        // MOSTRAR PREVIEW
-        document.getElementById("preview").src = base64;
-        document.getElementById("preview").style.display = "block";
-        document.getElementById("placeholder").style.display = "none";
+        const preview = document.getElementById("preview");
+        const placeholder = document.getElementById("placeholder");
+
+        if (preview) preview.src = base64;
+        if (preview) preview.style.display = "block";
+        if (placeholder) placeholder.style.display = "none";
       };
 
       reader.readAsDataURL(arquivo);
     }
   });
 }
+
+restoreFormValues();
+
+document.getElementById("fullName").addEventListener("input", function () {
+    localStorage.setItem("nome", this.value);
+});
+
+document.getElementById("dataNascimento").addEventListener("change", function () {
+    localStorage.setItem("data", this.value);
+});
+
+document.getElementById("genero").addEventListener("change", function () {
+    localStorage.setItem("genero", this.value);
+});

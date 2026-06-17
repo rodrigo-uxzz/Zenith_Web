@@ -765,7 +765,7 @@ strong{
     padding: 35px;
     border-radius: 16px;
     width: 90%;
-    max-width: 480px;
+    max-width: 400px;
     text-align: left;
     box-shadow: 0 10px 30px rgba(0,0,0,0.15);
     position: relative;
@@ -825,13 +825,21 @@ strong{
     flex-direction: column;
 }
 
-.chart-container{
+.chart-container {
     position: relative;
     flex: 1;
     width: 100%;
+    height: 270px;
 }
 
-.chart-container canvas{
+.chart-container canvas {
     width: 100% !important;
     height: 100% !important;
+}
+
+.painel {
+    background: #fff;
+    border-radius: 20px;
+    padding: 24px;
+    overflow: hidden;
 }

@@ -85,16 +85,18 @@
                    <!-- ----separador---- -->
 
                    <div class="linha3">
-                       <div class="input-container">
+                       <div class="input-container password-container">
                            <img src="../img/lock.svg" alt="icone" class="icon-input">
                            <label for="senha" class="label-diferenciado">Senha:</label>
                            <input type="password" class="input-diferenciado" id="senha" name="senha" required placeholder="Digite sua senha">
+                           <button type="button" class="toggle-password" data-target="senha">Mostrar</button>
                        </div>
                        
-                       <div class="input-container">
+                       <div class="input-container password-container">
                            <img src="../img/lock.svg" alt="icone" class="icon-input">
                            <label for="confirmarSenha" class="label-diferenciado">Confirmar Senha:</label>
                            <input type="password" class="input-diferenciado" id="confirmarSenha" name="confirmarSenha" required placeholder="Confirme sua senha">
+                           <button type="button" class="toggle-password" data-target="confirmarSenha">Mostrar</button>
                        </div>
                    </div>
 
@@ -125,33 +127,8 @@
 
         <script type="module" src="../js/cadastrar2.js"></script>
 
-            <!-- Modal -->
-        <div id="modal" class="modal">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <p id="modal-message"></p>
-            </div>
-        </div>
-
-                <!-- Modal de Erro -->
-        <div id="error-modal" class="modal" style="display:none;">
-            <div class="modal-content error-modal-content">
-                <span class="close" id="close-error-modal">&times;</span>
-                <h2>Erro no cadastro</h2>
-                <p id="error-modal-message"></p>
-            </div>
-        </div>
-
-        <!-- Modal de Sucesso -->
-        <div id="success-modal" class="modal" style="display:none;">
-            <div class="modal-content success-modal-content">
-                <span class="close" id="close-success-modal">&times;</span>
-                <h2>Cadastro realizado</h2>
-                <p id="success-modal-message"></p>
-                <div class="success-buttons">
-                    <button class="btnSuccess" id="btn-success-ok" type="button">OK</button>
-                </div>
-            </div>
+        <div id="toast" class="toast">
+            <span id="toast-message"></span>
         </div>
 </body>
 </html>

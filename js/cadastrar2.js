@@ -1,45 +1,125 @@
 import { apiRequest } from "./api.js";
 
-//Botoes pra ativar as funções
-document.getElementById("botaoVoltar").addEventListener("click", function () {
-  voltarTela1();
-});
+const fields = {
+  username: document.getElementById("username"),
+  email: document.getElementById("email"),
+  senha: document.getElementById("senha"),
+  confirmarSenha: document.getElementById("confirmarSenha"),
+  formacao: document.getElementById("formacao"),
+  termos: document.getElementById("termos"),
+};
 
-document.getElementById("criarConta").addEventListener("click", function () {
-  criarConta();
-});
-
-function showModal(message) {
-  document.getElementById("modal-message").textContent = message;
-  document.getElementById("modal").style.display = "block";
-  // Fechar automaticamente em 3 segundos
-  setTimeout(() => {
-    document.getElementById("modal").style.display = "none";
-  }, 4000);
+function setInputError(input, hasError) {
+  if (!input) return;
+  input.classList.toggle("input-error", hasError);
 }
 
-// Fechar modal
-document.querySelector(".close").onclick = function () {
-  document.getElementById("modal").style.display = "none";
-};
-window.onclick = function (event) {
-  if (event.target == document.getElementById("modal")) {
-    document.getElementById("modal").style.display = "none";
+function setupPasswordToggle() {
+  document.querySelectorAll(".toggle-password").forEach((button) => {
+    button.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+
+      const targetId = button.getAttribute("data-target");
+      const input = document.getElementById(targetId);
+
+      if (!input) return;
+
+      const isPassword = input.type === "password";
+      input.type = isPassword ? "text" : "password";
+      button.textContent = isPassword ? "Ocultar" : "Mostrar";
+    });
+  });
+}
+
+function restoreFormValues() {
+  const saved = {
+    username: localStorage.getItem("username"),
+    email: localStorage.getItem("email"),
+    senha: localStorage.getItem("senha"),
+    confirmarSenha: localStorage.getItem("confirmarSenha"),
+    formacao: localStorage.getItem("formacao"),
+    termos: localStorage.getItem("termos"),
+    cadastroEpsi: localStorage.getItem("cadastroEpsi"),
+  };
+
+  if (saved.username && fields.username) fields.username.value = saved.username;
+  if (saved.email && fields.email) fields.email.value = saved.email;
+  if (saved.senha && fields.senha) fields.senha.value = saved.senha;
+  if (saved.confirmarSenha && fields.confirmarSenha)
+    fields.confirmarSenha.value = saved.confirmarSenha;
+  if (saved.formacao && fields.formacao) fields.formacao.value = saved.formacao;
+  if (saved.termos === "true" && fields.termos) fields.termos.checked = true;
+
+  const radio = saved.cadastroEpsi;
+  if (radio === "1") {
+    const sim = document.getElementById("epsi-sim");
+    if (sim) sim.checked = true;
+  } else if (radio === "0") {
+    const nao = document.getElementById("epsi-nao");
+    if (nao) nao.checked = true;
   }
-};
+}
 
-// Quando a página abre, valida se tem dados salvos
-// window.addEventListener("DOMContentLoaded", function () {
-//   let nome = localStorage.getItem("nome");
+function setupButtonHandlers() {
+  const botaoVoltar = document.getElementById("botaoVoltar");
+  const criarContaBtn = document.getElementById("criarConta");
 
-//   // Se não encontrou, volta pra tela 1
-//   if (nome === null) {
-//     showModal("⚠️ Você precisa preencher a tela anterior!");
-//     setTimeout(() => {
-//       window.location.href = "./pages/criarScreen.html";
-//     }, 2000);
-//   }
-// });
+  if (botaoVoltar) {
+    botaoVoltar.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      voltarTela1();
+    });
+  }
+
+  if (criarContaBtn) {
+    criarContaBtn.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      criarConta();
+    });
+  }
+}
+
+function showToast(message) {
+  const toast = document.getElementById("toast");
+  const toastMessage = document.getElementById("toast-message");
+
+  if (!toast || !toastMessage) return;
+
+  toastMessage.textContent = message;
+  toast.classList.add("show");
+
+  setTimeout(() => {
+    toast.classList.remove("show");
+  }, 3000);
+}
+
+function getErrorMessage(dados) {
+  if (!dados) return "Erro ao cadastrar. Tente novamente.";
+  if (typeof dados === "string") return dados;
+  if (dados.message) return dados.message;
+  if (dados.error) return dados.error;
+  if (dados.detail) return dados.detail;
+  if (dados.errors) {
+    const mensagens = Object.values(dados.errors).flat();
+    if (mensagens.length) return mensagens.join(" ");
+  }
+  return "Erro ao cadastrar. Tente novamente.";
+}
+
+function initCadastro2() {
+  setupPasswordToggle();
+  setupButtonHandlers();
+  restoreFormValues();
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initCadastro2);
+} else {
+  initCadastro2();
+}
 
 // Função pra voltar pra tela 1
 function voltarTela1() {
@@ -48,72 +128,94 @@ function voltarTela1() {
 
 // Função pra criar conta
 async function criarConta() {
-  // Pegando os valores dos campos da tela 2
-  let username = document.getElementById("username").value;
-  let email = document.getElementById("email").value;
-  let senha = document.getElementById("senha").value;
-  let confirmarSenha = document.getElementById("confirmarSenha").value;
-  let cadastroEpsi = document.querySelector(
-    'input[name="cadastroEpsi"]:checked',
+  const username = document.getElementById("username").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const senha = document.getElementById("senha").value;
+  const confirmarSenha = document.getElementById("confirmarSenha").value;
+  const cadastroEpsi = document.querySelector(
+    'input[name="cadastroEpsi"]:checked'
   );
-  let formacao = document.getElementById("formacao").value;
-  let termos = document.getElementById("termos").checked;
+  const formacao = document.getElementById("formacao").value;
+  const termos = document.getElementById("termos").checked;
 
-  // Validando se estão vazios
-  if (
-    email === "" ||
-    senha === "" ||
-    confirmarSenha === "" ||
-    !cadastroEpsi ||
-    formacao === "" ||
-    !termos
-  ) {
-    showModal("Preencha TODOS os campos e aceite os termos!");
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  setInputError(fields.username, !username);
+  setInputError(fields.email, !email || !emailRegex.test(email));
+  setInputError(fields.senha, !senha || senha.length < 6);
+  setInputError(fields.confirmarSenha, !confirmarSenha || confirmarSenha !== senha);
+  setInputError(fields.formacao, !formacao);
+
+  if (!username) {
+    showToast("Digite um nome de usuário.");
+    return;
+  }
+  if (!email || !emailRegex.test(email)) {
+    showToast("Digite um e-mail válido.");
+    return;
+  }
+  if (!senha || senha.length < 6) {
+    showToast("A senha deve ter pelo menos 6 caracteres.");
+    return;
+  }
+  if (!confirmarSenha || confirmarSenha !== senha) {
+    showToast("As senhas não conferem.");
+    return;
+  }
+  if (!cadastroEpsi) {
+    showToast("Selecione se possui cadastro no e-psi.");
+    return;
+  }
+  if (!formacao) {
+    showToast("Selecione seu grau de formação.");
+    return;
+  }
+  if (!termos) {
+    showToast("Aceite os termos para continuar.");
     return;
   }
 
-  // Validando se as senhas são iguais
-  if (senha !== confirmarSenha) {
-    showModal("As senhas não conferem!");
-    return;
-  }
-
-  // Pegando dados da tela 1 (que já foram salvos)
-  let nome = localStorage.getItem("nome");
-  let telefone = localStorage.getItem("telefone");
-  let data = localStorage.getItem("data");
-  let genero = localStorage.getItem("genero");
-  let cpf = localStorage.getItem("cpf");
-  let crp = localStorage.getItem("crp");
-
-  // Salvando dados da tela 2 também
   localStorage.setItem("username", username);
   localStorage.setItem("email", email);
   localStorage.setItem("senha", senha);
+  localStorage.setItem("confirmarSenha", confirmarSenha);
   localStorage.setItem("cadastroEpsi", cadastroEpsi.value);
   localStorage.setItem("formacao", formacao);
-  localStorage.setItem("termos", termos.checked);
+  localStorage.setItem("termos", String(termos));
 
   // salvando no banco de dados
   // Criar FormData para enviar arquivo e dados
   const formData = new FormData();
 
   // Adicionar dados do formulário
-  formData.append("nome", localStorage.getItem("nome"));
-  formData.append("telefone", localStorage.getItem("telefone"));
-  formData.append("data_nascimento", localStorage.getItem("data"));
-  formData.append("genero", localStorage.getItem("genero")?.toUpperCase());
-  formData.append("cpf", localStorage.getItem("cpf"));
-  formData.append("crp", localStorage.getItem("crp"));
-  formData.append("username", localStorage.getItem("username"));
-  formData.append("email", localStorage.getItem("email"));
-  formData.append("senha", localStorage.getItem("senha"));
-  formData.append(
-    "cadastroEpsi",
-    localStorage.getItem("cadastroEpsi") === "1" ? 1 : 0,
-  );
-  formData.append("formacao", localStorage.getItem("formacao")?.toUpperCase());
+  const nome = localStorage.getItem("nome") || "";
+  const telefone = localStorage.getItem("telefone") || "";
+  const dataNascimento = localStorage.getItem("data") || "";
+  const genero = localStorage.getItem("genero") || "";
+  const cpf = localStorage.getItem("cpf") || "";
+  const crp = localStorage.getItem("crp") || "";
+  const cadastroEpsiValue =
+    localStorage.getItem("cadastroEpsi") === "1" ? 1 : 0;
+  const formacaoValue = (localStorage.getItem("formacao") || "").toUpperCase();
+
+  formData.append("nome", nome);
+  formData.append("telefone", telefone);
+  formData.append("data_nascimento", dataNascimento);
+  formData.append("dataNascimento", dataNascimento);
+  formData.append("genero", genero?.toUpperCase());
+  formData.append("cpf", cpf);
+  formData.append("crp", crp);
+  formData.append("username", username);
+  formData.append("nome_usuario", username);
+  formData.append("email", email);
+  formData.append("senha", senha);
+  formData.append("confirmarSenha", confirmarSenha);
+  formData.append("cadastroEpsi", cadastroEpsiValue);
+  formData.append("cadastro_psi", cadastroEpsiValue);
+  formData.append("formacao", formacaoValue);
+  formData.append("formacaoProfissional", formacaoValue);
   formData.append("termos_aceitos", termos ? 1 : 0);
+  formData.append("termosAceitos", termos ? 1 : 0);
 
   // Adicionar foto se existir
   const fotoBase64 = localStorage.getItem("foto");
@@ -135,16 +237,15 @@ async function criarConta() {
   if (ok) {
     console.log(dados);
 
-    showModal(
-      "Conta criada com sucesso! Sua conta entrará em análise. Aguarde um pouco e em breve você poderá fazer login.",
-    );
+    showToast("Conta criada com sucesso! Enviando código de verificação...");
 
-    // Ir pra login
+    localStorage.setItem("pendingVerifyEmail", email);
+
     setTimeout(() => {
       window.location.href = "loginScreen.html";
-    }, 5000);
+    }, 1500);
   } else {
     console.error(dados);
-    showModal("Erro ao cadastrar. Tente novamente!");
+    showToast(getErrorMessage(dados));
   }
 }

@@ -17,6 +17,7 @@ body {
 
 /* LADO ESQUERDO */
 .left-side {
+    position: relative;
     flex: 1;
     background: linear-gradient(135deg, #A383FB, #7B5CF5);
     display: flex;
@@ -24,6 +25,32 @@ body {
     justify-content: center;
     color: white;
     padding: 2rem;
+}
+
+.btn-voltar {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 5px;
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.18);
+    color: white;
+    text-decoration: none;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.btn-voltar:hover {
+    background: rgba(255, 255, 255, 0.28);
+    transform: translateY(-1px);
+}
+
+.btn-voltar .icone {
+    font-size: 1.2rem;
 }
 
 .left-content {
@@ -126,6 +153,24 @@ form {
     margin-top: 15px;
 }
 
+.password-container input {
+    padding-right: 90px;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    color: #A383FB;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    z-index: 2;
+}
+
 input {
     width: 100%;
     padding: 15px;
@@ -193,22 +238,209 @@ label {
 .modal {
     display: none;
     position: fixed;
-    z-index: 1;
+    z-index: 1000;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0,0,0,0.4);
+    background-color: rgba(0,0,0,0.45);
+    align-items: center;
+    justify-content: center;
 }
 
 .modal-content {
     background-color: #fff;
-    margin: 15% auto;
     padding: 20px;
     width: 80%;
     max-width: 400px;
     border-radius: 10px;
     text-align: center;
+}
+
+/* MODAL VERIFICAÇÃO */
+.verificacao-modal-content {
+    width: min(520px, calc(100% - 40px));
+    background: #fff;
+    border-radius: 20px;
+    padding: 48px 40px 40px;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.12);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 16px;
+}
+
+/* CAMPOS DE SENHA */
+.senha-field {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    text-align: left;
+}
+
+.senha-field label {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #1a1a2e;
+}
+
+.input-senha-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.input-senha-wrapper .verificacao-input {
+    width: 100%;
+    padding-right: 48px;
+    margin-top: 0;
+}
+
+.toggle-senha {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.2rem;
+    color: #aaa;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.toggle-senha:hover {
+    color: #A383FB;
+}
+
+/* ÍCONE DE SUCESSO */
+.sucesso-icon {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: #ede8ff;
+    display: grid;
+    place-items: center;
+    margin: 8px auto 8px;
+}
+
+.sucesso-icon ion-icon {
+    font-size: 2.8rem;
+    color: #A383FB;
+    font-weight: 700;
+}
+
+.verificacao-modal-content .close {
+    position: absolute;
+    right: 20px;
+    top: 16px;
+    font-size: 1.5rem;
+    color: #999;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.verificacao-modal-content .close:hover {
+    color: #555;
+}
+
+.verificacao-modal-content h2 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin: 0;
+}
+
+.verificacao-modal-content > p {
+    color: #555;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    max-width: 360px;
+    margin: 0;
+}
+
+.verificacao-input {
+    width: 100%;
+    padding: 16px 20px;
+    border: 1.5px solid #c4b8f0;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-family: 'Poppins', sans-serif;
+    color: #333;
+    outline: none;
+    margin-top: 8px;
+    transition: border-color 0.2s;
+}
+
+.verificacao-input::placeholder {
+    color: #aaa;
+}
+
+.verificacao-input:focus {
+    border-color: #A383FB;
+}
+
+.btn-confirmar {
+    width: 70%;
+    padding: 16px 0;
+    background: #A383FB;
+    color: white;
+    border: none;
+    border-radius: 14px;
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.2s;
+    margin-top: 4px;
+}
+
+.btn-confirmar:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.reenviar-texto {
+    font-size: 0.9rem;
+    color: #666;
+    margin: 0;
+}
+
+.link-reenviar {
+    color: #A383FB;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.link-reenviar:hover {
+    text-decoration: underline;
+}
+    letter-spacing: 0.3rem;
+    font-size: 1rem;
+}
+
+.verify-actions {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+}
+
+.verify-actions button {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.btn-resend {
+    background: #f3f0ff;
+    color: #5b3cc4;
+}
+
+.btn-confirm {
+    background: #5b3cc4;
+    color: #fff;
 }
 
 .close {

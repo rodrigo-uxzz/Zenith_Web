@@ -204,10 +204,11 @@ main {
     grid-template-columns: repeat(2, minmax(280px, 1fr));
     gap: 24px;
     align-items: start;
+    margin-top: 20px;
 }
 
 .cardGrafico{
-    background: #f8f4ff;
+    background: #fff;
     border-radius: 18px;
     padding: 24px;
     min-height: 260px;
@@ -458,3 +459,66 @@ main {
     height: 100% !important;
 }
 
+.card-dashboard {
+    background: #fff;
+    border-radius: 12px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+    min-height: 140px;
+    border: 1px solid #e5e2f0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.card-dashboard ion-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #f3f0ff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: #7b5cff;
+}
+
+.card-dashboard span {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #888;
+}
+
+.card-dashboard h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #290041;
+}
+
+.cards-dashboard {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+    align-items: stretch;
+}
+
+.cards-dashboard::-webkit-scrollbar {
+    height: 8px;
+}
+
+.cards-dashboard::-webkit-scrollbar-thumb {
+    background: rgba(91, 60, 196, 0.35);
+    border-radius: 999px;
+}
+
+.cards-dashboard::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+@media (max-width: 700px) {
+    .cards-dashboard {
+        grid-auto-columns: minmax(220px, 1fr);
+    }
+}

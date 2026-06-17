@@ -373,3 +373,50 @@ a {
     background-color: #c82333;
 }
 
+/* ESPECIALIDADES PERFIL */
+
+.especialidades-perfil {
+  margin-top: 25px;
+
+  background: white;
+  border: 1px solid #eee;
+
+  border-radius: 12px;
+
+  padding: 20px;
+}
+
+.especialidades-perfil h3 {
+  font-size: 19px;
+  margin-bottom: 18px;
+}
+
+.especialidades-lista{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-top:15px;
+}
+
+.especialidade-card{
+  background:#8b6ce6;
+  color:white;
+
+  padding:10px 16px;
+
+  border-radius:10px;
+
+  font-size:14px;
+  font-weight:500;
+}
+
+.especialidade-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(163, 131, 251, 0.35);
+}
+
+.especialidade-card span {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+}

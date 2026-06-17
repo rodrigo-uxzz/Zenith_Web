@@ -159,8 +159,17 @@ async function carregarDashboard() {
   // FATURAMENTO
   // =========================
 
+  const cards = data.cards || {};
   const faturamento = data.graficos.faturamento_mensal;
-  const receitaTotal = data.cards.receita_total;
+  const receitaTotal = cards.receita_total ?? 0;
+  const totalPacientes = cards.usuarios_total ?? cards.usuarios_total ?? 0;
+  const totalPsicologos = cards.total_psicologos ?? cards.psicologos_total ?? 0;
+  const sessoesRealizadas = cards.sessoes_realizadas ?? cards.realizadas ?? 0;
+
+  document.getElementById("totalPatientsCount").textContent = totalPacientes;
+  document.getElementById("totalPsychologistsCount").textContent = totalPsicologos;
+  document.getElementById("sessionsDoneCount").textContent = sessoesRealizadas;
+  document.getElementById("revenueCount").textContent = `R$${receitaTotal}`;
 
   const meses = [
     "Jan",
