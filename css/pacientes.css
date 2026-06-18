@@ -11,7 +11,7 @@
     --primary-light: #7a5cff;
     --bg-main: #f3f0fa;
     --bg-card: #ffffff;
-    --text-dark: #290041;
+    --text-dark:  #5b3cc4;
     --text-muted: #888;
     --border: #e5e2f0;
 }
@@ -81,7 +81,7 @@ body {
 }
 
 .logo {
-    width: 32px;
+    width: 80px;
     height: auto;
 }
 

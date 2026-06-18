@@ -364,11 +364,9 @@ document
         const nomeArquivo = urlComprovante.split("/").pop();
 
         comprovanteArea.innerHTML = `
-          <ion-icon name="document-attach-outline"></ion-icon>
-          <p class="nome-arquivo">${nomeArquivo}</p>
-          <p>Comprovante disponível</p>
+            <ion-icon name="document-outline"></ion-icon>
+            <p>Nenhum comprovante enviado pelo paciente</p>
         `;
-
         comprovanteBotoes.style.display = "flex";
 
         document.getElementById("btnVisualizarComprovante").onclick = () =>
