@@ -383,6 +383,12 @@ main.agendaContainer {
     justify-content: center;
 }
 
+/* Badge amarelo com texto legível */
+.consultaPendente {
+    background: #f4b30054 !important;
+    color: #946d00 !important;
+
+}
 .consultaCard strong {
     display: block;
     font-size: 18px;

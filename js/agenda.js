@@ -268,41 +268,48 @@ async function atualizarData() {
         const isRealizada = status.includes("realiz");
         // Verificar se é pendente
         const isPendente = status.includes("pendente");
-        // Verificar se é cancelamento solicitado (pendente de aprovação)
-        const isCancelamentoSolicitado =
-          status.includes("cancelamento_solicitado") ||
-          status === "cancelamento_solicitado";
-        // Verificar se é cancelada (já aprovada)
-        const isCancelada =
-          status.includes("cancel") && !isCancelamentoSolicitado;
-        // Verificar se é reagendamento (pendente de aprovação)
-        const isReagendada =
-          status.includes("reagend") || status.includes("remarc");
+        // Verificar se é cancelamento solicitado (pendente de aprovação) - paciente OU psicólogo
+        const isCancelamentoSolicitado = status === "cancelamento_solicitado"; // só paciente
 
-        // Aplicar classe conforme o status
+        const isCancelamentoPsicologo = status === "cancelamentopsicologo"; // só psicólogo
+
+        const isReagendadaPaciente = status.includes(
+          "reagendamento_solicitado",
+        ); // só paciente
+
+        const isReagendadaPsicologo = status === "reagendamentopsicologo"; // só psicólogo
         conteudo.classList.remove("consultaCard");
         if (isRealizada) {
           conteudo.classList.add("consultaRealizada");
         } else if (isPendente) {
           conteudo.classList.add("consultaPendente");
+        } else if (isCancelamentoPsicologo || isReagendadaPsicologo) {
+          conteudo.classList.add("consultaPendente"); // amarelo
         } else if (isCancelamentoSolicitado) {
-          conteudo.classList.add("consultaCancelamentoSolicitado");
-        } else if (isCancelada) {
-          conteudo.classList.add("consultaCancelada");
-        } else if (isReagendada) {
-          conteudo.classList.add("consultaReagendamentoSolicitado");
+          conteudo.classList.add("consultaCancelamentoSolicitado"); // vermelho
+        } else if (isReagendadaPaciente) {
+          conteudo.classList.add("consultaReagendamentoSolicitado"); // azul
         } else {
           conteudo.classList.add("consultaCard");
         }
 
         // Formatar texto do status para exibição
         let statusTexto = status.charAt(0).toUpperCase() + status.slice(1);
-        if (status.includes("cancelamento_solicitado"))
-          statusTexto = "Cancelamento Solicitado";
-        else if (status.includes("cancel")) statusTexto = "Cancelada";
-        else if (status.includes("reagend") || status.includes("remarc"))
-          statusTexto = "Reagendamento Solicitado";
+        let statusBadgeClasse = status;
 
+        if (status === "cancelamentopsicologo") {
+          statusTexto = "Aguardando Cancelamento";
+          statusBadgeClasse = "aguardando-cancelamento";
+        } else if (status === "reagendamentopsicologo") {
+          statusTexto = "Aguardando Reagendamento";
+          statusBadgeClasse = "aguardando-reagendamento";
+        } else if (status.includes("cancelamento_solicitado")) {
+          statusTexto = "Cancelamento Solicitado";
+        } else if (status.includes("cancel")) {
+          statusTexto = "Cancelada";
+        } else if (status.includes("reagend") || status.includes("remarc")) {
+          statusTexto = "Reagendamento Solicitado";
+        }
         conteudo.style.position = "relative";
 
         conteudo.innerHTML = `
@@ -312,7 +319,7 @@ async function atualizarData() {
           </div>
 
           <span 
-            class="status-badge status-${status}"
+            class="status-badge status-${statusBadgeClasse}"
             style="
               position: absolute;
               right: 16px;
