@@ -9,6 +9,7 @@ export async function apiRequest(endPoint, method = "GET", dados = null) {
       "Cache-Control": "no-cache, no-store, must-revalidate",
       Pragma: "no-cache",
       Expires: "0",
+      Accept: "application/json",
     },
   };
 
@@ -26,18 +27,37 @@ export async function apiRequest(endPoint, method = "GET", dados = null) {
   const response = await fetch(API_URL + endPoint, options);
 
   const text = await response.text();
+  const contentType = response.headers.get("content-type") || "";
+  const isJson = contentType.includes("application/json") || contentType.includes("+json");
 
   let result;
 
-  try {
-    result = JSON.parse(text);
-  } catch {
-    console.error("Resposta não é JSON:", text);
+  if (!text) {
+    result = { error: "Resposta vazia do servidor" };
+  } else if (isJson) {
+    try {
+      result = JSON.parse(text);
+    } catch {
+      result = { error: "Resposta inválida do servidor", raw: text };
+    }
+  } else {
     result = { error: "Resposta inválida do servidor", raw: text };
   }
 
+  const payloadOk = result && typeof result === "object" && "ok" in result ? result.ok : true;
+  const payloadSuccess = result && typeof result === "object" && "success" in result ? result.success : true;
+  const payloadHasError =
+    Boolean(result?.error) ||
+    result?.success === false ||
+    result?.ok === false;
+    
   return {
-    ok: response.ok,
+    ok:
+      response.ok &&
+      payloadOk !== false &&
+      payloadSuccess !== false &&
+      !payloadHasError,
+    status: response.status,
     dados: result,
   };
 }

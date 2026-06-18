@@ -86,6 +86,69 @@ function obterElemento(id) {
   return document.getElementById(id);
 }
 
+function extrairValor(obj, chaves, fallback = "") {
+  for (const chave of chaves) {
+    if (!chave) continue;
+
+    if (obj?.[chave] !== undefined && obj?.[chave] !== null && obj?.[chave] !== "") {
+      return obj[chave];
+    }
+
+    const valor = chave.split(".").reduce((acc, parte) => acc?.[parte], obj);
+    if (valor !== undefined && valor !== null && valor !== "") {
+      return valor;
+    }
+  }
+
+  return fallback;
+}
+
+function normalizarListaResposta(resposta) {
+  const candidatos = [
+    resposta,
+    resposta?.dados,
+    resposta?.data,
+    resposta?.dados?.data,
+    resposta?.dados?.psicologos,
+    resposta?.dados?.psicologos?.data,
+    resposta?.dados?.result,
+    resposta?.dados?.items,
+  ];
+
+  for (const item of candidatos) {
+    if (Array.isArray(item)) {
+      const objs = item.filter((x) => x && typeof x === "object");
+      if (objs.length) return objs;
+    }
+  }
+
+  const procurarArray = (valor) => {
+    if (!valor || typeof valor !== "object") return [];
+
+    if (Array.isArray(valor)) {
+      const objs = valor.filter((x) => x && typeof x === "object");
+      if (objs.length) return objs;
+    }
+
+    for (const chave of Object.keys(valor)) {
+      const nested = valor[chave];
+      if (Array.isArray(nested)) {
+        const objs = nested.filter((x) => x && typeof x === "object");
+        if (objs.length) return objs;
+      }
+
+      if (nested && typeof nested === "object") {
+        const found = procurarArray(nested);
+        if (found.length) return found;
+      }
+    }
+
+    return [];
+  };
+
+  return procurarArray(resposta);
+}
+
 function inicializarElementos() {
   elementos.totalCount = obterElemento("totalCount");
   elementos.activeCount = obterElemento("activeCount");
@@ -94,7 +157,7 @@ function inicializarElementos() {
   elementos.searchInput = obterElemento("searchInput");
   elementos.listContainer = obterElemento("psychologistsList");
   elementos.filterButtons = Array.from(
-    document.querySelectorAll(".search-box .btn"),
+    document.querySelectorAll(".filtros-bar .btn"),
   );
   elementos.pendingModal = obterElemento("pending-modal");
   elementos.closePendingModal = obterElemento("close-pending-modal");
@@ -178,27 +241,37 @@ function configurarEventos() {
 }
 
 async function carregarPsicologos() {
+  renderizarEstadoCarregando();
   await carregarEspecialidades();
 
   let dados = [];
 
   try {
     const resposta = await apiRequest("/psicologos", "GET");
+    console.log("Resposta da API /psicologos:", resposta);
 
-    const payload =
-      resposta.dados?.psicologos?.data ||
-      resposta.dados?.psicologos ||
-      resposta.dados?.data ||
-      resposta.dados ||
-      [];
-
-    dados = Array.isArray(payload) ? payload : [];
+    if (!resposta.ok) {
+      console.warn(`Erro API: status ${resposta.status}`, resposta.dados);
+      if (resposta.status === 401) {
+        console.warn("Token inválido ou expirado. Usando dados mock.");
+      }
+    } else {
+      dados = normalizarListaResposta(resposta);
+      console.log("Dados da API normalizados:", dados);
+    }
   } catch (error) {
-    console.warn("Erro API ao carregar psicólogos:", error);
+    console.error("Erro ao carregar psicólogos:", error);
   }
 
   const lista = dados.length ? dados : dadosMock;
-  state.psicologos = lista.map(mapearPsicologo);
+  console.log("Lista final:", lista);
+
+  state.psicologos = lista.map((item) => {
+    console.log("Mapeando item:", item);
+    return mapearPsicologo(item);
+  });
+
+  console.log("Psicólogos após mapeamento:", state.psicologos);
 
   atualizarContadores();
   renderizarLista();
@@ -234,58 +307,183 @@ async function carregarEspecialidades() {
 }
 
 function mapearPsicologo(item) {
-  const statusBruto = (item.status || item.status_psicologo || "")
+  const usuario =
+    item?.usuario ||
+    item?.user ||
+    item?.user_data ||
+    item?.dadosUsuario ||
+    {};
+
+  const perfil = item?.psicologo || item?.psychologist || item || {};
+
+  const statusBruto = extrairValor(
+    item,
+    [
+      "status",
+      "status_psicologo",
+      "statusCadastro",
+      "aprovacao",
+      "situacao",
+    ],
+    ""
+  )
     .toString()
     .toLowerCase();
 
   let status = "ativo";
-  if (statusBruto.includes("pendente")) {
+  if (statusBruto.includes("pendente") || statusBruto.includes("aguard")) {
     status = "pendente";
   }
 
+  const email = extrairValor(
+    item,
+    [
+      "email",
+      "email_contato",
+      "usuario.email",
+      "user.email",
+      "usuario.email_address",
+      "emailAddress",
+    ],
+    usuario.email || perfil.email || "Não informado"
+  );
+
+  const telefone = extrairValor(
+    item,
+    [
+      "telefone",
+      "phone",
+      "celular",
+      "whatsapp",
+      "usuario.telefone",
+      "user.telefone",
+    ],
+    usuario.telefone || perfil.telefone || "Não informado"
+  );
+
   return {
-    id: item.id_psicologo || item.id || Math.random().toString(36).slice(2),
+    id:
+      extrairValor(item, ["id_psicologo", "id", "psicologo_id"], "") ||
+      Math.random().toString(36).slice(2),
 
-    nome: item.usuario?.nome || item.usuario?.name || "Sem nome",
+    nome:
+      extrairValor(
+        item,
+        [
+          "nome",
+          "name",
+          "full_name",
+          "usuario.nome",
+          "user.name",
+          "usuario.full_name",
+        ],
+        usuario.nome || usuario.name || "Sem nome"
+      ) || "Sem nome",
 
-    crp: item.crp || "--",
+    crp:
+      extrairValor(item, ["crp", "crp_numero", "registro_crp"], "") ||
+      "--",
 
-    // 🔥 CPF vem do USER
-    cpf: item.usuario?.cpf || "--",
+    cpf:
+      extrairValor(
+        item,
+        [
+          "cpf",
+          "CPF",
+          "documento",
+          "usuario.cpf",
+          "user.cpf",
+          "cpf_formatado",
+        ],
+        usuario.cpf || "--"
+      ) || "--",
 
     status,
+    online: Boolean(
+      extrairValor(item, ["online", "is_online", "conectado"], false)
+    ),
 
-    online: Boolean(item.online),
+    formacao:
+      extrairValor(
+        item,
+        [
+          "grau_formacao",
+          "formacao",
+          "formacao_profissional",
+          "titulo",
+          "degree",
+        ],
+        perfil.grau_formacao || perfil.formacao || "Não informado"
+      ) || "Não informado",
 
-    // 🔥 formação vem direto do psicólogo
-    formacao: item.grau_formacao || "Não informado",
+    especialidade: formatarEspecialidades(
+      extrairValor(
+        item,
+        [
+          "especialidades",
+          "especialidade",
+          "areas_atuacao",
+          "profissoes",
+        ],
+        perfil.especialidades || perfil.especialidade || []
+      )
+    ),
 
-    // 🔥 especialidades (ARRAY)
-    especialidade: formatarEspecialidades(item.especialidades),
+    email,
+    telefone,
 
-    email: item.usuario?.email || "Não informado",
-    telefone: item.usuario?.telefone || "Não informado",
+    experiencia:
+      extrairValor(
+        item,
+        [
+          "experiencia",
+          "anos_experiencia",
+          "experiencia_profissional",
+          "tempo_experiencia",
+        ],
+        perfil.experiencia || "Não informado"
+      ) || "Não informado",
 
-    experiencia: item.experiencia || "Não informado",
-
-    sobre: item.biografia || "Sem descrição adicional.",
+    sobre:
+      extrairValor(
+        item,
+        ["biografia", "sobre", "descricao", "bio"],
+        perfil.biografia || perfil.sobre || "Sem descrição adicional."
+      ) || "Sem descrição adicional.",
   };
 }
 
 function formatarEspecialidades(especialidades) {
-  if (!especialidades) {
+  if (!especialidades || especialidades === "null") {
     return "Sem especialidade";
   }
 
   if (typeof especialidades === "string") {
+    const texto = especialidades.trim();
+    if (!texto) return "Sem especialidade";
+
     try {
-      especialidades = JSON.parse(especialidades);
+      especialidades = JSON.parse(texto);
     } catch {
-      return especialidades || "Sem especialidade";
+      if (texto.includes(",")) {
+        return texto.split(",").map((v) => v.trim()).filter(Boolean).join(", ");
+      }
+      return texto;
     }
   }
 
   if (!Array.isArray(especialidades)) {
+    if (
+      especialidades &&
+      typeof especialidades === "object" &&
+      (especialidades.nome || especialidades.especialidade || especialidades.titulo)
+    ) {
+      const nome =
+        especialidades.nome ||
+        especialidades.especialidade ||
+        especialidades.titulo;
+      return nome;
+    }
     return "Sem especialidade";
   }
 
@@ -421,18 +619,37 @@ function filtrarPsicologos() {
   });
 }
 
-function renderizarLista() {
+function renderizarEstadoCarregando() {
   if (!elementos.listContainer) {
     return;
   }
 
+  elementos.listContainer.innerHTML = `
+    <div class="person loading-state">
+      <div class="info">
+        <div>
+          <h3>Carregando psicólogos...</h3>
+          <p>Aguarde enquanto buscamos os dados.</p>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderizarLista() {
+  if (!elementos.listContainer) {
+    console.error("Elemento listContainer não encontrado!");
+    return;
+  }
+
+  console.log("renderizarLista - estado.psicologos:", state.psicologos);
   const listaFiltrada = filtrarPsicologos();
+  console.log("Lista filtrada:", listaFiltrada);
 
   if (!listaFiltrada.length) {
     elementos.listContainer.innerHTML = `
       <div class="person">
         <div class="info">
-          <i class="fa-regular fa-user"></i>
           <div>
             <h3>Nenhum psicólogo encontrado</h3>
             <p>Verifique o filtro ou a busca.</p>
@@ -446,7 +663,9 @@ function renderizarLista() {
   elementos.listContainer.innerHTML = "";
 
   listaFiltrada.forEach((psicologo) => {
-    elementos.listContainer.appendChild(criarCardPsicologo(psicologo));
+    const card = criarCardPsicologo(psicologo);
+    console.log("Adicionando card:", psicologo.nome);
+    elementos.listContainer.appendChild(card);
   });
 }
 
@@ -454,43 +673,37 @@ function criarCardPsicologo(psicologo) {
   const card = document.createElement("div");
   card.classList.add("person");
 
-  const spanStatus = document.createElement("span");
-  spanStatus.classList.add("status");
-  spanStatus.classList.add(
-    psicologo.status === "pendente" ? "pending" : "active-status",
-  );
-  spanStatus.textContent =
-    psicologo.status === "pendente" ? "Pendente" : "Ativo";
-
   const info = document.createElement("div");
   info.classList.add("info");
-
-  const icon = document.createElement("i");
-  icon.classList.add("fa-regular", "fa-user");
 
   const details = document.createElement("div");
 
   const nameElement = document.createElement("h3");
-  nameElement.textContent = psicologo.nome;
+  nameElement.textContent = psicologo.nome || "Sem nome";
 
   const crpCpfElement = document.createElement("p");
-  crpCpfElement.textContent = `CRP: ${psicologo.crp} - CPF: ${psicologo.cpf}`;
+  crpCpfElement.textContent = `CRP: ${psicologo.crp || "--"} - CPF: ${psicologo.cpf || "--"}`;
 
   const specialidadeElement = document.createElement("p");
   specialidadeElement.style.fontSize = "0.85rem";
   specialidadeElement.style.color = "#7b6f97";
   specialidadeElement.style.marginTop = "6px";
-  specialidadeElement.textContent = psicologo.especialidade;
+  specialidadeElement.textContent = psicologo.especialidade || "Sem especialidade";
 
   details.appendChild(nameElement);
   details.appendChild(crpCpfElement);
   details.appendChild(specialidadeElement);
 
-  info.appendChild(icon);
-  info.appendChild(details);
+  const statusElement = document.createElement("span");
+  statusElement.className =
+    psicologo.status === "pendente" ? "status pending" : "status active-status";
+  statusElement.textContent =
+    psicologo.status === "pendente" ? "Pendente" : "Ativo";
 
+  info.appendChild(details);
   card.appendChild(info);
-  card.appendChild(spanStatus);
+  card.appendChild(statusElement);
+
   card.classList.add("clickable-card");
   card.dataset.psicologoId = psicologo.id;
 

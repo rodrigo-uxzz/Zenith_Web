@@ -544,7 +544,7 @@ main.agendaContainer {
     padding: 24px 22px;
     border-radius: 16px;
     width: 100%;
-    max-width: 420px;
+    max-width: 400px;
     max-height: calc(100vh - 80px);
     overflow-y: auto;
     box-shadow: 0 14px 40px rgba(0, 0, 0, 0.16);

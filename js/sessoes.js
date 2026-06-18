@@ -111,6 +111,8 @@ function configurarFiltros() {
 function configurarModalSessao() {
   const modal = document.getElementById("modal-sessao");
   const closeBtn = document.getElementById("close-modal-sessao");
+  const fecharBtn = document.getElementById("btn-fechar-sessao");
+  const editarBtn = document.getElementById("btn-editar-sessao");
 
   if (!modal) return;
 
@@ -118,6 +120,21 @@ function configurarModalSessao() {
     closeBtn.addEventListener("click", function () {
       modal.style.display = "none";
       sessaoAberta = null;
+    });
+  }
+
+  if (fecharBtn) {
+    fecharBtn.addEventListener("click", function () {
+      modal.style.display = "none";
+      sessaoAberta = null;
+    });
+  }
+
+  if (editarBtn) {
+    editarBtn.addEventListener("click", function () {
+      // Implementar lógica de edição futura
+      console.log("Editar sessão:", sessaoAberta);
+      // window.location.href = "./editarSessao.html?id=" + sessaoAberta.id;
     });
   }
 

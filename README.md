@@ -37,7 +37,7 @@ Este repositório contém o **painel web do psicólogo**, onde o profissional po
 | 📅 Sessões | Agendamento, remarcação e controle de atendimentos |
 | 🧾 Anotações | Registro de observações clínicas |
 | 📊 Agenda | Visualização dos atendimentos do dia/semana |
-| 💰 Financeiro | Controle de pagamentos *(em desenvolvimento)* |
+| 💰 Financeiro | Controle de pagamentos |
 | 🔐 Autenticação | Login seguro do profissional |
 ---
 

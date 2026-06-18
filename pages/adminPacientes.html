@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Zenith - Psicólogos</title>
+    <title>Admin Zenith - Pacientes</title>
     <link rel="icon" type="image/x-icon" href="../img/logo z.PNG">
-    <link rel="stylesheet" href="../css/adminPsi.css">
+    <link rel="stylesheet" href="../css/adminPacientes.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
@@ -58,7 +58,7 @@
 
     <div class="container">
 
-        <h1>Gestão de Psicólogos</h1>
+        <h1>Gestão de Pacientes</h1>
 
         <!-- Cards -->
         <section class="cards-resumo">
@@ -74,62 +74,63 @@
 
             <div class="card">
               <div class="card-header">
-                <h3>Ativos</h3>
+                <h3>Com Psicólogo</h3>
                 <div class="card-icon">
                   <ion-icon name="checkmark-circle-outline"></ion-icon>
                 </div>
               </div>
-              <p class="card-valor" id="activeCount">0</p>
+              <p class="card-valor" id="comPsiCount">0</p>
             </div>
 
             <div class="card">
               <div class="card-header">
-                <h3>Pendentes</h3>
+                <h3>Sem Psicólogo</h3>
                 <div class="card-icon">
-                  <ion-icon name="time-outline"></ion-icon>
+                  <ion-icon name="close-circle-outline"></ion-icon>
                 </div>
               </div>
-              <p class="card-valor" id="pendingCount">0</p>
+              <p class="card-valor" id="semPsiCount">0</p>
             </div>
 
             <div class="card">
               <div class="card-header">
-                <h3>Online</h3>
+                <h3>Novos (mês)</h3>
                 <div class="card-icon">
-                  <ion-icon name="ellipse-outline"></ion-icon>
+                  <ion-icon name="person-add-outline"></ion-icon>
                 </div>
               </div>
-              <p class="card-valor" id="onlineCount">0</p>
+              <p class="card-valor" id="novosCount">0</p>
             </div>
         </section>
 
         <!-- Barra de Filtros -->
         <div class="filtros-bar">
             <div class="filtros-left">
-                <button class="btn active" data-status="todas">Todos</button>
-                <button class="btn" data-status="pendentes">Pendentes</button>
+                <button class="btn active" data-status="todos">Todos</button>
+                <button class="btn" data-status="com-psicologo">Com Psicólogo</button>
+                <button class="btn" data-status="sem-psicologo">Sem Psicólogo</button>
             </div>
             <div class="filtros-right">
                 <div class="search-box">
                     <ion-icon name="search-outline"></ion-icon>
-                    <input id="searchInput" type="text" placeholder="Buscar por nome, CRP ou CPF">
+                    <input id="searchInput" type="text" placeholder="Buscar por nome, CPF ou email">
                 </div>
             </div>
         </div>
 
         <!-- Lista -->
-        <section class="psicologos-card">
+        <section class="pacientes-card">
             <div class="cardHeader">
                 <div>
-                    <h2>Psicólogos Cadastrados</h2>
+                    <h2>Pacientes Cadastrados</h2>
                 </div>
             </div>
 
-            <div class="list" id="psychologistsList">
+            <div class="list" id="pacientesList">
                 <div class="person loading-state">
-                    <div class="info">
+                    <div class="info">   
                         <div>
-                            <h3>Carregando psicólogos...</h3>
+                            <h3>Carregando pacientes...</h3>
                             <p>Aguarde enquanto buscamos os dados.</p>
                         </div>
                     </div>
@@ -139,61 +140,55 @@
 
     </div>
 
-    <!-- Modal Pendente -->
-    <div id="pending-modal" class="modal" style="display:none;">
-        <div class="modal-content pending-modal-content">
-            <span class="close" id="close-pending-modal">&times;</span>
+    <!-- Modal Detalhes Paciente -->
+    <div id="paciente-modal" class="modal" style="display:none;">
+        <div class="modal-content paciente-modal-content">
+            <span class="close" id="close-paciente-modal">&times;</span>
 
-            <div class="pending-header">
-                <div class="pending-avatar">
+            <div class="paciente-header">
+                <div class="paciente-avatar">
                     <ion-icon name="person-outline"></ion-icon>
                 </div>
-                <div>
-                    <h2 id="pending-modal-name">Nome do psicólogo</h2>
-                    <p id="pending-modal-crp">CRP: --</p>
-                    <p id="pending-modal-cpf">CPF: --</p>
+                <div class="patient-meta">
+                    <h2 id="modal-nome">Nome do paciente</h2>
+                    <p id="modal-cpf">CPF: --</p>
+                    <p id="modal-nasc">Nascimento: --</p>
                 </div>
             </div>
 
-            <div class="pending-details">
-                <div class="pending-item">
+            <div class="paciente-details">
+                <div class="paciente-item">
                     <div class="item-icon"><ion-icon name="mail-outline"></ion-icon></div>
                     <div>
-                        <span>Contato</span>
-                        <p id="pending-modal-email">email@exemplo.com</p>
+                        <span>Email</span>
+                        <p id="modal-email">email@exemplo.com</p>
                     </div>
                 </div>
-                <div class="pending-item">
+                <div class="paciente-item">
                     <div class="item-icon"><ion-icon name="call-outline"></ion-icon></div>
                     <div>
                         <span>Telefone</span>
-                        <p id="pending-modal-phone">(00) 00000-0000</p>
+                        <p id="modal-telefone">(00) 00000-0000</p>
                     </div>
                 </div>
-                <div class="pending-item">
-                    <div class="item-icon"><ion-icon name="school-outline"></ion-icon></div>
+                <div class="paciente-item">
+                    <div class="item-icon"><ion-icon name="person-circle-outline"></ion-icon></div>
                     <div>
-                        <span>Formação</span>
-                        <p id="pending-modal-degree">Pós-Graduado</p>
+                        <span>Psicólogo</span>
+                        <p id="modal-psicologo">Não vinculado</p>
                     </div>
                 </div>
-                <div class="pending-item">
-                    <div class="item-icon"><ion-icon name="briefcase-outline"></ion-icon></div>
+                <div class="paciente-item">
+                    <div class="item-icon"><ion-icon name="calendar-outline"></ion-icon></div>
                     <div>
-                        <span>Experiência</span>
-                        <p id="pending-modal-experience">5 anos de experiência</p>
+                        <span>Última Sessão</span>
+                        <p id="modal-ultima-sessao">--</p>
                     </div>
                 </div>
             </div>
 
-            <div class="pending-bio">
-                <h3>Sobre</h3>
-                <p id="pending-modal-bio">Descrição do psicólogo e experiência clínica.</p>
-            </div>
-
-            <div class="pending-actions">
-                <button class="btn-aceitar" id="pending-accept">Aceitar</button>
-                <button class="btn-recusar" id="pending-reject">Rejeitar</button>
+            <div class="modal-actions">
+                <button class="btn-fechar" id="btn-fechar-modal">Fechar</button>
             </div>
         </div>
     </div>
@@ -215,6 +210,6 @@
         <span id="toast-message"></span>
     </div>
 
-    <script type="module" src="../js/adminPsi.js"></script>
+    <script type="module" src="../js/adminPacientes.js"></script>
 </body>
 </html>
