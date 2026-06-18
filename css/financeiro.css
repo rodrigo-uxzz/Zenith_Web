@@ -11,7 +11,7 @@
   --primary-light: #7a5cff;
   --bg-main: #f3f0fa;
   --bg-card: #ffffff;
-  --text-dark: #290041;
+  --text-dark: #5b3cc4;
   --text-muted: #666;
   --border: #e5e2f0;
   --pendente: #dc3545;
@@ -792,6 +792,7 @@ tbody tr:hover {
     margin-bottom: 12px;
 }
 
+/* COMPROVANTE — só leitura */
 .comprovante-area {
     border: 2px dashed #c4b8f0;
     border-radius: 14px;
@@ -801,11 +802,11 @@ tbody tr:hover {
     align-items: center;
     gap: 10px;
     background: #faf8ff;
-    cursor: pointer;
+    cursor: default; /* era pointer, tirar sensação de upload */
     transition: background 0.2s;
 }
 
-.comprovante-area:hover { background: #f3edff; }
+.comprovante-area:hover { background: #faf8ff; } /* sem hover effect */
 
 .comprovante-area ion-icon {
     font-size: 2.2rem;

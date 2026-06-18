@@ -205,19 +205,6 @@ function conectarCanal(idChat, idPaciente) {
 
   console.log("Canal conectado:", `chat.${idChat}`);
 
-  // DEBUG temporário
-  echo.connector.pusher.connection.bind('error', (err) => {
-    console.error("Erro de conexão Pusher/Reverb:", err);
-  });
-
-  canalAtivo.subscription.bind('pusher:subscription_succeeded', () => {
-    console.log("✅ Subscription SUCESSO:", `chat.${idChat}`);
-  });
-
-  canalAtivo.subscription.bind('pusher:subscription_error', (status) => {
-    console.error("❌ Subscription ERRO:", status);
-  });
-
   canalAtivo.listen(".MensagemEnviada", (e) => {
     console.log("MensagemEnviada recebida:", e);
     if (document.querySelector(`[data-msg="${e.id_mensagem}"]`)) return;

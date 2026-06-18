@@ -66,7 +66,7 @@ body {
 }
 
 
-/* espaçamento icons */
+
 .sidebar ul li .icone {
     display: flex;
     justify-content: center;
@@ -74,8 +74,9 @@ body {
     font-size: 1.5rem;
     min-width: 60px;
     height: 60px;
-    color:white;
+    color: white;
 }
+
 
 .sidebar ul li .titulo {
     display: flex;
@@ -104,7 +105,7 @@ body {
 
 .logo {
     width: 80px;
-    height: auto;    
+    height: auto;
 }
 
 .titulo {
@@ -139,9 +140,7 @@ body {
 }
 
 /* primeiro e ultimo */
-.sidebar ul li:first-of-type{
-    bottom: 100;
-    width: 100%;
+.sidebar ul li:first-of-type {
     margin-bottom: 60px;
 }
 
