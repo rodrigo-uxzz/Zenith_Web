@@ -187,10 +187,10 @@ function formatarMoeda(valor) {
 }
 
 function normalizarStatus(status) {
-  const s = String(status || "").toLowerCase();
-  if (s.includes("pag") || s.includes("quitad")) return "pago";
-  if (s.includes("pend") || s.includes("aberto") || s.includes("aguard"))
-    return "pendente";
+  const s = String(status || "").toLowerCase().trim();
+  if (s === "aguardando_confirmacao") return "aguardando_confirmacao";
+  if (s.includes("pag") || s.includes("quitad"))  return "pago";
+  if (s.includes("pend") || s.includes("aberto"))  return "pendente";
   return s;
 }
 
@@ -293,7 +293,10 @@ async function listarPagamentos(data) {
     const statusNorm = normalizarStatus(
       pagamento.status_pagamento || pagamento.status || "",
     );
-    const labelStatus = statusNorm === "pago" ? "Pago" : "Pendente";
+    const labelStatus =
+  statusNorm === "pago"                   ? "Pago"                   :
+  statusNorm === "aguardando_confirmacao" ? "Aguardando confirmação" :
+                                            "Pendente";
 
     linha.innerHTML = `
       <td>${pagamento.paciente?.usuario?.nome ?? "—"}</td>
@@ -359,13 +362,15 @@ document
 
       const comprovanteArea = document.getElementById("comprovanteArea");
       const comprovanteBotoes = document.getElementById("comprovanteBotoes");
-
+      if (respostaComprovante.ok) {
+  urlComprovante = respostaComprovante.dados.comprovante;
+  console.log("URL comprovante:", urlComprovante);
+}
       if (urlComprovante) {
         const nomeArquivo = urlComprovante.split("/").pop();
-
         comprovanteArea.innerHTML = `
-            <ion-icon name="document-outline"></ion-icon>
-            <p>Nenhum comprovante enviado pelo paciente</p>
+          <ion-icon name="document-attach-outline"></ion-icon>
+          <p>${nomeArquivo}</p>
         `;
         comprovanteBotoes.style.display = "flex";
 

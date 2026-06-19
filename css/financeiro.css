@@ -18,6 +18,11 @@
   --pago: #28a745;
 }
 
+.badge.aguardando_confirmacao {
+  background-color: #FEF3C7;
+  color: #92400E;
+}
+
 body {
   min-height: 100vh;
   background: var(--bg-main);
