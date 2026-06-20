@@ -676,3 +676,24 @@ textarea {
   font-size: 14px;
   color: #333;
 }
+
+select {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 13px;
+  background: #fafafa;
+  color: #333;
+  cursor: pointer;
+}
+
+.pix-badge-ok {
+  margin-top: 12px;
+  background: #f0fdf4;
+  color: #15803d;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 13px;
+}

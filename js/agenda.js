@@ -422,22 +422,23 @@ function showConsultaModal(button) {
   const horarioTexto = button.querySelector("span")?.textContent || "";
   const horario = parseHorario(horarioTexto);
   const data = document.querySelector(".dataAgenda")?.textContent || "";
-  const link = `https://zoom.us/`; // Substitua pelo link real se disponível
 
-  // Passar ID e status da sessão para o modal
+  // Passa ID e status
   consultaModal.dataset.id = button.dataset.id;
   consultaModal.dataset.status = button.dataset.status || "agendada";
 
   document.getElementById("consulta-modal-nome").textContent = nome;
   document.getElementById("consulta-modal-data").textContent = data;
   document.getElementById("consulta-modal-horario").textContent = horario;
-  const consultaLink = document.getElementById("consulta-modal-link");
-  consultaLink.href = link;
-  consultaLink.textContent = "Abrir link externo";
-  document.getElementById("consulta-modal-observacao").textContent =
-    "Primeira consulta";
 
-  // Ajustar botões conforme o status
+  // Link será preenchido pelo detalhesConsulta ao clicar
+  const consultaLink = document.getElementById("consulta-modal-link");
+  consultaLink.href = "#";
+  consultaLink.textContent = "Carregando...";
+
+  document.getElementById("consulta-modal-observacao").textContent =
+    "Carregando...";
+
   const status = (button.dataset.status || "agendada").toLowerCase();
   const actionsContainer = document.querySelector(".consulta-modal-actions");
   const modalHeader = document.querySelector(".consulta-modal-header");
@@ -450,7 +451,6 @@ function showConsultaModal(button) {
     const btnRealizada = actionsContainer.querySelector(".btnRealizada");
     const btnCancelada = actionsContainer.querySelector(".btnCancelada");
 
-    // ESCONDE TUDO PRIMEIRO
     if (acaoPendente) acaoPendente.style.display = "none";
     if (acaoAgendada) acaoAgendada.style.display = "none";
     if (btnEditar) btnEditar.style.display = "none";
@@ -458,7 +458,6 @@ function showConsultaModal(button) {
     if (btnRealizada) btnRealizada.style.display = "none";
     if (btnCancelada) btnCancelada.style.display = "none";
 
-    // MOSTRAR BOTÕES CONFORME O STATUS
     if (
       status.includes("pendente") ||
       status.includes("cancelamento_solicitado") ||
@@ -467,12 +466,9 @@ function showConsultaModal(button) {
       if (acaoPendente) acaoPendente.style.display = "flex";
     } else if (status === "agendada") {
       if (acaoAgendada) acaoAgendada.style.display = "flex";
-
       if (btnReagendar) btnReagendar.style.display = "block";
       if (btnRealizada) btnRealizada.style.display = "block";
       if (btnCancelada) btnCancelada.style.display = "block";
-
-      // APENAS AGENDADA TEM BOTÃO DE EDITAR
       if (btnEditar) btnEditar.style.display = "block";
     }
 
@@ -911,19 +907,49 @@ if (btnSalvarReagendar) {
 }
 
 if (btnSalvarEditar) {
-  btnSalvarEditar.addEventListener("click", function () {
-    const link = editarLink.value.trim() || "#";
+  btnSalvarEditar.addEventListener("click", async function () {
+    const link = editarLink.value.trim();
     const observacoes = editarObservacoes.value.trim();
+    const id = consultaModal.dataset.id;
 
-    const consultaLink = document.getElementById("consulta-modal-link");
-    consultaLink.href = link;
-    consultaLink.textContent = link !== "#" ? "Abrir link externo" : "Sem link";
+    if (!id) {
+      showToast("ID da sessão não encontrado");
+      return;
+    }
 
-    document.getElementById("consulta-modal-observacao").textContent =
-      observacoes || "Sem observações";
+    try {
+      // Salva o link específico da sessão na API
+      if (link) {
+        const { ok, dados } = await apiRequest(`/link/sessao/${id}`, "PUT", {
+          link_sessao: link,
+        });
 
-    editarModal.style.display = "none";
-    consultaModal.style.display = "flex";
+        if (!ok) {
+          showToast(dados?.error || "Erro ao salvar link");
+          return;
+        }
+      }
+
+      // Atualiza o modal de detalhes visualmente
+      const consultaLink = document.getElementById("consulta-modal-link");
+      if (link) {
+        consultaLink.href = link;
+        consultaLink.textContent = "Abrir link externo";
+      } else {
+        consultaLink.href = "#";
+        consultaLink.textContent = "Sem link";
+      }
+
+      document.getElementById("consulta-modal-observacao").textContent =
+        observacoes || "Sem observações";
+
+      editarModal.style.display = "none";
+      consultaModal.style.display = "flex";
+      showToast("✅ Alterações salvas com sucesso!");
+    } catch (error) {
+      console.error("Erro ao salvar:", error);
+      showToast("Erro ao salvar alterações");
+    }
   });
 }
 
@@ -1012,10 +1038,20 @@ document
       document.getElementById("consulta-modal-observacao").textContent =
         sessao.anotacoes || "Sem observações";
 
+      const consultaLink = document.getElementById("consulta-modal-link");
+      if (dados.link) {
+        consultaLink.href = dados.link;
+        consultaLink.textContent = "Abrir link externo";
+      } else {
+        consultaLink.href = "#";
+        consultaLink.textContent = "Sem link cadastrado";
+      }
+
+      consultaModal.dataset.status = sessao.status_sessao;
+
       consultaModal.style.display = "flex";
       console.log(dados);
 
-      consultaModal.dataset.status = sessao.status;
       if (sessao.status === "realizada") {
         document.querySelector(".btnReagendar").style.display = "inline-block";
         document.querySelector(".btnRealizada").style.display = "none";
