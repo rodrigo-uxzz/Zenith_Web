@@ -1666,9 +1666,37 @@ btnCancelEdit:hover {
    MODAL REAGENDAR — novo seletor de data
 ══════════════════════════════════════════ */
 
+/* Substitua o bloco .reagendar-modal-content e adicione ao grid */
+
 .reagendar-modal-content {
     padding: 28px 24px 20px;
     max-width: 460px;
+    /* altura fixa para o modal não mudar de tamanho */
+    width: 460px;
+}
+
+.reagendar-horarios-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 18px;
+    /* altura fixa com scroll interno */
+    height: 200px;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+.reagendar-horarios-grid::-webkit-scrollbar {
+    width: 5px;
+}
+
+.reagendar-horarios-grid::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.reagendar-horarios-grid::-webkit-scrollbar-thumb {
+    background: rgba(91, 60, 196, 0.25);
+    border-radius: 999px;
 }
 
 /* Navegação de data */

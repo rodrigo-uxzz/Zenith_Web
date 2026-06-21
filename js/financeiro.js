@@ -275,22 +275,24 @@ function calcularResumoFinanceiro(pagamentos, dataSelecionada) {
 
 // ===== DASHBOARD =====
 async function carregarDashboard(data) {
-    const endpoint = modoFiltro === "semanal"
-        ? `/dashboardFinanceiroSemanal?data=${data}`
-        : `/dashboardFinanceiro?data=${data}`;
+  const endpoint =
+    modoFiltro === "semanal"
+      ? `/dashboardFinanceiroSemanal?data=${data}`
+      : `/dashboardFinanceiro?data=${data}`;
 
-    const { ok, dados } = await apiRequest(endpoint);
-    if (!ok) return;
+  const { ok, dados } = await apiRequest(endpoint);
+  if (!ok) return;
 
-    document.getElementById("cardFaturamentoDiaValor").innerText =
-        `R$ ${formatarMoeda(dados.faturamento)}`;
+  document.getElementById("cardFaturamentoDiaValor").innerText =
+    `R$ ${formatarMoeda(dados.faturamento)}`;
 
-    document.getElementById("cardFaturamentoMensalValor").innerText =
-        `R$ ${formatarMoeda(dados.faturamento_mensal)}`;
+  document.getElementById("cardFaturamentoMensalValor").innerText =
+    `R$ ${formatarMoeda(dados.faturamento_mensal)}`;
 
-    document.getElementById("cardConsultasPagasValor").innerText = dados.pagas;
+  document.getElementById("cardConsultasPagasValor").innerText = dados.pagas;
 
-    document.getElementById("cardConsultasPendentesValor").innerText = dados.pendentes;
+  document.getElementById("cardConsultasPendentesValor").innerText =
+    dados.pendentes;
 }
 // ===== LISTAGEM =====
 async function listarPagamentos(data) {
@@ -409,18 +411,29 @@ document
         const nomeArquivo = urlComprovante.split("/").pop();
 
         comprovanteArea.innerHTML = `
-            <ion-icon name="document-outline"></ion-icon>
-            <p>Nenhum comprovante enviado pelo paciente</p>
-        `;
+    <ion-icon name="document-outline"></ion-icon>
+    <p>${nomeArquivo}</p>
+  `;
         comprovanteBotoes.style.display = "flex";
 
         document.getElementById("btnVisualizarComprovante").onclick = () =>
           window.open(urlComprovante, "_blank");
-        document.getElementById("btnBaixarComprovante").onclick = () => {
-          const a = document.createElement("a");
-          a.href = urlComprovante;
-          a.download = nomeArquivo;
-          a.click();
+
+        document.getElementById("btnBaixarComprovante").onclick = async () => {
+          try {
+            const response = await fetch(urlComprovante);
+            const blob = await response.blob();
+            const blobUrl = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = blobUrl;
+            a.download = nomeArquivo;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(blobUrl);
+          } catch (err) {
+            console.error("Erro ao baixar comprovante:", err);
+          }
         };
       } else {
         comprovanteArea.innerHTML = `
