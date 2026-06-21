@@ -416,7 +416,6 @@ document
 
         document.getElementById("btnVisualizarComprovante").onclick = () =>
           window.open(urlComprovante, "_blank");
-
         document.getElementById("btnBaixarComprovante").onclick = () => {
           const a = document.createElement("a");
           a.href = urlComprovante;

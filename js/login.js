@@ -3,40 +3,40 @@ import { apiRequest } from "./api.js";
 // ───── HELPER DE LOADING ─────────────────────────────────────────────────────
 
 function setLoading(botao, carregando, spinnerDark = false) {
-    if (!botao) return;
-    if (carregando) {
-        botao.disabled = true;
-        botao.dataset.textoOriginal = botao.innerHTML;
-        botao.innerHTML = `<span class="spinner${spinnerDark ? " spinner-dark" : ""}"></span>`;
-    } else {
-        botao.disabled = false;
-        botao.innerHTML = botao.dataset.textoOriginal || botao.innerHTML;
-    }
+  if (!botao) return;
+  if (carregando) {
+    botao.disabled = true;
+    botao.dataset.textoOriginal = botao.innerHTML;
+    botao.innerHTML = `<span class="spinner${spinnerDark ? " spinner-dark" : ""}"></span>`;
+  } else {
+    botao.disabled = false;
+    botao.innerHTML = botao.dataset.textoOriginal || botao.innerHTML;
+  }
 }
 
 // ─── ELEMENTOS ───────────────────────────────────────────────────────────────
 
-const verifyModal      = document.getElementById("modalVerificacao");
-const verifyCodeInput  = document.getElementById("verification-code");
-const confirmCodeBtn   = document.getElementById("confirm-code-btn");
+const verifyModal = document.getElementById("modalVerificacao");
+const verifyCodeInput = document.getElementById("verification-code");
+const confirmCodeBtn = document.getElementById("confirm-code-btn");
 const closeVerifyModal = document.getElementById("close-verify-modal");
 
-const esqueciModal    = document.getElementById("modalEsqueciSenha");
+const esqueciModal = document.getElementById("modalEsqueciSenha");
 const emailRecuperacao = document.getElementById("emailRecuperacao");
-const btnEnviarRecup  = document.getElementById("btnEnviarRecuperacao");
+const btnEnviarRecup = document.getElementById("btnEnviarRecuperacao");
 const closeEsqueciModal = document.getElementById("close-esqueci-senha");
 
-const novaSenhaModal     = document.getElementById("modalNovaSenha");
-const closeNovaSenha     = document.getElementById("close-nova-senha");
+const novaSenhaModal = document.getElementById("modalNovaSenha");
+const closeNovaSenha = document.getElementById("close-nova-senha");
 const btnEnviarNovaSenha = document.getElementById("btnEnviarNovaSenha");
 
-const senhaAtualModal    = document.getElementById("modalSenhaAtualizada");
-const closeSenhaAtual    = document.getElementById("close-senha-atualizada");
+const senhaAtualModal = document.getElementById("modalSenhaAtualizada");
+const closeSenhaAtual = document.getElementById("close-senha-atualizada");
 const btnFecharSenhaAtual = document.getElementById("btnFecharSenhaAtualizada");
 
 // pendingEmail agora é só para recuperação de senha
-let pendingEmail  = "";
-let recoveryCode  = "";
+let pendingEmail = "";
+let recoveryCode = "";
 
 // ─── TOAST ───────────────────────────────────────────────────────────────────
 
@@ -127,20 +127,22 @@ if (btnEnviarRecup) {
       return;
     }
 
-        setLoading(btnEnviarRecup, true, true);
+    setLoading(btnEnviarRecup, true, true);
 
-        const { ok, dados } = await apiRequest("/forgotPassword", "POST", { email });
-
-        setLoading(btnEnviarRecup, false, true);
-
-        if (ok) {
-            recoveryEmail                 = email;
-            esqueciModal.style.display    = "none";
-            openVerifyModal(email, true);
-        } else {
-            showToast(dados?.message || "E-mail não encontrado.");
-        }
+    const { ok, dados } = await apiRequest("/forgotPassword", "POST", {
+      email,
     });
+
+    setLoading(btnEnviarRecup, false, true);
+
+    if (ok) {
+      recoveryEmail = email;
+      esqueciModal.style.display = "none";
+      openVerifyModal(email, true);
+    } else {
+      showToast(dados?.message || "E-mail não encontrado.");
+    }
+  });
 }
 
 // ─── MODAL NOVA SENHA ─────────────────────────────────────────────────────────
@@ -151,7 +153,7 @@ if (closeNovaSenha) {
 
 if (btnEnviarNovaSenha) {
   btnEnviarNovaSenha.addEventListener("click", async () => {
-    const nova      = document.getElementById("novaSenha").value;
+    const nova = document.getElementById("novaSenha").value;
     const confirmar = document.getElementById("confirmarSenha").value;
 
     if (!nova || nova.length < 6) {
@@ -163,22 +165,22 @@ if (btnEnviarNovaSenha) {
       return;
     }
 
-        setLoading(btnEnviarNovaSenha, true, true);
+    setLoading(btnEnviarNovaSenha, true, true);
 
-        const { ok, dados } = await apiRequest("/resetPassword", "POST", {
-            email:    pendingEmail,
-            password: nova,
-        });
-
-        setLoading(btnEnviarNovaSenha, false, true);
-
-        if (ok) {
-            novaSenhaModal.style.display   = "none";
-            senhaAtualModal.style.display  = "flex";
-        } else {
-            showToast(dados?.message || "Erro ao atualizar a senha.");
-        }
+    const { ok, dados } = await apiRequest("/resetPassword", "POST", {
+      email: pendingEmail,
+      password: nova,
     });
+
+    setLoading(btnEnviarNovaSenha, false, true);
+
+    if (ok) {
+      novaSenhaModal.style.display = "none";
+      senhaAtualModal.style.display = "flex";
+    } else {
+      showToast(dados?.message || "Erro ao atualizar a senha.");
+    }
+  });
 }
 
 // ─── MODAL SENHA ATUALIZADA ───────────────────────────────────────────────────
@@ -196,8 +198,8 @@ if (btnFecharSenhaAtual) {
 // ─── FECHAR MODAIS CLICANDO FORA ─────────────────────────────────────────────
 
 window.addEventListener("click", (e) => {
-  if (e.target === verifyModal)    verifyModal.style.display    = "none";
-  if (e.target === esqueciModal)   esqueciModal.style.display   = "none";
+  if (e.target === verifyModal) verifyModal.style.display = "none";
+  if (e.target === esqueciModal) esqueciModal.style.display = "none";
   if (e.target === novaSenhaModal) novaSenhaModal.style.display = "none";
   if (e.target === senhaAtualModal) senhaAtualModal.style.display = "none";
 });
@@ -206,46 +208,75 @@ window.addEventListener("click", (e) => {
 document.getElementById("loginForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  const email    = document.getElementById("email").value.trim();
+  const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value.trim();
 
-  if (!email)    return showToast("Preencha o campo de E-mail ou CRP.");
-  if (!password) return showToast("Preencha o campo de Senha.");
+  if (!email) {
+    showToast("Preencha o campo de E-mail ou CRP.");
+    return;
+  }
+  if (!password) {
+    showToast("Preencha o campo de Senha.");
+    return;
+  }
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const crpRegex   = /^CRP-\d{2}\/\d{5}$/;
+  const crpRegex = /^CRP-\d{2}\/\d{5}$/;
 
   if (email.includes("@") && !emailRegex.test(email)) {
-    return showToast("Insira um e-mail válido.");
+    showToast("Insira um e-mail válido.");
+    return;
   }
   if (!email.includes("@") && !crpRegex.test(email.toUpperCase())) {
-    return showToast("Insira um CRP válido no formato CRP-XX/XXXXX.");
+    showToast("Insira um CRP válido no formato CRP-XX/XXXXX.");
+    return;
   }
   if (password.length < 6) {
-    return showToast("A senha deve ter pelo menos 6 caracteres.");
+    showToast("A senha deve ter pelo menos 6 caracteres.");
+    return;
   }
+
+  const btnEntrar = document.querySelector(".botaoE");
+  setLoading(btnEntrar, true);
 
   const { ok, dados } = await apiRequest("/login", "POST", {
     login: email,
     senha: password,
   });
 
+  setLoading(btnEntrar, false);
+
   if (!ok) {
     if (dados?.error === "Aguarde a verificação da conta") {
       showToast("Sua conta está em análise pelo administrador, aguarde.");
+    } else if (dados?.error === "Email não verificado") {
+      openVerifyModal(email, false);
     } else {
-      // "Email não verificado" não deve mais ocorrer — o cadastro já resolve isso
       showToast("Login inválido: verifique suas credenciais.");
     }
     return;
   }
 
-    const btnEntrar = document.querySelector(".botaoE");
-    setLoading(btnEntrar, true);
+  if (!dados.user) {
+    showToast("Erro inesperado na resposta do servidor.");
+    return;
+  }
+  if (dados.user.tipo_usuario !== "psicologo") {
+    showToast("Login inválido: apenas psicólogos podem acessar.");
+    return;
+  }
 
-    const { ok, dados } = await apiRequest("/login", "POST", { login: email, senha: password });
+  const usuarioLogado = dados.user || {};
+  const psicologoId =
+    usuarioLogado.id_psicologo ||
+    usuarioLogado.psicologo?.id_psicologo ||
+    usuarioLogado.psicologo?.id ||
+    usuarioLogado.id ||
+    "";
 
-    setLoading(btnEntrar, false);
+  localStorage.setItem("token", dados.access_token);
+  localStorage.setItem("usuarioLogado", JSON.stringify(usuarioLogado));
+  localStorage.setItem("psicologoId", String(psicologoId));
 
     if (!ok) {
         if (dados?.error === "Aguarde a verificação da conta") {

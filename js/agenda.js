@@ -29,8 +29,16 @@ function aplicarBotoesStatus(status) {
   const btnCanceladaBtn = actionsContainer.querySelector(".btnCancelada");
 
   // Esconde tudo primeiro
-  [acaoPendente, acaoAgendada, btnEditarHeader, btnReagendarBtn, btnRealizadaBtn, btnCanceladaBtn]
-    .forEach((el) => { if (el) el.style.display = "none"; });
+  [
+    acaoPendente,
+    acaoAgendada,
+    btnEditarHeader,
+    btnReagendarBtn,
+    btnRealizadaBtn,
+    btnCanceladaBtn,
+  ].forEach((el) => {
+    if (el) el.style.display = "none";
+  });
 
   const s = status.toLowerCase();
 
@@ -307,7 +315,7 @@ async function atualizarData() {
         const isPendente = status.includes("pendente");
         // Verificar se é cancelamento solicitado (pendente de aprovação) - paciente OU psicólogo
         const isCancelamentoSolicitado = status === "cancelamento_solicitado"; // só paciente
-
+        
         const isCancelamentoPsicologo = status === "cancelamentopsicologo"; // só psicólogo
 
         const isReagendadaPaciente = status.includes(

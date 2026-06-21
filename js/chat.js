@@ -223,7 +223,7 @@ function conectarCanal(idChat, idPaciente) {
       });
       headerStatus.textContent = "Visto agora";
     }
-  });   
+  });
 }
 
 // ─── Enviar ───────────────────────────────────────────────────────────────────

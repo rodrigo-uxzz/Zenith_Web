@@ -1,209 +1,243 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin Zenith - Pacientes</title>
-    <link rel="icon" type="image/x-icon" href="../img/logo z.PNG">
-    <link rel="stylesheet" href="../css/adminPacientes.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-</head>
+    <link rel="icon" type="image/png" sizes="64x64" href="../img/logoZ.png" />
+    <link rel="stylesheet" href="../css/adminPacientes.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+    ></script>
+    <script>
+      const token = localStorage.getItem("token");
 
-<body>
-
+      if (!token) {
+        window.location.href = "loginScreen.html";
+      }
+    </script>
+  </head>
+  <body>
     <div class="sidebar">
-        <ul>
-            <li>
-                <a href="./adminHome.html">
-                    <span class="icone">
-                        <img src="../img/logo.png" class="logo" alt="logo do site">
-                    </span>
-                    <span class="titulo">ZENITH</span>
-                </a>
-            </li>
-            <li>
-                <a href="adminHome.html">
-                    <span class="icone"><ion-icon name="home-outline"></ion-icon></span>
-                    <span class="titulo">Home</span>
-                </a>
-            </li>
-            <li>
-                <a href="./adminPacientes.html">
-                    <span class="icone"><ion-icon name="people-outline"></ion-icon></span>
-                    <span class="titulo">Pacientes</span>
-                </a>
-            </li>
-            <li>
-                <a href="./adminPsi.html">
-                    <span class="icone"><ion-icon name="person-add-outline"></ion-icon></span>
-                    <span class="titulo">Psicólogos</span>
-                </a>
-            </li>
-            <li>
-                <a id="open-Modal-logout" href="#">
-                    <span class="icone"><ion-icon name="log-out-outline"></ion-icon></span>
-                    <span class="titulo">Sair</span>
-                </a>
-            </li>
-        </ul>
+      <ul>
+        <li>
+          <a href="./adminHome.html">
+            <span class="icone">
+              <img src="../img/logo.png" class="logo" alt="logo do site" />
+            </span>
+            <span class="titulo">ZENITH</span>
+          </a>
+        </li>
+        <li>
+          <a href="adminHome.html">
+            <span class="icone"><ion-icon name="home-outline"></ion-icon></span>
+            <span class="titulo">Home</span>
+          </a>
+        </li>
+        <li>
+          <a href="./adminPacientes.html">
+            <span class="icone"
+              ><ion-icon name="people-outline"></ion-icon
+            ></span>
+            <span class="titulo">Pacientes</span>
+          </a>
+        </li>
+        <li>
+          <a href="./adminPsi.html">
+            <span class="icone"
+              ><ion-icon name="person-add-outline"></ion-icon
+            ></span>
+            <span class="titulo">Psicólogos</span>
+          </a>
+        </li>
+        <li>
+          <a id="open-Modal-logout" href="#">
+            <span class="icone"
+              ><ion-icon name="log-out-outline"></ion-icon
+            ></span>
+            <span class="titulo">Sair</span>
+          </a>
+        </li>
+      </ul>
     </div>
 
     <div class="container">
+      <h1>Gestão de Pacientes</h1>
 
-        <h1>Gestão de Pacientes</h1>
-
-        <!-- Cards -->
-        <section class="cards-resumo">
-            <div class="card">
-              <div class="card-header">
-                <h3>Total</h3>
-                <div class="card-icon">
-                  <ion-icon name="people-outline"></ion-icon>
-                </div>
-              </div>
-              <p class="card-valor" id="totalCount">0</p>
+      <!-- Cards -->
+      <section class="cards-resumo">
+        <div class="card">
+          <div class="card-header">
+            <h3>Total</h3>
+            <div class="card-icon">
+              <ion-icon name="people-outline"></ion-icon>
             </div>
-
-            <div class="card">
-              <div class="card-header">
-                <h3>Com Psicólogo</h3>
-                <div class="card-icon">
-                  <ion-icon name="checkmark-circle-outline"></ion-icon>
-                </div>
-              </div>
-              <p class="card-valor" id="comPsiCount">0</p>
-            </div>
-
-            <div class="card">
-              <div class="card-header">
-                <h3>Sem Psicólogo</h3>
-                <div class="card-icon">
-                  <ion-icon name="close-circle-outline"></ion-icon>
-                </div>
-              </div>
-              <p class="card-valor" id="semPsiCount">0</p>
-            </div>
-
-            <div class="card">
-              <div class="card-header">
-                <h3>Novos (mês)</h3>
-                <div class="card-icon">
-                  <ion-icon name="person-add-outline"></ion-icon>
-                </div>
-              </div>
-              <p class="card-valor" id="novosCount">0</p>
-            </div>
-        </section>
-
-        <!-- Barra de Filtros -->
-        <div class="filtros-bar">
-            <div class="filtros-left">
-                <button class="btn active" data-status="todos">Todos</button>
-                <button class="btn" data-status="com-psicologo">Com Psicólogo</button>
-                <button class="btn" data-status="sem-psicologo">Sem Psicólogo</button>
-            </div>
-            <div class="filtros-right">
-                <div class="search-box">
-                    <ion-icon name="search-outline"></ion-icon>
-                    <input id="searchInput" type="text" placeholder="Buscar por nome, CPF ou email">
-                </div>
-            </div>
+          </div>
+          <p class="card-valor" id="totalCount">0</p>
         </div>
 
-        <!-- Lista -->
-        <section class="pacientes-card">
-            <div class="cardHeader">
-                <div>
-                    <h2>Pacientes Cadastrados</h2>
-                </div>
+        <div class="card">
+          <div class="card-header">
+            <h3>Com Psicólogo</h3>
+            <div class="card-icon">
+              <ion-icon name="checkmark-circle-outline"></ion-icon>
             </div>
+          </div>
+          <p class="card-valor" id="comPsiCount">0</p>
+        </div>
 
-            <div class="list" id="pacientesList">
-                <div class="person loading-state">
-                    <div class="info">   
-                        <div>
-                            <h3>Carregando pacientes...</h3>
-                            <p>Aguarde enquanto buscamos os dados.</p>
-                        </div>
-                    </div>
-                </div>
+        <div class="card">
+          <div class="card-header">
+            <h3>Sem Psicólogo</h3>
+            <div class="card-icon">
+              <ion-icon name="close-circle-outline"></ion-icon>
             </div>
-        </section>
+          </div>
+          <p class="card-valor" id="semPsiCount">0</p>
+        </div>
 
+        <div class="card">
+          <div class="card-header">
+            <h3>Novos (mês)</h3>
+            <div class="card-icon">
+              <ion-icon name="person-add-outline"></ion-icon>
+            </div>
+          </div>
+          <p class="card-valor" id="novosCount">0</p>
+        </div>
+      </section>
+
+      <!-- Barra de Filtros -->
+      <div class="filtros-bar">
+        <div class="filtros-left">
+          <button class="btn active" data-status="todos">Todos</button>
+          <button class="btn" data-status="com-psicologo">Com Psicólogo</button>
+          <button class="btn" data-status="sem-psicologo">Sem Psicólogo</button>
+        </div>
+        <div class="filtros-right">
+          <div class="search-box">
+            <ion-icon name="search-outline"></ion-icon>
+            <input
+              id="searchInput"
+              type="text"
+              placeholder="Buscar por nome, CPF ou email"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- Lista -->
+      <section class="pacientes-card">
+        <div class="cardHeader">
+          <div>
+            <h2>Pacientes Cadastrados</h2>
+          </div>
+        </div>
+
+        <div class="list" id="pacientesList">
+          <div class="person loading-state">
+            <div class="info">
+              <div>
+                <h3>Carregando pacientes...</h3>
+                <p>Aguarde enquanto buscamos os dados.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
 
     <!-- Modal Detalhes Paciente -->
-    <div id="paciente-modal" class="modal" style="display:none;">
-        <div class="modal-content paciente-modal-content">
-            <span class="close" id="close-paciente-modal">&times;</span>
+    <div id="paciente-modal" class="modal" style="display: none">
+      <div class="modal-content paciente-modal-content">
+        <span class="close" id="close-paciente-modal">&times;</span>
 
-            <div class="paciente-header">
-                <div class="paciente-avatar">
-                    <ion-icon name="person-outline"></ion-icon>
-                </div>
-                <div class="patient-meta">
-                    <h2 id="modal-nome">Nome do paciente</h2>
-                    <p id="modal-cpf">CPF: --</p>
-                    <p id="modal-nasc">Nascimento: --</p>
-                </div>
-            </div>
-
-            <div class="paciente-details">
-                <div class="paciente-item">
-                    <div class="item-icon"><ion-icon name="mail-outline"></ion-icon></div>
-                    <div>
-                        <span>Email</span>
-                        <p id="modal-email">email@exemplo.com</p>
-                    </div>
-                </div>
-                <div class="paciente-item">
-                    <div class="item-icon"><ion-icon name="call-outline"></ion-icon></div>
-                    <div>
-                        <span>Telefone</span>
-                        <p id="modal-telefone">(00) 00000-0000</p>
-                    </div>
-                </div>
-                <div class="paciente-item">
-                    <div class="item-icon"><ion-icon name="person-circle-outline"></ion-icon></div>
-                    <div>
-                        <span>Psicólogo</span>
-                        <p id="modal-psicologo">Não vinculado</p>
-                    </div>
-                </div>
-                <div class="paciente-item">
-                    <div class="item-icon"><ion-icon name="calendar-outline"></ion-icon></div>
-                    <div>
-                        <span>Última Sessão</span>
-                        <p id="modal-ultima-sessao">--</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="modal-actions">
-                <button class="btn-fechar" id="btn-fechar-modal">Fechar</button>
-            </div>
+        <div class="paciente-header">
+          <div class="paciente-avatar">
+            <ion-icon name="person-outline"></ion-icon>
+          </div>
+          <div class="patient-meta">
+            <h2 id="modal-nome">Nome do paciente</h2>
+            <p id="modal-cpf">CPF: --</p>
+            <p id="modal-nasc">Nascimento: --</p>
+          </div>
         </div>
+
+        <div class="paciente-details">
+          <div class="paciente-item">
+            <div class="item-icon">
+              <ion-icon name="mail-outline"></ion-icon>
+            </div>
+            <div>
+              <span>Email</span>
+              <p id="modal-email">email@exemplo.com</p>
+            </div>
+          </div>
+          <div class="paciente-item">
+            <div class="item-icon">
+              <ion-icon name="call-outline"></ion-icon>
+            </div>
+            <div>
+              <span>Telefone</span>
+              <p id="modal-telefone">(00) 00000-0000</p>
+            </div>
+          </div>
+          <div class="paciente-item">
+            <div class="item-icon">
+              <ion-icon name="person-circle-outline"></ion-icon>
+            </div>
+            <div>
+              <span>Psicólogo</span>
+              <p id="modal-psicologo">Não vinculado</p>
+            </div>
+          </div>
+          <div class="paciente-item">
+            <div class="item-icon">
+              <ion-icon name="calendar-outline"></ion-icon>
+            </div>
+            <div>
+              <span>Última Sessão</span>
+              <p id="modal-ultima-sessao">--</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button class="btn-fechar" id="btn-fechar-modal">Fechar</button>
+        </div>
+      </div>
     </div>
 
     <!-- Modal de Logout -->
-    <div id="modal-logout" class="modal" style="display:none;">
-        <div class="modal-content">
-            <span class="close" id="close-logout">&times;</span>
-            <h2>Confirmar Logout</h2>
-            <p>Tem certeza de que deseja sair?</p>
-            <div class="logout-buttons">
-                <button class="btnCancel" id="btn-cancel-logout" type="button">Cancelar</button>
-                <button class="btnLogout" id="btn-confirm-logout" type="button">Sair</button>
-            </div>
+    <div id="modal-logout" class="modal" style="display: none">
+      <div class="modal-content">
+        <span class="close" id="close-logout">&times;</span>
+        <h2>Confirmar Logout</h2>
+        <p>Tem certeza de que deseja sair?</p>
+        <div class="logout-buttons">
+          <button class="btnCancel" id="btn-cancel-logout" type="button">
+            Cancelar
+          </button>
+          <button class="btnLogout" id="btn-confirm-logout" type="button">
+            Sair
+          </button>
         </div>
+      </div>
     </div>
 
     <div id="toast" class="toast">
-        <span id="toast-message"></span>
+      <span id="toast-message"></span>
     </div>
 
     <script type="module" src="../js/adminPacientes.js"></script>
-</body>
+  </body>
 </html>

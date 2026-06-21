@@ -4,12 +4,19 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Agenda</title>
-
+    <link rel="icon" type="image/png" sizes="64x64" href="../img/logoZ.png" />
     <link rel="stylesheet" href="../css/agendaScreen.css" />
     <link
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap"
       rel="stylesheet"
     />
+    <script>
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        window.location.href = "loginScreen.html";
+      }
+    </script>
   </head>
 
   <body>

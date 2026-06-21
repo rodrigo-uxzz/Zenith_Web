@@ -29,15 +29,7 @@ function setInputError(input, hasError) {
 }
 
 function restoreFormValues() {
-  const fields = [
-    "nome",
-    "telefone",
-    "data",
-    "genero",
-    "cpf",
-    "crp",
-    "foto",
-  ];
+  const fields = ["nome", "telefone", "data", "genero", "cpf", "crp", "foto"];
 
   fields.forEach((key) => {
     const value = localStorage.getItem(key);
@@ -210,84 +202,96 @@ async function verificarCPF(cpf) {
 }
 
 function setLoading(botao, carregando) {
-    if (!botao) return;
-    if (carregando) {
-        botao.disabled = true;
-        botao.dataset.textoOriginal = botao.innerHTML;
-        botao.innerHTML = `<span class="spinner"></span>`;
-    } else {
-        botao.disabled = false;
-        botao.innerHTML = botao.dataset.textoOriginal || botao.innerHTML;
-    }
+  if (!botao) return;
+  if (carregando) {
+    botao.disabled = true;
+    botao.dataset.textoOriginal = botao.innerHTML;
+    botao.innerHTML = `<span class="spinner"></span>`;
+  } else {
+    botao.disabled = false;
+    botao.innerHTML = botao.dataset.textoOriginal || botao.innerHTML;
+  }
 }
 
 // Função para validar e ir pra próxima tela
 
 async function validarProximo() {
-    const nome = document.getElementById("fullName").value.trim();
-    const telefone = document.getElementById("telefone").value.trim();
-    const data = document.getElementById("dataNascimento").value;
-    const genero = document.getElementById("genero").value;
-    const cpf = document.getElementById("cpf").value.trim();
-    const crp = document.getElementById("crp").value.trim();
+  const nome = document.getElementById("fullName").value.trim();
+  const telefone = document.getElementById("telefone").value.trim();
+  const data = document.getElementById("dataNascimento").value;
+  const genero = document.getElementById("genero").value;
+  const cpf = document.getElementById("cpf").value.trim();
+  const crp = document.getElementById("crp").value.trim();
 
-    const cpfLimpo = cpf.replace(/\D/g, "");
-    const telefoneLimpo = telefone.replace(/\D/g, "");
-    const crpLimpo = crp.replace(/[^A-Z0-9]/gi, "");
-    const cpfLocalValido = validarDigitosCpf(cpfLimpo);
+  const cpfLimpo = cpf.replace(/\D/g, "");
+  const telefoneLimpo = telefone.replace(/\D/g, "");
+  const crpLimpo = crp.replace(/[^A-Z0-9]/gi, "");
+  const cpfLocalValido = validarDigitosCpf(cpfLimpo);
 
-    let temErro = false;
+  let temErro = false;
 
-    setInputError(inputs.nome, !nome);
-    setInputError(inputs.telefone, !telefoneLimpo || telefoneLimpo.length !== 11);
-    setInputError(inputs.data, !data);
-    setInputError(inputs.genero, !genero);
-    setInputError(inputs.cpf, !cpfLocalValido);
-    setInputError(inputs.crp, !crp || crp.length < 6);
+  setInputError(inputs.nome, !nome);
+  setInputError(inputs.telefone, !telefoneLimpo || telefoneLimpo.length !== 11);
+  setInputError(inputs.data, !data);
+  setInputError(inputs.genero, !genero);
+  setInputError(inputs.cpf, !cpfLocalValido);
+  setInputError(inputs.crp, !crp || crp.length < 6);
 
-    if (!nome) { showToast("Informe seu nome completo."); temErro = true; }
-    if (!telefoneLimpo || telefoneLimpo.length !== 11) {
-        showToast("Telefone inválido. Use o formato (00) 00000-0000.");
-        temErro = true;
-    }
-    if (!data) { showToast("Selecione sua data de nascimento."); temErro = true; }
-    if (!genero) { showToast("Selecione um gênero."); temErro = true; }
+  if (!nome) {
+    showToast("Informe seu nome completo.");
+    temErro = true;
+  }
+  if (!telefoneLimpo || telefoneLimpo.length !== 11) {
+    showToast("Telefone inválido. Use o formato (00) 00000-0000.");
+    temErro = true;
+  }
+  if (!data) {
+    showToast("Selecione sua data de nascimento.");
+    temErro = true;
+  }
+  if (!genero) {
+    showToast("Selecione um gênero.");
+    temErro = true;
+  }
 
-    const botaoProximo = document.getElementById("proximaTela");
+  const botaoProximo = document.getElementById("proximaTela");
 
-    if (!cpfLocalValido) {
-        showToast("CPF inválido.");
-        temErro = true;
+  if (!cpfLocalValido) {
+    showToast("CPF inválido.");
+    temErro = true;
+  } else {
+    setLoading(botaoProximo, true);
+    const cpfServidorValido = await validarCpf(cpfLimpo);
+    setLoading(botaoProximo, false);
+
+    if (!cpfServidorValido) {
+      setInputError(inputs.cpf, true);
+      showToast("CPF não pôde ser validado.");
+      temErro = true;
     } else {
-        setLoading(botaoProximo, true);
-        const cpfServidorValido = await validarCpf(cpfLimpo);
-        setLoading(botaoProximo, false);
-
-        if (!cpfServidorValido) {
-            setInputError(inputs.cpf, true);
-            showToast("CPF não pôde ser validado.");
-            temErro = true;
-        } else {
-            cpfValido = true;
-            setInputError(inputs.cpf, false);
-        }
+      cpfValido = true;
+      setInputError(inputs.cpf, false);
     }
-    if (!crp || crp.length < 6) { showToast("CRP inválido."); temErro = true; }
+  }
+  if (!crp || crp.length < 6) {
+    showToast("CRP inválido.");
+    temErro = true;
+  }
 
-    if (temErro) return;
+  if (temErro) return;
 
-    localStorage.setItem("nome", nome);
-    localStorage.setItem("telefone", telefoneLimpo);
-    localStorage.setItem("data", data);
-    localStorage.setItem("genero", genero);
-    localStorage.setItem("cpf", cpfLimpo);
-    localStorage.setItem("crp", crpLimpo);
+  localStorage.setItem("nome", nome);
+  localStorage.setItem("telefone", telefoneLimpo);
+  localStorage.setItem("data", data);
+  localStorage.setItem("genero", genero);
+  localStorage.setItem("cpf", cpfLimpo);
+  localStorage.setItem("crp", crpLimpo);
 
-    showToast("Dados salvos! Continuando...");
+  showToast("Dados salvos! Continuando...");
 
-    setTimeout(() => {
-        window.location.href = "./../pages/criarScreen2.html";
-    }, 1000);
+  setTimeout(() => {
+    window.location.href = "./../pages/criarScreen2.html";
+  }, 1000);
 }
 
 // Variável global para guardar a foto entre telas
@@ -324,13 +328,15 @@ if (inputFoto) {
 restoreFormValues();
 
 document.getElementById("fullName").addEventListener("input", function () {
-    localStorage.setItem("nome", this.value);
+  localStorage.setItem("nome", this.value);
 });
 
-document.getElementById("dataNascimento").addEventListener("change", function () {
+document
+  .getElementById("dataNascimento")
+  .addEventListener("change", function () {
     localStorage.setItem("data", this.value);
-});
+  });
 
 document.getElementById("genero").addEventListener("change", function () {
-    localStorage.setItem("genero", this.value);
+  localStorage.setItem("genero", this.value);
 });

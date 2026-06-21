@@ -1,22 +1,22 @@
 <!doctype html>
-<html lang="pt-BR">
+<html lang="pt-br">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Zenith · Financeiro</title>
+    <title>Financeiro</title>
     <link rel="icon" type="image/png" sizes="64x64" href="../img/logoZ.png" />
     <link
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="../css/financeiro.css" />
-    <!-- <script>
-    const token = localStorage.getItem("token");
+    <script>
+      const token = localStorage.getItem("token");
 
-    if(!token){
-      window.location.href = "loginScreen.html";
-    }
-  </script> -->
+      if (!token) {
+        window.location.href = "loginScreen.html";
+      }
+    </script>
   </head>
   <body>
     <!-- Sidebar -->
@@ -103,19 +103,21 @@
       </div>
     </div>
 
-     <!-- Main Content -->
+    <!-- Main Content -->
     <main class="main-content">
       <!-- Header -->
       <header class="page-header">
         <div>
           <h1>Financeiro</h1>
-          <p class="subtitulo">Acompanhe receitas, pagamentos e status das consultas</p>
+          <p class="subtitulo">
+            Acompanhe receitas, pagamentos e status das consultas
+          </p>
         </div>
 
         <div class="controle-data">
           <button id="voltarDia">
             <span class="icone">
-                <ion-icon name="chevron-back-outline"></ion-icon>
+              <ion-icon name="chevron-back-outline"></ion-icon>
             </span>
           </button>
 
@@ -123,7 +125,7 @@
 
           <button id="avancarDia">
             <span class="icone">
-                <ion-icon name="chevron-forward-outline"></ion-icon>
+              <ion-icon name="chevron-forward-outline"></ion-icon>
             </span>
           </button>
         </div>
@@ -186,7 +188,6 @@
               <ion-icon name="search-outline"></ion-icon>
               <input type="text" placeholder="Buscar paciente" />
             </div>
-
           </div>
         </div>
 
@@ -202,71 +203,78 @@
                 <th>Ações</th>
               </tr>
             </thead>
-            <tbody id="listaPagamentos">
-            </tbody>
+            <tbody id="listaPagamentos"></tbody>
           </table>
         </div>
         <div id="modalFinanceiro" class="modal" style="display: none">
-    <div class="modal-financeiro-content">
+          <div class="modal-financeiro-content">
+            <button class="modal-close" id="btnCloseModalFinanceiro">×</button>
 
-        <button class="modal-close" id="btnCloseModalFinanceiro">×</button>
-
-        <!-- HEADER -->
-        <div class="modal-financeiro-header">
-            <div class="modal-financeiro-avatar">
+            <!-- HEADER -->
+            <div class="modal-financeiro-header">
+              <div class="modal-financeiro-avatar">
                 <ion-icon name="person-outline"></ion-icon>
-            </div>
-            <div>
+              </div>
+              <div>
                 <h2 id="modalPaciente"></h2>
                 <p id="modalData"></p>
+              </div>
             </div>
-        </div>
 
-        <!-- DETALHES -->
-        <div class="modal-financeiro-details">
-            <div class="modal-financeiro-item">
-                <div class="item-icon"><ion-icon name="cash-outline"></ion-icon></div>
-                <div>
-                    <span>Valor</span>
-                    <p id="modalValor"></p>
+            <!-- DETALHES -->
+            <div class="modal-financeiro-details">
+              <div class="modal-financeiro-item">
+                <div class="item-icon">
+                  <ion-icon name="cash-outline"></ion-icon>
                 </div>
-            </div>
-            <div class="modal-financeiro-item">
-                <div class="item-icon"><ion-icon name="ellipse-outline"></ion-icon></div>
                 <div>
-                    <span>Status</span>
-                    <p id="modalStatus"></p>
+                  <span>Valor</span>
+                  <p id="modalValor"></p>
                 </div>
+              </div>
+              <div class="modal-financeiro-item">
+                <div class="item-icon">
+                  <ion-icon name="ellipse-outline"></ion-icon>
+                </div>
+                <div>
+                  <span>Status</span>
+                  <p id="modalStatus"></p>
+                </div>
+              </div>
             </div>
-        </div>
 
-        <!-- COMPROVANTE -->
-        <div class="comprovante-section">
-            <h3>Comprovante de Pagamento</h3>
+            <!-- COMPROVANTE -->
+            <div class="comprovante-section">
+              <h3>Comprovante de Pagamento</h3>
 
-            <div class="comprovante-area" id="comprovanteArea">
+              <div class="comprovante-area" id="comprovanteArea">
                 <ion-icon name="document-outline"></ion-icon>
                 <p id="comprovanteTexto">Nenhum comprovante anexado</p>
-            </div>
+              </div>
 
-            <div class="comprovante-botoes" id="comprovanteBotoes" style="display:none;">
+              <div
+                class="comprovante-botoes"
+                id="comprovanteBotoes"
+                style="display: none"
+              >
                 <button class="btn-visualizar" id="btnVisualizarComprovante">
-                    <ion-icon name="eye-outline"></ion-icon> Visualizar
+                  <ion-icon name="eye-outline"></ion-icon> Visualizar
                 </button>
                 <button class="btn-baixar" id="btnBaixarComprovante">
-                    <ion-icon name="download-outline"></ion-icon> Baixar
+                  <ion-icon name="download-outline"></ion-icon> Baixar
                 </button>
+              </div>
             </div>
-        </div>
 
-        <!-- AÇÕES -->
-        <div class="modal-financeiro-actions">
-            <button class="btnCancel" id="btnFecharFinanceiro">Fechar</button>
-            <button class="btnConfirm" id="btnMarcarPago">Marcar como pago</button>
+            <!-- AÇÕES -->
+            <div class="modal-financeiro-actions">
+              <button class="btnCancel" id="btnFecharFinanceiro">Fechar</button>
+              <button class="btnConfirm" id="btnMarcarPago">
+                Marcar como pago
+              </button>
+            </div>
+          </div>
         </div>
-
-    </div>
-</div>
       </section>
     </main>
 

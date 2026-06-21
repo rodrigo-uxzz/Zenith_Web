@@ -1,152 +1,235 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/criarScreen2.css">
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../css/criarScreen2.css" />
     <title>Criar conta</title>
-    <link rel="icon" type="image/x-icon" href="../img/logo z.PNG">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-</head>
-<body>
-
-<div class="split-container">
-
-    <!-- LADO ESQUERDO -->
-    <div class="left-side">
+    <link rel="icon" type="image/png" sizes="64x64" href="../img/logoZ.png" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="split-container">
+      <!-- LADO ESQUERDO -->
+      <div class="left-side">
         <div class="left-content">
-            <img src="../img/logo.png" alt="Logo Zenith">
-            <h1>Zenith</h1>
-            <p>Cadastre-se e comece a gerenciar seus atendimentos.</p>
+          <img src="../img/logo.png" alt="Logo Zenith" />
+          <h1>Zenith</h1>
+          <p>Cadastre-se e comece a gerenciar seus atendimentos.</p>
         </div>
-    </div>
+      </div>
 
-    <!-- LADO DIREITO -->
-    <div class="right-side">
-
+      <!-- LADO DIREITO -->
+      <div class="right-side">
         <main>
-            <section>
-
-                <article>
-                    <p>Cadastro de Psicólogo</p>
-                </article>
+          <section>
+            <article>
+              <p>Cadastro de Psicólogo</p>
+            </article>
 
             <!-- botões e etc abaixo em section-->
-               <form action="#" method="post">
+            <form action="#" method="post">
+              <div class="linha1">
+                <div class="input-container">
+                  <img src="../img/user.svg" alt="icone" class="icon-input" />
+                  <label for="crp" class="label-diferenciado"
+                    >Nome de usuário:</label
+                  >
+                  <input
+                    type="text"
+                    class="input-diferenciado"
+                    id="username"
+                    name="username"
+                    required
+                    placeholder="username"
+                  />
+                </div>
+              </div>
 
-                   <div class="linha1"> 
-                       <div class="input-container">
-                           <img src="../img/user.svg" alt="icone" class="icon-input">
-                           <label for="crp" class="label-diferenciado">Nome de usuário:</label>
-                           <input type="text" class="input-diferenciado" id="username" name="username" required placeholder="username">
-                       </div>
-                   </div>
-                   
-                   <!-- ----separador---- -->
+              <!-- ----separador---- -->
 
-                   <div class="linha2">
+              <div class="linha2">
+                <div class="input-container">
+                  <p class="pergunta-radio">Possui cadastro no e-psi?</p>
+                  <div class="radio-group">
+                    <label class="radio-label">
+                      <input
+                        type="radio"
+                        id="epsi-nao"
+                        name="cadastroEpsi"
+                        value="0"
+                        required
+                      />
+                      <span>Não</span>
+                    </label>
+                    <label class="radio-label">
+                      <input
+                        type="radio"
+                        id="epsi-sim"
+                        name="cadastroEpsi"
+                        value="1"
+                        required
+                      />
+                      <span>Sim</span>
+                    </label>
+                  </div>
+                </div>
 
-                       <div class="input-container">
-                           <p class="pergunta-radio">Possui cadastro no e-psi?</p>
-                           <div class="radio-group">
-                               <label class="radio-label">
-                                   <input type="radio" id="epsi-nao" name="cadastroEpsi" value="0" required>
-                                   <span>Não</span>
-                               </label>
-                               <label class="radio-label">
-                                   <input type="radio" id="epsi-sim" name="cadastroEpsi" value="1" required>
-                                   <span>Sim</span>
-                               </label>
-                           </div>
-                       </div>
-                       
-                       <div class="input-container">
-                           <img src="../img/telefone.svg" alt="icone" class="icon-input">
-                           <label for="formacao" class="label-diferenciado">Qual seu grau de formação?</label>
-                           <select class="input-diferenciado" id="formacao" name="formacao" required>
-                               <option value="">Selecione uma opção</option>
-                               <option value="GRADUACAO">Graduado</option>
-                               <option value="ESPECIALIZACAO">Especialista</option>
-                               <option value="MESTRADO">Mestre</option>
-                               <option value="DOUTORADO">Doutor</option>
-                           </select>
-                       </div>
-                    </div>
+                <div class="input-container">
+                  <img
+                    src="../img/telefone.svg"
+                    alt="icone"
+                    class="icon-input"
+                  />
+                  <label for="formacao" class="label-diferenciado"
+                    >Qual seu grau de formação?</label
+                  >
+                  <select
+                    class="input-diferenciado"
+                    id="formacao"
+                    name="formacao"
+                    required
+                  >
+                    <option value="">Selecione uma opção</option>
+                    <option value="GRADUACAO">Graduado</option>
+                    <option value="ESPECIALIZACAO">Especialista</option>
+                    <option value="MESTRADO">Mestre</option>
+                    <option value="DOUTORADO">Doutor</option>
+                  </select>
+                </div>
+              </div>
 
+              <!-- ----separador---- -->
 
-                   <!-- ----separador---- -->
+              <div class="input-container">
+                <img src="../img/email.svg" alt="icone" class="icon-input" />
+                <label for="email" class="label-diferenciado">Email:</label>
+                <input
+                  type="email"
+                  class="input-diferenciado"
+                  id="email"
+                  name="email"
+                  required
+                  placeholder="seu@email.com"
+                />
+              </div>
 
-                   <div class="input-container">
-                       <img src="../img/email.svg" alt="icone" class="icon-input">
-                       <label for="email" class="label-diferenciado">Email:</label>
-                       <input type="email" class="input-diferenciado" id="email" name="email" required placeholder="seu@email.com">
-                   </div>
+              <!-- ----separador---- -->
 
-                   <!-- ----separador---- -->
+              <div class="linha3">
+                <div class="input-container password-container">
+                  <img src="../img/lock.svg" alt="icone" class="icon-input" />
+                  <label for="senha" class="label-diferenciado">Senha:</label>
+                  <input
+                    type="password"
+                    class="input-diferenciado"
+                    id="senha"
+                    name="senha"
+                    required
+                    placeholder="Digite sua senha"
+                  />
+                  <button
+                    type="button"
+                    class="toggle-password"
+                    data-target="senha"
+                  >
+                    Mostrar
+                  </button>
+                </div>
 
-                   <div class="linha3">
-                       <div class="input-container password-container">
-                           <img src="../img/lock.svg" alt="icone" class="icon-input">
-                           <label for="senha" class="label-diferenciado">Senha:</label>
-                           <input type="password" class="input-diferenciado" id="senha" name="senha" required placeholder="Digite sua senha">
-                           <button type="button" class="toggle-password" data-target="senha">Mostrar</button>
-                       </div>
-                       
-                       <div class="input-container password-container">
-                           <img src="../img/lock.svg" alt="icone" class="icon-input">
-                           <label for="confirmarSenha" class="label-diferenciado">Confirmar Senha:</label>
-                           <input type="password" class="input-diferenciado" id="confirmarSenha" name="confirmarSenha" required placeholder="Confirme sua senha">
-                           <button type="button" class="toggle-password" data-target="confirmarSenha">Mostrar</button>
-                       </div>
-                   </div>
+                <div class="input-container password-container">
+                  <img src="../img/lock.svg" alt="icone" class="icon-input" />
+                  <label for="confirmarSenha" class="label-diferenciado"
+                    >Confirmar Senha:</label
+                  >
+                  <input
+                    type="password"
+                    class="input-diferenciado"
+                    id="confirmarSenha"
+                    name="confirmarSenha"
+                    required
+                    placeholder="Confirme sua senha"
+                  />
+                  <button
+                    type="button"
+                    class="toggle-password"
+                    data-target="confirmarSenha"
+                  >
+                    Mostrar
+                  </button>
+                </div>
+              </div>
 
-                   <!-- ----separador---- -->
-                   <div class="containerT">
-                      <label for="termos" class="termos">
-                          <input type="checkbox" id="termos" name="termos" required>
-                          <span>Concordo com os</span> <a href="#" class="link-termos">Termos de Uso</a> <span>e</span> <a href="#" class="link-termos">Política de Privacidade</a>.
-                        </label>
-                    </div>
-                    
-                    <div class="botoes-footer">
-                        <button type="button" class="botaoC botao-anterior" id="botaoVoltar">← Anterior</button>
-                        <button type="button" class="botaoC" id="criarConta">Criar conta</button>
-                    </div>
-                </form>
-                
-            </section>
+              <!-- ----separador---- -->
+              <div class="containerT">
+                <label for="termos" class="termos">
+                  <input type="checkbox" id="termos" name="termos" required />
+                  <span>Concordo com os</span>
+                  <a href="#" class="link-termos">Termos de Uso</a>
+                  <span>e</span>
+                  <a href="#" class="link-termos">Política de Privacidade</a>.
+                </label>
+              </div>
+
+              <div class="botoes-footer">
+                <button
+                  type="button"
+                  class="botaoC botao-anterior"
+                  id="botaoVoltar"
+                >
+                  ← Anterior
+                </button>
+                <button type="button" class="botaoC" id="criarConta">
+                  Criar conta
+                </button>
+              </div>
+            </form>
+          </section>
         </main>
 
         <footer class="footer-right">
-            &copy; 2026 Zenith. Todos os direitos reservados.
+          &copy; 2026 Zenith. Todos os direitos reservados.
         </footer>
-
+      </div>
     </div>
 
-</div>
+    <script type="module" src="../js/cadastrar2.js"></script>
 
-        <script type="module" src="../js/cadastrar2.js"></script>
+    <div id="toast" class="toast">
+      <span id="toast-message"></span>
+    </div>
 
-        <div id="toast" class="toast">
-            <span id="toast-message"></span>
-        </div>
-
-        <!-- MODAL VERIFICAÇÃO -->
-<div class="modal" id="modalVerificacao" style="display:none;">
-    <div class="verificacao-modal-content">
+    <!-- MODAL VERIFICAÇÃO -->
+    <div class="modal" id="modalVerificacao" style="display: none">
+      <div class="verificacao-modal-content">
         <span class="close" id="close-verify-modal">&times;</span>
 
         <h2>Verifique seu e-mail</h2>
-        <p>Enviamos um código de verificação para seu e-mail. Digite o código abaixo para concluir o cadastro.</p>
+        <p>
+          Enviamos um código de verificação para seu e-mail. Digite o código
+          abaixo para concluir o cadastro.
+        </p>
 
-        <input type="text" id="verification-code" maxlength="6" placeholder="Digite o código" class="verificacao-input" />
+        <input
+          type="text"
+          id="verification-code"
+          maxlength="6"
+          placeholder="Digite o código"
+          class="verificacao-input"
+        />
 
-        <button type="button" id="confirm-code-btn" class="btn-confirmar">Confirmar</button>
+        <button type="button" id="confirm-code-btn" class="btn-confirmar">
+          Confirmar
+        </button>
 
         <p class="reenviar-texto">
-            Não recebeu o código? <a href="#" class="link-reenviar">Reenviar código</a>
+          Não recebeu o código?
+          <a href="#" class="link-reenviar">Reenviar código</a>
         </p>
+      </div>
     </div>
-</div>
-</body>
+  </body>
 </html>
