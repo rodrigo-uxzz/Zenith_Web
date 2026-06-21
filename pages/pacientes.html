@@ -1,200 +1,231 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zenith - Gestão de Pacientes</title>
-    <link rel="stylesheet" href="../css/pacientes.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-</head>
-<body>
-
-<!-- sidebar -->
-<div class="sidebar">
-    <ul>
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pacientes</title>
+    <link rel="icon" type="image/png" sizes="64x64" href="../img/logoZ.png" />
+    <link rel="stylesheet" href="../css/pacientes.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      const token = localStorage.getItem("token");
+      if (!token) {
+        window.location.href = "loginScreen.html";
+      }
+    </script>
+  </head>
+  <body>
+    <!-- sidebar -->
+    <div class="sidebar">
+      <ul>
         <li>
-            <a href="./homeScreen.html">
-                <span class="icone">
-                    <img src="../img/logo.png" class="logo" alt="logo do site">
-                </span>
-                <span class="titulo" style="font-weight:700; font-size:1.1rem;">ZENITH</span>
-            </a>
+          <a href="./homeScreen.html">
+            <span class="icone">
+              <img src="../img/logo.png" class="logo" alt="logo do site" />
+            </span>
+            <span class="titulo" style="font-weight: 700; font-size: 1.1rem"
+              >ZENITH</span
+            >
+          </a>
         </li>
         <li>
-            <a href="./homeScreen.html">
-                <span class="icone"><ion-icon name="home-outline"></ion-icon></span>
-                <span class="titulo">Home</span>
-            </a>
+          <a href="./homeScreen.html">
+            <span class="icone"><ion-icon name="home-outline"></ion-icon></span>
+            <span class="titulo">Home</span>
+          </a>
         </li>
         <li>
-            <a href="./agendaScreen.html">
-                <span class="icone"><ion-icon name="calendar-outline"></ion-icon></span>
-                <span class="titulo">Agenda</span>
-            </a>
+          <a href="./agendaScreen.html">
+            <span class="icone"
+              ><ion-icon name="calendar-outline"></ion-icon
+            ></span>
+            <span class="titulo">Agenda</span>
+          </a>
         </li>
         <li>
-            <a href="./pacientes.html">
-                <span class="icone"><ion-icon name="people-outline"></ion-icon></span>
-                <span class="titulo">Pacientes</span>
-            </a>
+          <a href="./pacientes.html">
+            <span class="icone"
+              ><ion-icon name="people-outline"></ion-icon
+            ></span>
+            <span class="titulo">Pacientes</span>
+          </a>
         </li>
         <li>
-            <a href="./financeiro.html">
-                <span class="icone"><ion-icon name="wallet-outline"></ion-icon></span>
-                <span class="titulo">Financeiro</span>
-            </a>
+          <a href="./financeiro.html">
+            <span class="icone"
+              ><ion-icon name="wallet-outline"></ion-icon
+            ></span>
+            <span class="titulo">Financeiro</span>
+          </a>
         </li>
         <li>
-            <a href="./chat.html">
-                <span class="icone"><ion-icon name="chatbubbles-outline"></ion-icon></span>
-                <span class="titulo">Chat</span>
-            </a>
+          <a href="./chat.html">
+            <span class="icone"
+              ><ion-icon name="chatbubbles-outline"></ion-icon
+            ></span>
+            <span class="titulo">Chat</span>
+          </a>
         </li>
         <li>
-            <a href="./perfilScreen.html">
-                <span class="icone"><ion-icon name="person-outline"></ion-icon></span>
-                <span class="titulo">Perfil</span>
-            </a>
+          <a href="./perfilScreen.html">
+            <span class="icone"
+              ><ion-icon name="person-outline"></ion-icon
+            ></span>
+            <span class="titulo">Perfil</span>
+          </a>
         </li>
         <li class="conta"></li>
         <li>
-            <a href="#" id="open-Modal-logout">
-                <span class="icone"><ion-icon name="log-out-outline"></ion-icon></span>
-                <span class="titulo">Logout</span>
-            </a>
+          <a href="#" id="open-Modal-logout">
+            <span class="icone"
+              ><ion-icon name="log-out-outline"></ion-icon
+            ></span>
+            <span class="titulo">Logout</span>
+          </a>
         </li>
-    </ul>
-</div>
+      </ul>
+    </div>
 
-<!-- modal logout -->
-<div id="modal-logout" class="modal">
-    <div class="modal-content">
+    <!-- modal logout -->
+    <div id="modal-logout" class="modal">
+      <div class="modal-content">
         <h2>Confirmar Logout</h2>
         <p>Tem certeza de que deseja sair?</p>
         <div class="logout-buttons">
-            <button class="btnCancel" id="btn-cancel-logout">Cancelar</button>
-            <button class="btnLogout" id="btn-confirm-logout">Sair</button>
+          <button class="btnCancel" id="btn-cancel-logout">Cancelar</button>
+          <button class="btnLogout" id="btn-confirm-logout">Sair</button>
         </div>
+      </div>
     </div>
-</div>
 
-<!-- main -->
-<main class="pacientesContainer">
-
-    <!-- Header -->
-    <header class="pacientesHeader">
+    <!-- main -->
+    <main class="pacientesContainer">
+      <!-- Header -->
+      <header class="pacientesHeader">
         <div>
-            <h1 class="tituloPacientes">Gestão de Pacientes</h1>
-            <p class="subtituloPacientes">Gerencie os pacientes cadastrados e acompanhe seus atendimentos</p>
+          <h1 class="tituloPacientes">Gestão de Pacientes</h1>
+          <p class="subtituloPacientes">
+            Gerencie os pacientes cadastrados e acompanhe seus atendimentos
+          </p>
         </div>
-    </header>
+      </header>
 
-    <!-- Cards Resumo -->
-    <section class="cards-resumo">
+      <!-- Cards Resumo -->
+      <section class="cards-resumo">
         <div class="card">
-            <div class="card-header">
-                <h3>Total de Pacientes</h3>
-                <div class="card-icon">
-                    <ion-icon name="people-outline"></ion-icon>
-                </div>
+          <div class="card-header">
+            <h3>Total de Pacientes</h3>
+            <div class="card-icon">
+              <ion-icon name="people-outline"></ion-icon>
             </div>
-            <p class="card-valor" id="cardTotalPacientesValor">0</p>
-            <p class="card-sub">Todos cadastrados</p>
+          </div>
+          <p class="card-valor" id="cardTotalPacientesValor">0</p>
+          <p class="card-sub">Todos cadastrados</p>
         </div>
 
         <div class="card">
-            <div class="card-header">
-                <h3>Consultas Hoje</h3>
-                <div class="card-icon">
-                    <ion-icon name="calendar-clear-outline"></ion-icon>
-                </div>
+          <div class="card-header">
+            <h3>Consultas Hoje</h3>
+            <div class="card-icon">
+              <ion-icon name="calendar-clear-outline"></ion-icon>
             </div>
-            <p class="card-valor" id="cardConsultasHojeValor">0</p>
-            <p class="card-sub">Agendadas para hoje</p>
+          </div>
+          <p class="card-valor" id="cardConsultasHojeValor">0</p>
+          <p class="card-sub">Agendadas para hoje</p>
         </div>
-    </section>
+      </section>
 
-    <!-- Card Principal -->
-    <div class="cardPacientes">
-
+      <!-- Card Principal -->
+      <div class="cardPacientes">
         <!-- Busca -->
         <div class="topoPacientes">
-            <div class="searchBox">
-                <ion-icon name="search-outline"></ion-icon>
-                <input type="text" id="inputBusca" placeholder="Buscar por nome, CPF ou email">
-            </div>
+          <div class="searchBox">
+            <ion-icon name="search-outline"></ion-icon>
+            <input
+              type="text"
+              id="inputBusca"
+              placeholder="Buscar por nome, CPF ou email"
+            />
+          </div>
         </div>
 
         <!-- Título seção -->
         <div class="secaoPacientes">
-
-            <!-- Lista -->
-            <div class="listaPacientes" id="listaPacientes"></div><!-- /listaPacientes -->
+          <!-- Lista -->
+          <div class="listaPacientes" id="listaPacientes"></div>
+          <!-- /listaPacientes -->
         </div>
 
         <!-- Rodapé -->
         <div class="rodapePacientes">
-            <span class="info" id="infoContagem">Carregando pacientes...</span>
+          <span class="info" id="infoContagem">Carregando pacientes...</span>
         </div>
-        <div class="loadingMore" id="loadingMore">Carregando mais pacientes…</div>
+        <div class="loadingMore" id="loadingMore">
+          Carregando mais pacientes…
+        </div>
+      </div>
+      <!-- /cardPacientes -->
 
-    </div><!-- /cardPacientes -->
-
-    <!-- painel detalhes -->
-    <aside class="painelDetalhes" id="painelDetalhes">
-
+      <!-- painel detalhes -->
+      <aside class="painelDetalhes" id="painelDetalhes">
         <button class="fecharPainel" id="fecharPainel">&#215;</button>
 
         <div class="detalheHeader">
-            <div class="avatarDetalhe" id="detalheAvatar"></div>
+          <div class="avatarDetalhe" id="detalheAvatar"></div>
+          <div>
+            <h2 id="detalheNome">Selecione um paciente</h2>
+            <span id="detalheEmail"></span>
+          </div>
+        </div>
+
+        <div class="secaoDetalhes">
+          <h3>Informações</h3>
+          <div class="itemInfo">
+            <ion-icon name="call-outline"></ion-icon>
+            <span id="detalheTel"></span>
+          </div>
+          <div class="itemInfo">
+            <ion-icon name="calendar-outline"></ion-icon>
+            <span id="detalheNasc"></span>
+          </div>
+        </div>
+
+        <div class="secaoDetalhes">
+          <h3>Resumo</h3>
+          <div class="caixaResumo">
             <div>
-                <h2 id="detalheNome">Selecione um paciente</h2>
-                <span id="detalheEmail"></span>
+              <span>Sessões</span>
+              <strong id="detalheSessoes"></strong>
             </div>
-        </div>
-
-        <div class="secaoDetalhes">
-            <h3>Informações</h3>
-            <div class="itemInfo">
-                <ion-icon name="call-outline"></ion-icon>
-                <span id="detalheTel"></span>
+            <div>
+              <span>Última consulta</span>
+              <strong id="detalheUltima"></strong>
             </div>
-            <div class="itemInfo">
-                <ion-icon name="calendar-outline"></ion-icon>
-                <span id="detalheNasc"></span>
+            <div>
+              <span>Faturamento</span>
+              <strong id="detalheFat"></strong>
             </div>
-        </div>
-
-        <div class="secaoDetalhes">
-            <h3>Resumo</h3>
-            <div class="caixaResumo">
-                <div>
-                    <span>Sessões</span>
-                    <strong id="detalheSessoes"></strong>
-                </div>
-                <div>
-                    <span>Última consulta</span>
-                    <strong id="detalheUltima"></strong>
-                </div>
-                <div>
-                    <span>Faturamento</span>
-                    <strong id="detalheFat"></strong>
-                </div>
-            </div>
+          </div>
         </div>
 
         <button class="btnFecharPainel" id="btnFecharPainel">Fechar</button>
+      </aside>
+    </main>
 
-    </aside>
+    <!-- Toast -->
+    <div id="toast" class="toast"><span id="toast-message"></span></div>
 
-</main>
-
-<!-- Toast -->
-<div id="toast" class="toast"><span id="toast-message"></span></div>
-
-<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-<script type="module" src="../js/pacientes.js"></script>
-
-</body>
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+    ></script>
+    <script type="module" src="../js/pacientes.js"></script>
+  </body>
 </html>

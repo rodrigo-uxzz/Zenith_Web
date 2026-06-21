@@ -53,7 +53,6 @@ document
     // Validação: formato de email se parecer com email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-
     // Validação: senha com mínimo de 6 caracteres
     if (password.length < 6) {
       showModal("A senha deve ter pelo menos 6 caracteres");
@@ -90,4 +89,3 @@ document
     window.location.href = "./../pages/adminHome.html";
     console.log(ok);
   });
-

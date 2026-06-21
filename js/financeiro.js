@@ -15,7 +15,13 @@ function obterIniciais(nome) {
 }
 
 function obterCorAvatar(nome) {
-  const cores = ["avatarRoxo", "avatarAmarelo", "avatarRosa", "avatarVerde", "avatarAzul"];
+  const cores = [
+    "avatarRoxo",
+    "avatarAmarelo",
+    "avatarRosa",
+    "avatarVerde",
+    "avatarAzul",
+  ];
   if (!nome) return cores[0];
   let soma = 0;
   for (let i = 0; i < nome.length; i++) soma += nome.charCodeAt(i);
@@ -31,41 +37,59 @@ document.addEventListener("DOMContentLoaded", () => {
 
   modalFinanceiro = document.getElementById("modalFinanceiro");
 
-  document.getElementById("btnFecharFinanceiro")?.addEventListener("click", fecharModalFinanceiro);
-  document.getElementById("btnCloseModalFinanceiro")?.addEventListener("click", fecharModalFinanceiro);
+  document
+    .getElementById("btnFecharFinanceiro")
+    ?.addEventListener("click", fecharModalFinanceiro);
+  document
+    .getElementById("btnCloseModalFinanceiro")
+    ?.addEventListener("click", fecharModalFinanceiro);
 
-  document.getElementById("btnMarcarPago")?.addEventListener("click", async () => {
-    const id = modalFinanceiro?.dataset.id;
-    if (!id) return;
+  document
+    .getElementById("btnMarcarPago")
+    ?.addEventListener("click", async () => {
+      const id = modalFinanceiro?.dataset.id;
+      if (!id) return;
 
-    const { ok, dados } = await apiRequest(`/marcarComoPago/${id}`, "POST");
-    if (!ok) {
-      console.error(dados);
-      return;
-    }
+      const { ok, dados } = await apiRequest(`/marcarComoPago/${id}`, "POST");
+      if (!ok) {
+        console.error(dados);
+        return;
+      }
 
-    fecharModalFinanceiro();
-    await atualizarFinanceiro();
-  });
+      fecharModalFinanceiro();
+      await atualizarFinanceiro();
+    });
 
   // ===== FILTROS DIÁRIO / SEMANAL =====
   document.querySelectorAll(".btn-filtro").forEach((btn) => {
     btn.addEventListener("click", () => {
-      document.querySelectorAll(".btn-filtro").forEach((b) => b.classList.remove("active"));
+      document
+        .querySelectorAll(".btn-filtro")
+        .forEach((b) => b.classList.remove("active"));
       btn.classList.add("active");
-      modoFiltro = btn.textContent.trim().toLowerCase() === "semanal" ? "semanal" : "diario";
+      modoFiltro =
+        btn.textContent.trim().toLowerCase() === "semanal"
+          ? "semanal"
+          : "diario";
       atualizarFinanceiro();
     });
   });
 
   // ===== BUSCA =====
-  document.querySelector(".search-box input")?.addEventListener("input", (e) => {
-    const termo = e.target.value.toLowerCase().trim();
-    document.querySelectorAll("#listaPagamentos tr.cardPagamento").forEach((tr) => {
-      const nome = tr.querySelector(".nome-paciente-tabela")?.textContent?.toLowerCase() || "";
-      tr.style.display = nome.includes(termo) ? "" : "none";
+  document
+    .querySelector(".search-box input")
+    ?.addEventListener("input", (e) => {
+      const termo = e.target.value.toLowerCase().trim();
+      document
+        .querySelectorAll("#listaPagamentos tr.cardPagamento")
+        .forEach((tr) => {
+          const nome =
+            tr
+              .querySelector(".nome-paciente-tabela")
+              ?.textContent?.toLowerCase() || "";
+          tr.style.display = nome.includes(termo) ? "" : "none";
+        });
     });
-  });
 
   // ===== LOGOUT =====
   openModalBtn?.addEventListener("click", (e) => {
@@ -73,7 +97,10 @@ document.addEventListener("DOMContentLoaded", () => {
     modalLogout.style.display = "flex";
   });
 
-  cancelBtn?.addEventListener("click", () => (modalLogout.style.display = "none"));
+  cancelBtn?.addEventListener(
+    "click",
+    () => (modalLogout.style.display = "none"),
+  );
 
   confirmBtn?.addEventListener("click", async () => {
     try {
@@ -87,7 +114,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   window.addEventListener("click", (event) => {
     if (event.target === modalLogout) modalLogout.style.display = "none";
-    if (modalFinanceiro && event.target === modalFinanceiro) fecharModalFinanceiro();
+    if (modalFinanceiro && event.target === modalFinanceiro)
+      fecharModalFinanceiro();
   });
 
   atualizarFinanceiro();
@@ -159,7 +187,9 @@ function atualizarTextoData() {
 // ===== PARSEAR / FORMATAR =====
 function parsearValor(valor) {
   if (typeof valor === "number" && Number.isFinite(valor)) return valor;
-  const texto = String(valor ?? "").trim().replace(/[R$\s]/g, "");
+  const texto = String(valor ?? "")
+    .trim()
+    .replace(/[R$\s]/g, "");
   if (!texto) return 0;
   if (texto.includes(",") || texto.includes(".")) {
     if (texto.includes(",") && texto.includes("."))
@@ -182,30 +212,36 @@ function formatarMoeda(valor) {
 function normalizarStatus(status) {
   const s = String(status || "").toLowerCase();
   if (s.includes("pag") || s.includes("quitad")) return "pago";
-  if (s.includes("pend") || s.includes("aberto") || s.includes("aguard")) return "pendente";
+  if (s.includes("pend") || s.includes("aberto") || s.includes("aguard"))
+    return "pendente";
   return s;
 }
 
 // ===== DASHBOARD =====
 async function carregarDashboard(data) {
-  const endpoint = modoFiltro === "semanal"
-    ? `/dashboardFinanceiroSemanal?data=${data}`
-    : `/dashboardFinanceiro?data=${data}`;
+  const endpoint =
+    modoFiltro === "semanal"
+      ? `/dashboardFinanceiroSemanal?data=${data}`
+      : `/dashboardFinanceiro?data=${data}`;
 
   const { ok, dados } = await apiRequest(endpoint);
   if (!ok) return;
 
-  document.getElementById("cardFaturamentoDiaValor").innerText = `R$ ${formatarMoeda(dados.faturamento)}`;
-  document.getElementById("cardFaturamentoMensalValor").innerText = `R$ ${formatarMoeda(dados.faturamento_mensal)}`;
+  document.getElementById("cardFaturamentoDiaValor").innerText =
+    `R$ ${formatarMoeda(dados.faturamento)}`;
+  document.getElementById("cardFaturamentoMensalValor").innerText =
+    `R$ ${formatarMoeda(dados.faturamento_mensal)}`;
   document.getElementById("cardConsultasPagasValor").innerText = dados.pagas;
-  document.getElementById("cardConsultasPendentesValor").innerText = dados.pendentes;
+  document.getElementById("cardConsultasPendentesValor").innerText =
+    dados.pendentes;
 }
 
 // ===== LISTAGEM =====
 async function listarPagamentos(data) {
-  const endpoint = modoFiltro === "semanal"
-    ? `/listarPagamentosSemanal?data=${data}`
-    : `/listarPagamentos?data=${data}`;
+  const endpoint =
+    modoFiltro === "semanal"
+      ? `/listarPagamentosSemanal?data=${data}`
+      : `/listarPagamentos?data=${data}`;
 
   const { ok, dados } = await apiRequest(endpoint);
   const container = document.getElementById("listaPagamentos");
@@ -221,8 +257,12 @@ async function listarPagamentos(data) {
     linha.classList.add("cardPagamento");
     linha.dataset.id = pagamento.id_pagamento;
 
-    const valorFormatado = formatarMoeda(pagamento.valor_total ?? pagamento.valor ?? pagamento.valor_pago ?? 0);
-    const statusNorm = normalizarStatus(pagamento.status_pagamento || pagamento.status || "");
+    const valorFormatado = formatarMoeda(
+      pagamento.valor_total ?? pagamento.valor ?? pagamento.valor_pago ?? 0,
+    );
+    const statusNorm = normalizarStatus(
+      pagamento.status_pagamento || pagamento.status || "",
+    );
     const labelStatus = statusNorm === "pago" ? "Pago" : "Pendente";
 
     const nomePaciente = pagamento.paciente?.usuario?.nome ?? "—";
@@ -249,68 +289,84 @@ async function listarPagamentos(data) {
   });
 }
 
-document.getElementById("listaPagamentos")?.addEventListener("click", async (event) => {
-  const card = event.target.closest(".cardPagamento");
-  if (!card) return;
+document
+  .getElementById("listaPagamentos")
+  ?.addEventListener("click", async (event) => {
+    const card = event.target.closest(".cardPagamento");
+    if (!card) return;
 
-  try {
-    const id = card.dataset.id;
-    const { ok, dados } = await apiRequest(`/detalhesPagamento/${id}`);
-    if (!ok) return;
+    try {
+      const id = card.dataset.id;
+      const { ok, dados } = await apiRequest(`/detalhesPagamento/${id}`);
+      if (!ok) return;
 
-    const pagamento = dados.pagamento;
-    const statusNorm = normalizarStatus(pagamento.status_pagamento || pagamento.status || "");
+      const pagamento = dados.pagamento;
+      const statusNorm = normalizarStatus(
+        pagamento.status_pagamento || pagamento.status || "",
+      );
 
-    document.getElementById("modalPaciente").textContent = pagamento.paciente?.usuario?.nome ?? "—";
-    document.getElementById("modalData").textContent = new Date(pagamento.created_at).toLocaleDateString("pt-BR", {
-      day: "2-digit", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit",
-    });
+      document.getElementById("modalPaciente").textContent =
+        pagamento.paciente?.usuario?.nome ?? "—";
+      document.getElementById("modalData").textContent = new Date(
+        pagamento.created_at,
+      ).toLocaleDateString("pt-BR", {
+        day: "2-digit",
+        month: "long",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
 
-    document.getElementById("modalValor").textContent = `R$ ${formatarMoeda(pagamento.valor_total ?? pagamento.valor ?? 0)}`;
-    document.getElementById("modalStatus").textContent = statusNorm === "pago" ? "Pago" : "Pendente";
+      document.getElementById("modalValor").textContent =
+        `R$ ${formatarMoeda(pagamento.valor_total ?? pagamento.valor ?? 0)}`;
+      document.getElementById("modalStatus").textContent =
+        statusNorm === "pago" ? "Pago" : "Pendente";
 
-    // COMPROVANTE
-    const respostaComprovante = await apiRequest(`/verComprovante/${id}`);
-    let urlComprovante = null;
+      // COMPROVANTE
+      const respostaComprovante = await apiRequest(`/verComprovante/${id}`);
+      let urlComprovante = null;
 
-    if (respostaComprovante.ok) {
-      urlComprovante = respostaComprovante.dados.comprovante;
-    }
+      if (respostaComprovante.ok) {
+        urlComprovante = respostaComprovante.dados.comprovante;
+      }
 
-    const comprovanteArea = document.getElementById("comprovanteArea");
-    const comprovanteBotoes = document.getElementById("comprovanteBotoes");
+      const comprovanteArea = document.getElementById("comprovanteArea");
+      const comprovanteBotoes = document.getElementById("comprovanteBotoes");
 
-    if (urlComprovante) {
-      const nomeArquivo = urlComprovante.split("/").pop();
+      if (urlComprovante) {
+        const nomeArquivo = urlComprovante.split("/").pop();
 
-      comprovanteArea.innerHTML = `
+        comprovanteArea.innerHTML = `
         <ion-icon name="document-attach-outline"></ion-icon>
         <p class="nome-arquivo">${nomeArquivo}</p>
         <p>Comprovante disponível</p>
       `;
-      comprovanteBotoes.style.display = "flex";
+        comprovanteBotoes.style.display = "flex";
 
-      document.getElementById("btnVisualizarComprovante").onclick = () => window.open(urlComprovante, "_blank");
-      document.getElementById("btnBaixarComprovante").onclick = () => {
-        const a = document.createElement("a");
-        a.href = urlComprovante;
-        a.download = nomeArquivo;
-        a.click();
-      };
-    } else {
-      comprovanteArea.innerHTML = `
+        document.getElementById("btnVisualizarComprovante").onclick = () =>
+          window.open(urlComprovante, "_blank");
+        document.getElementById("btnBaixarComprovante").onclick = () => {
+          const a = document.createElement("a");
+          a.href = urlComprovante;
+          a.download = nomeArquivo;
+          a.click();
+        };
+      } else {
+        comprovanteArea.innerHTML = `
         <ion-icon name="document-outline"></ion-icon>
         <p>Nenhum comprovante enviado pelo paciente</p>
       `;
-      comprovanteBotoes.style.display = "none";
+        comprovanteBotoes.style.display = "none";
+      }
+
+      const btnMarcar = document.getElementById("btnMarcarPago");
+      if (btnMarcar)
+        btnMarcar.style.display =
+          statusNorm === "pago" ? "none" : "inline-block";
+
+      modalFinanceiro.dataset.id = pagamento.id_pagamento;
+      modalFinanceiro.style.display = "flex";
+    } catch (err) {
+      console.error("Erro ao abrir modal:", err);
     }
-
-    const btnMarcar = document.getElementById("btnMarcarPago");
-    if (btnMarcar) btnMarcar.style.display = statusNorm === "pago" ? "none" : "inline-block";
-
-    modalFinanceiro.dataset.id = pagamento.id_pagamento;
-    modalFinanceiro.style.display = "flex";
-  } catch (err) {
-    console.error("Erro ao abrir modal:", err);
-  }
-});
+  });

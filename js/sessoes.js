@@ -166,7 +166,6 @@ function configurarModalSessao() {
   });
 }
 
-
 /* =========================
    CARREGAR HISTÓRICO
 ========================= */
@@ -183,22 +182,17 @@ async function carregarHistoricoSessoes() {
   `;
 
   try {
-    const { ok, dados } = await apiRequest(
-      "/psicologoHistorico",
-      "GET"
-    );
+    const { ok, dados } = await apiRequest("/psicologoHistorico", "GET");
 
     console.log("RETORNO API:", ok, dados);
 
     if (!ok) {
-      throw new Error(
-        dados?.error || "Erro ao buscar histórico"
-      );
+      throw new Error(dados?.error || "Erro ao buscar histórico");
     }
 
     todasSessoes = [
       ...(dados.realizadas || []),
-      ...(dados.cancelamentos || [])
+      ...(dados.cancelamentos || []),
     ];
 
     console.log("SESSÕES TRATADAS:", todasSessoes);
@@ -213,12 +207,8 @@ async function carregarHistoricoSessoes() {
     }
 
     filtrarSessoes();
-
   } catch (error) {
-    console.error(
-      "Erro ao carregar histórico:",
-      error
-    );
+    console.error("Erro ao carregar histórico:", error);
 
     container.innerHTML = `
       <div class="semSessoes">
@@ -227,7 +217,6 @@ async function carregarHistoricoSessoes() {
     `;
   }
 }
-
 
 /* =========================
    FILTRAR
@@ -243,9 +232,7 @@ function filtrarSessoes() {
 
   if (filtroAtual !== "todas") {
     sessoesFiltradas = sessoesFiltradas.filter((sessao) => {
-      const status = (
-        sessao.status_sessao || ""
-      ).toLowerCase();
+      const status = (sessao.status_sessao || "").toLowerCase();
 
       if (filtroAtual === "realizadas") {
         return status === "realizada";
@@ -256,10 +243,7 @@ function filtrarSessoes() {
       }
 
       if (filtroAtual === "reagendadas") {
-        return (
-          status === "reagendamento_solicitado" ||
-          status === "reagendada"
-        );
+        return status === "reagendamento_solicitado" || status === "reagendada";
       }
 
       return true;
@@ -284,9 +268,7 @@ function filtrarSessoes() {
 
   if (filtroData) {
     sessoesFiltradas = sessoesFiltradas.filter((sessao) => {
-      const dataSessao = (
-        sessao.data_sessao || ""
-      ).substring(0, 10);
+      const dataSessao = (sessao.data_sessao || "").substring(0, 10);
 
       return dataSessao === filtroData;
     });
@@ -295,13 +277,9 @@ function filtrarSessoes() {
   /* ordenação */
 
   sessoesFiltradas.sort((a, b) => {
-    const dataA = new Date(
-      `${a.data_sessao} ${a.hora_inicio}`
-    );
+    const dataA = new Date(`${a.data_sessao} ${a.hora_inicio}`);
 
-    const dataB = new Date(
-      `${b.data_sessao} ${b.hora_inicio}`
-    );
+    const dataB = new Date(`${b.data_sessao} ${b.hora_inicio}`);
 
     return dataB - dataA;
   });
@@ -347,20 +325,16 @@ function criarCardSessao(sessao) {
     sessao.paciente?.usuario?.nome ||
     "Paciente";
 
-  const dataObj = new Date(
-    `${sessao.data_sessao} ${sessao.hora_inicio}`
-  );
+  const dataObj = new Date(`${sessao.data_sessao} ${sessao.hora_inicio}`);
 
   const dataFormatada = dataObj.toLocaleDateString("pt-BR");
 
   const horaFormatada = dataObj.toLocaleTimeString("pt-BR", {
     hour: "2-digit",
-    minute: "2-digit"
+    minute: "2-digit",
   });
 
-  const status = (
-    sessao.status_sessao || "agendada"
-  ).toLowerCase();
+  const status = (sessao.status_sessao || "agendada").toLowerCase();
 
   let statusTexto = "Agendada";
   let statusClasse = "status-agendada";
@@ -375,10 +349,7 @@ function criarCardSessao(sessao) {
     statusClasse = "status-cancelada";
   }
 
-  if (
-    status === "reagendamento_solicitado" ||
-    status === "reagendada"
-  ) {
+  if (status === "reagendamento_solicitado" || status === "reagendada") {
     statusTexto = "Reagendada";
     statusClasse = "status-reagendada";
   }
@@ -450,12 +421,10 @@ function abrirModalSessao(sessao) {
     ? "-"
     : dataObj.toLocaleTimeString("pt-BR", {
         hour: "2-digit",
-        minute: "2-digit"
+        minute: "2-digit",
       });
 
-  const horaFim = sessao.hora_fim
-    ? sessao.hora_fim
-    : sessao.hora_final || "-";
+  const horaFim = sessao.hora_fim ? sessao.hora_fim : sessao.hora_final || "-";
 
   const tipo =
     sessao.tipo ||
@@ -465,10 +434,7 @@ function abrirModalSessao(sessao) {
     "Consulta";
 
   const local =
-    sessao.local ||
-    sessao.sala ||
-    sessao.endereco ||
-    "Não informado";
+    sessao.local || sessao.sala || sessao.endereco || "Não informado";
 
   const observacoes =
     sessao.observacoes ||
@@ -491,17 +457,24 @@ function abrirModalSessao(sessao) {
     statusTexto = "Reagendada";
   }
 
-  const horaRange = horaFim && horaFim !== "-" ? `${horaFormatada} - ${horaFim}` : horaFormatada;
+  const horaRange =
+    horaFim && horaFim !== "-"
+      ? `${horaFormatada} - ${horaFim}`
+      : horaFormatada;
 
   const titleElement = document.getElementById("sessao-modal-name");
   const statusElement = document.getElementById("sessao-modal-status");
   const pacienteElement = document.getElementById("sessao-modal-paciente");
-  const profissionalElement = document.getElementById("sessao-modal-profissional");
+  const profissionalElement = document.getElementById(
+    "sessao-modal-profissional",
+  );
   const dataElement = document.getElementById("sessao-modal-data");
   const horaElement = document.getElementById("sessao-modal-hora");
   const tipoElement = document.getElementById("sessao-modal-tipo");
   const localElement = document.getElementById("sessao-modal-local");
-  const observacoesElement = document.getElementById("sessao-modal-observacoes");
+  const observacoesElement = document.getElementById(
+    "sessao-modal-observacoes",
+  );
 
   if (titleElement) titleElement.textContent = `Sessão de ${pacienteNome}`;
   if (statusElement) statusElement.textContent = statusTexto;

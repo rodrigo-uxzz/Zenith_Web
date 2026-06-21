@@ -29,8 +29,16 @@ function aplicarBotoesStatus(status) {
   const btnCanceladaBtn = actionsContainer.querySelector(".btnCancelada");
 
   // Esconde tudo primeiro
-  [acaoPendente, acaoAgendada, btnEditarHeader, btnReagendarBtn, btnRealizadaBtn, btnCanceladaBtn]
-    .forEach((el) => { if (el) el.style.display = "none"; });
+  [
+    acaoPendente,
+    acaoAgendada,
+    btnEditarHeader,
+    btnReagendarBtn,
+    btnRealizadaBtn,
+    btnCanceladaBtn,
+  ].forEach((el) => {
+    if (el) el.style.display = "none";
+  });
 
   const s = status.toLowerCase();
 
@@ -42,14 +50,12 @@ function aplicarBotoesStatus(status) {
     s === "reagendamentopsicologo"
   ) {
     if (acaoPendente) acaoPendente.style.display = "flex";
-
   } else if (s === "agendada") {
     if (acaoAgendada) acaoAgendada.style.display = "flex";
     if (btnReagendarBtn) btnReagendarBtn.style.display = "block";
     if (btnRealizadaBtn) btnRealizadaBtn.style.display = "block";
     if (btnCanceladaBtn) btnCanceladaBtn.style.display = "block";
     if (btnEditarHeader) btnEditarHeader.style.display = "block";
-
   }
   // realizada, cancelada e qualquer outro: nenhuma ação — tudo já está escondido
 }
@@ -125,7 +131,10 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
       }
       try {
-        const { ok, dados } = await apiRequest(`/aprovarSessao/${idSessao}`, "POST");
+        const { ok, dados } = await apiRequest(
+          `/aprovarSessao/${idSessao}`,
+          "POST",
+        );
         if (ok) {
           showToast("Solicitação aprovada com sucesso!");
           consultaModal.style.display = "none";
@@ -204,8 +213,10 @@ function atualizarHeaderSemanal() {
   const mes = fimSemana.toLocaleDateString("pt-BR", { month: "long" });
   const ano = fimSemana.getFullYear();
 
-  document.getElementById("dia").innerText = `${diaInicio} - ${diaFim} de ${mes} de ${ano}`;
-  document.getElementById("dia2").innerText = `${diaInicio} - ${diaFim} de ${mes} de ${ano}`;
+  document.getElementById("dia").innerText =
+    `${diaInicio} - ${diaFim} de ${mes} de ${ano}`;
+  document.getElementById("dia2").innerText =
+    `${diaInicio} - ${diaFim} de ${mes} de ${ano}`;
 }
 
 async function atualizarData() {
@@ -284,7 +295,8 @@ async function atualizarData() {
 
         conteudo.dataset.id = item.sessao?.id_sessao;
 
-        let status = item.sessao?.status || item.sessao?.status_sessao || "agendada";
+        let status =
+          item.sessao?.status || item.sessao?.status_sessao || "agendada";
         status = status.toLowerCase().trim();
 
         if (!status || status === "null" || status === "undefined") {
@@ -299,7 +311,9 @@ async function atualizarData() {
         const isPendente = status.includes("pendente");
         const isCancelamentoSolicitado = status === "cancelamento_solicitado";
         const isCancelamentoPsicologo = status === "cancelamentopsicologo";
-        const isReagendadaPaciente = status.includes("reagendamento_solicitado");
+        const isReagendadaPaciente = status.includes(
+          "reagendamento_solicitado",
+        );
         const isReagendadaPsicologo = status === "reagendamentopsicologo";
 
         conteudo.classList.remove("consultaCard");
@@ -365,7 +379,9 @@ async function atualizarData() {
 const cancelarModal = document.getElementById("cancelar-modal");
 const closeCancelarModal = document.getElementById("close-cancelar-modal");
 const btnVoltarCancelar = document.getElementById("btn-voltar-cancelar");
-const btnConfirmarCancelamento = document.getElementById("btn-confirmar-cancelamento");
+const btnConfirmarCancelamento = document.getElementById(
+  "btn-confirmar-cancelamento",
+);
 const motivoCancelamento = document.getElementById("motivo-cancelamento");
 
 const consultaButtons = document.querySelectorAll(".botaoConsulta");
@@ -388,7 +404,9 @@ const closeConfirmModal = document.getElementById("close-confirm-modal");
 const btnVoltarConfirm = document.getElementById("btn-voltar-confirm");
 const btnConfirmAction = document.getElementById("btn-confirm-action");
 const confirmDoneModal = document.getElementById("confirm-done-modal");
-const closeConfirmDoneModal = document.getElementById("close-confirm-done-modal");
+const closeConfirmDoneModal = document.getElementById(
+  "close-confirm-done-modal",
+);
 const btnVoltarConfirmDone = document.getElementById("btn-voltar-confirm-done");
 const btnConfirmDoneAction = document.getElementById("btn-confirm-done-action");
 const btnRealizada = document.querySelector(".btnRealizada");
@@ -441,7 +459,8 @@ function showConsultaModal(button) {
   const consultaLink = document.getElementById("consulta-modal-link");
   consultaLink.href = "https://zoom.us/";
   consultaLink.textContent = "Abrir link externo";
-  document.getElementById("consulta-modal-observacao").textContent = "Primeira consulta";
+  document.getElementById("consulta-modal-observacao").textContent =
+    "Primeira consulta";
 
   const status = (button.dataset.status || "agendada").toLowerCase();
   aplicarBotoesStatus(status);
@@ -451,7 +470,8 @@ function showConsultaModal(button) {
 
 function showEditarModal() {
   const link = document.getElementById("consulta-modal-link").href || "";
-  const observacoes = document.getElementById("consulta-modal-observacao").textContent || "";
+  const observacoes =
+    document.getElementById("consulta-modal-observacao").textContent || "";
 
   editarLink.value = link === "#" ? "" : link;
   editarObservacoes.value = observacoes;
@@ -468,9 +488,18 @@ function formatDateInput(dataTexto) {
   if (partesData.length !== 3) return "";
   const [dia, mes, ano] = partesData;
   const meses = {
-    janeiro: "01", fevereiro: "02", março: "03", abril: "04",
-    maio: "05", junho: "06", julho: "07", agosto: "08",
-    setembro: "09", outubro: "10", novembro: "11", dezembro: "12",
+    janeiro: "01",
+    fevereiro: "02",
+    março: "03",
+    abril: "04",
+    maio: "05",
+    junho: "06",
+    julho: "07",
+    agosto: "08",
+    setembro: "09",
+    outubro: "10",
+    novembro: "11",
+    dezembro: "12",
   };
   const mesNumero = meses[mes.toLowerCase()];
   if (!mesNumero) return "";
@@ -560,8 +589,12 @@ const reagendarTime = document.getElementById("reagendar-time");
 const btnReagendar = document.querySelector(".btnReagendar");
 if (btnReagendar) {
   btnReagendar.addEventListener("click", function () {
-    const dataTexto = document.getElementById("consulta-modal-data").textContent;
-    const horarioAtual = document.getElementById("consulta-modal-horario").textContent;
+    const dataTexto = document.getElementById(
+      "consulta-modal-data",
+    ).textContent;
+    const horarioAtual = document.getElementById(
+      "consulta-modal-horario",
+    ).textContent;
     if (reagendarDate) {
       const partes = dataTexto.split(",");
       if (partes.length > 1) {
@@ -569,9 +602,18 @@ if (btnReagendar) {
         if (inventarioData.length === 3) {
           const [dia, mes, ano] = inventarioData;
           const meses = {
-            janeiro: "01", fevereiro: "02", março: "03", abril: "04",
-            maio: "05", junho: "06", julho: "07", agosto: "08",
-            setembro: "09", outubro: "10", novembro: "11", dezembro: "12",
+            janeiro: "01",
+            fevereiro: "02",
+            março: "03",
+            abril: "04",
+            maio: "05",
+            junho: "06",
+            julho: "07",
+            agosto: "08",
+            setembro: "09",
+            outubro: "10",
+            novembro: "11",
+            dezembro: "12",
           };
           const mesNumero = meses[mes.toLowerCase()];
           if (mesNumero) {
@@ -692,7 +734,10 @@ if (btnConfirmDoneAction) {
         return;
       }
       consultaModal.style.display = "none";
-      showStatusModal("Consulta realizada", "A consulta foi marcada como realizada.");
+      showStatusModal(
+        "Consulta realizada",
+        "A consulta foi marcada como realizada.",
+      );
       if (modoVisualizacao === "semanal") {
         carregarSemana();
       } else {
@@ -730,26 +775,38 @@ if (btnConfirmarCancelamento) {
 
     if (!motivo) {
       showToast(
-        modo === "recusar" ? "Informe o motivo da recusa" : "Informe o motivo do cancelamento",
+        modo === "recusar"
+          ? "Informe o motivo da recusa"
+          : "Informe o motivo do cancelamento",
       );
       return;
     }
 
     try {
-      const endpoint = modo === "recusar" ? `/recusarSessao/${id}` : `/cancelarSessao/${id}`;
-      const { ok, dados } = await apiRequest(endpoint, "POST", { motivo: motivo });
+      const endpoint =
+        modo === "recusar" ? `/recusarSessao/${id}` : `/cancelarSessao/${id}`;
+      const { ok, dados } = await apiRequest(endpoint, "POST", {
+        motivo: motivo,
+      });
 
       if (!ok) {
         showStatusModal(
           "Erro",
-          dados?.error || (modo === "recusar" ? "Erro ao recusar solicitação" : "Erro ao cancelar"),
+          dados?.error ||
+            (modo === "recusar"
+              ? "Erro ao recusar solicitação"
+              : "Erro ao cancelar"),
         );
         return;
       }
 
       cancelarModal.style.display = "none";
       cancelarModal.dataset.mode = "cancel";
-      showStatusModal(modo === "recusar" ? "Solicitação recusada com sucesso!" : "Sessão cancelada!");
+      showStatusModal(
+        modo === "recusar"
+          ? "Solicitação recusada com sucesso!"
+          : "Sessão cancelada!",
+      );
       if (modoVisualizacao === "semanal") {
         carregarSemana();
       } else {
@@ -791,7 +848,10 @@ if (btnSalvarReagendar) {
       }
 
       reagendarModal.style.display = "none";
-      showStatusModal("Consulta reagendada", "A consulta foi reagendada com sucesso.");
+      showStatusModal(
+        "Consulta reagendada",
+        "A consulta foi reagendada com sucesso.",
+      );
       if (modoVisualizacao === "semanal") {
         carregarSemana();
       } else {
@@ -812,7 +872,8 @@ if (btnSalvarEditar) {
     const consultaLink = document.getElementById("consulta-modal-link");
     consultaLink.href = link;
     consultaLink.textContent = link !== "#" ? "Abrir link externo" : "Sem link";
-    document.getElementById("consulta-modal-observacao").textContent = observacoes || "Sem observações";
+    document.getElementById("consulta-modal-observacao").textContent =
+      observacoes || "Sem observações";
 
     editarModal.style.display = "none";
     consultaModal.style.display = "flex";
@@ -823,9 +884,18 @@ function formatDateDisplay(value) {
   if (!value) return "";
   const [ano, mes, dia] = value.split("-");
   const meses = {
-    "01": "janeiro", "02": "fevereiro", "03": "março", "04": "abril",
-    "05": "maio", "06": "junho", "07": "julho", "08": "agosto",
-    "09": "setembro", 10: "outubro", 11: "novembro", 12: "dezembro",
+    "01": "janeiro",
+    "02": "fevereiro",
+    "03": "março",
+    "04": "abril",
+    "05": "maio",
+    "06": "junho",
+    "07": "julho",
+    "08": "agosto",
+    "09": "setembro",
+    10: "outubro",
+    11: "novembro",
+    12: "dezembro",
   };
   return `terça-feira, ${dia} de ${meses[mes] || ""} de ${ano}`;
 }
@@ -850,7 +920,8 @@ document
     consultaModal.dataset.id = id;
     consultaModal.style.display = "flex";
 
-    document.getElementById("consulta-modal-nome").textContent = "Carregando...";
+    document.getElementById("consulta-modal-nome").textContent =
+      "Carregando...";
     document.getElementById("consulta-modal-data").textContent = "";
     document.getElementById("consulta-modal-horario").textContent = "";
     document.getElementById("consulta-valor").textContent = "";
@@ -864,7 +935,10 @@ document
 
       if (!ok) {
         console.error("Erro ao buscar detalhes da consulta:", dados);
-        showStatusModal("Erro", "Não foi possível carregar os detalhes da consulta. Tente novamente mais tarde.");
+        showStatusModal(
+          "Erro",
+          "Não foi possível carregar os detalhes da consulta. Tente novamente mais tarde.",
+        );
         return;
       }
 
@@ -879,8 +953,11 @@ document
 
       const sessao = dados.sessao;
 
-      document.getElementById("consulta-modal-nome").textContent = sessao?.paciente?.usuario?.nome || "Paciente";
-      document.getElementById("consulta-modal-data").textContent = formatarData(sessao.data_sessao);
+      document.getElementById("consulta-modal-nome").textContent =
+        sessao?.paciente?.usuario?.nome || "Paciente";
+      document.getElementById("consulta-modal-data").textContent = formatarData(
+        sessao.data_sessao,
+      );
       document.getElementById("consulta-modal-horario").textContent =
         sessao.hora_inicio.slice(0, 5) + " - " + sessao.hora_fim.slice(0, 5);
       document.getElementById("consulta-valor").textContent =
@@ -888,12 +965,15 @@ document
       document.getElementById("consulta-modal-observacao").textContent =
         sessao.anotacoes || "Sem observações";
 
-      const status = (sessao.status_sessao || sessao.status || "agendada").toLowerCase();
+      const status = (
+        sessao.status_sessao ||
+        sessao.status ||
+        "agendada"
+      ).toLowerCase();
       consultaModal.dataset.status = status;
 
       // Aplica botões corretos conforme status vindo da API
       aplicarBotoesStatus(status);
-
     } catch (error) {
       console.error("Erro ao carregar detalhes da consulta:", error);
     }
@@ -916,7 +996,11 @@ if (inputPreco) {
   });
 
   inputPreco.addEventListener("blur", function () {
-    if (inputPreco.value.trim() === "" || inputPreco.value === "0" || inputPreco.value === ",") {
+    if (
+      inputPreco.value.trim() === "" ||
+      inputPreco.value === "0" ||
+      inputPreco.value === ","
+    ) {
       inputPreco.value = "0,00";
     }
   });
@@ -947,7 +1031,10 @@ document
     });
 
     if (agendas.length === 0) {
-      showStatusModal("Atenção", "Selecione pelo menos um dia e horário para configurar a agenda.");
+      showStatusModal(
+        "Atenção",
+        "Selecione pelo menos um dia e horário para configurar a agenda.",
+      );
       return;
     }
 
@@ -958,7 +1045,10 @@ document
 
     if (!ok) {
       console.error("Erro ao salvar agenda:", dados);
-      showStatusModal("Erro", "Não foi possível salvar a agenda. Tente novamente mais tarde.");
+      showStatusModal(
+        "Erro",
+        "Não foi possível salvar a agenda. Tente novamente mais tarde.",
+      );
       return;
     }
 
@@ -966,11 +1056,15 @@ document
     const almocoFim = document.getElementById("almoco-fim").value;
 
     if (almocoInicio && almocoFim) {
-      const { ok: okAlmoco, dados: dadosAlmoco } = await apiRequest("/marcarEvento", "POST", {
-        slug: "almoco",
-        hora_inicio: almocoInicio,
-        hora_fim: almocoFim,
-      });
+      const { ok: okAlmoco, dados: dadosAlmoco } = await apiRequest(
+        "/marcarEvento",
+        "POST",
+        {
+          slug: "almoco",
+          hora_inicio: almocoInicio,
+          hora_fim: almocoFim,
+        },
+      );
 
       if (!okAlmoco) {
         console.error("Erro ao salvar horário de almoço:", dadosAlmoco);
@@ -980,7 +1074,10 @@ document
     }
 
     horarioModal.style.display = "none";
-    showStatusModal("Horários salvos", "A configuração de horários foi atualizada com sucesso.");
+    showStatusModal(
+      "Horários salvos",
+      "A configuração de horários foi atualizada com sucesso.",
+    );
     window.location.reload();
   });
 
@@ -1051,7 +1148,9 @@ function renderizarGradeSemanal(semana) {
     diasPorWeekday[dataObj.getDay()] = { ...dia, dataObj };
   });
 
-  const diasOrdenados = DIAS_ORDEM.map((wd) => diasPorWeekday[wd]).filter(Boolean);
+  const diasOrdenados = DIAS_ORDEM.map((wd) => diasPorWeekday[wd]).filter(
+    Boolean,
+  );
 
   const horariosSet = new Set();
   diasOrdenados.forEach((dia) => {
@@ -1117,7 +1216,9 @@ function renderizarGradeSemanal(semana) {
         celula.innerHTML = `<div class="gradeDisponivel"></div>`;
       } else if (item.tipo === "evento") {
         const isAlmoco = item.slug === "almoco";
-        const nomeEvento = isAlmoco ? "🍽 Almoço" : ("📌 " + (item.evento?.nome || "Bloqueado"));
+        const nomeEvento = isAlmoco
+          ? "🍽 Almoço"
+          : "📌 " + (item.evento?.nome || "Bloqueado");
         const classeExtra = isAlmoco ? "gradeBloqueadoAlmoco" : "";
         celula.innerHTML = `<div class="gradeBloqueado ${classeExtra}">${nomeEvento}</div>`;
       } else if (item.sessao) {
@@ -1145,62 +1246,76 @@ function renderizarGradeSemanal(semana) {
 }
 
 // Clique nos cards da grade semanal
-document.getElementById("gradeSemanal")?.addEventListener("click", async function (event) {
-  const button = event.target.closest(".gradeCard");
-  if (!button) return;
+document
+  .getElementById("gradeSemanal")
+  ?.addEventListener("click", async function (event) {
+    const button = event.target.closest(".gradeCard");
+    if (!button) return;
 
-  const id = button.dataset.id;
-  if (!id) return;
+    const id = button.dataset.id;
+    if (!id) return;
 
-  consultaModal.dataset.id = id;
-  consultaModal.style.display = "flex";
+    consultaModal.dataset.id = id;
+    consultaModal.style.display = "flex";
 
-  document.getElementById("consulta-modal-nome").textContent = "Carregando...";
-  document.getElementById("consulta-modal-data").textContent = "";
-  document.getElementById("consulta-modal-horario").textContent = "";
-  document.getElementById("consulta-valor").textContent = "";
-  document.getElementById("consulta-modal-observacao").textContent = "";
+    document.getElementById("consulta-modal-nome").textContent =
+      "Carregando...";
+    document.getElementById("consulta-modal-data").textContent = "";
+    document.getElementById("consulta-modal-horario").textContent = "";
+    document.getElementById("consulta-valor").textContent = "";
+    document.getElementById("consulta-modal-observacao").textContent = "";
 
-  // Esconde todos os botões enquanto carrega
-  aplicarBotoesStatus("__carregando__");
+    // Esconde todos os botões enquanto carrega
+    aplicarBotoesStatus("__carregando__");
 
-  try {
-    const { ok, dados } = await apiRequest(`/detalhesConsulta/${id}`);
+    try {
+      const { ok, dados } = await apiRequest(`/detalhesConsulta/${id}`);
 
-    if (!ok) {
-      showStatusModal("Erro", "Não foi possível carregar os detalhes da consulta.");
-      return;
+      if (!ok) {
+        showStatusModal(
+          "Erro",
+          "Não foi possível carregar os detalhes da consulta.",
+        );
+        return;
+      }
+
+      function formatarData(data) {
+        return new Date(data + "T00:00:00").toLocaleDateString("pt-BR", {
+          weekday: "long",
+          day: "2-digit",
+          month: "long",
+          year: "numeric",
+        });
+      }
+
+      const sessao = dados.sessao;
+      console.log("STATUS:", sessao.status);
+      console.log("SESSAO COMPLETA:", JSON.stringify(sessao));
+
+      document.getElementById("consulta-modal-nome").textContent =
+        sessao?.paciente?.usuario?.nome || "Paciente";
+      document.getElementById("consulta-modal-data").textContent = formatarData(
+        sessao.data_sessao,
+      );
+      document.getElementById("consulta-modal-horario").textContent =
+        sessao.hora_inicio.slice(0, 5) + " - " + sessao.hora_fim.slice(0, 5);
+      document.getElementById("consulta-valor").textContent =
+        `R$ ${Number(sessao.valor).toFixed(2).replace(".", ",")}`;
+      document.getElementById("consulta-modal-observacao").textContent =
+        sessao.anotacoes || "Sem observações";
+
+      const status = (
+        sessao.status_sessao ||
+        sessao.status ||
+        "agendada"
+      ).toLowerCase();
+      consultaModal.dataset.status = status;
+
+      aplicarBotoesStatus(status);
+    } catch (error) {
+      console.error("Erro ao carregar detalhes da consulta:", error);
+      showStatusModal("Erro", "Erro ao comunicar com o servidor.");
     }
-
-    function formatarData(data) {
-      return new Date(data + "T00:00:00").toLocaleDateString("pt-BR", {
-        weekday: "long", day: "2-digit", month: "long", year: "numeric",
-      });
-    }
-
-    const sessao = dados.sessao;
-    console.log("STATUS:", sessao.status);
-    console.log("SESSAO COMPLETA:", JSON.stringify(sessao));
-
-    document.getElementById("consulta-modal-nome").textContent = sessao?.paciente?.usuario?.nome || "Paciente";
-    document.getElementById("consulta-modal-data").textContent = formatarData(sessao.data_sessao);
-    document.getElementById("consulta-modal-horario").textContent =
-      sessao.hora_inicio.slice(0, 5) + " - " + sessao.hora_fim.slice(0, 5);
-    document.getElementById("consulta-valor").textContent =
-      `R$ ${Number(sessao.valor).toFixed(2).replace(".", ",")}`;
-    document.getElementById("consulta-modal-observacao").textContent =
-      sessao.anotacoes || "Sem observações";
-
-    const status = (sessao.status_sessao || sessao.status || "agendada").toLowerCase();
-    consultaModal.dataset.status = status;
-
-    aplicarBotoesStatus(status);
-
-  } catch (error) {
-    console.error("Erro ao carregar detalhes da consulta:", error);
-    showStatusModal("Erro", "Erro ao comunicar com o servidor.");
-  }
-});
-
+  });
 
 configurarFiltrosVisualizacao();
