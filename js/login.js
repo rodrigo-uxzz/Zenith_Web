@@ -1,5 +1,19 @@
 import { apiRequest } from "./api.js";
 
+// ───── HELPER DE LOADING ─────────────────────────────────────────────────────
+
+function setLoading(botao, carregando, spinnerDark = false) {
+    if (!botao) return;
+    if (carregando) {
+        botao.disabled = true;
+        botao.dataset.textoOriginal = botao.innerHTML;
+        botao.innerHTML = `<span class="spinner${spinnerDark ? " spinner-dark" : ""}"></span>`;
+    } else {
+        botao.disabled = false;
+        botao.innerHTML = botao.dataset.textoOriginal || botao.innerHTML;
+    }
+}
+
 // ─── ELEMENTOS ───────────────────────────────────────────────────────────────
 
 const verifyModal      = document.getElementById("modalVerificacao");
@@ -113,15 +127,20 @@ if (btnEnviarRecup) {
       return;
     }
 
-    const { ok, dados } = await apiRequest("/forgotPassword", "POST", { email });
+        setLoading(btnEnviarRecup, true, true);
 
-    if (ok) {
-      esqueciModal.style.display = "none";
-      openVerifyModal(email);
-    } else {
-      showToast(dados?.message || "E-mail não encontrado.");
-    }
-  });
+        const { ok, dados } = await apiRequest("/forgotPassword", "POST", { email });
+
+        setLoading(btnEnviarRecup, false, true);
+
+        if (ok) {
+            recoveryEmail                 = email;
+            esqueciModal.style.display    = "none";
+            openVerifyModal(email, true);
+        } else {
+            showToast(dados?.message || "E-mail não encontrado.");
+        }
+    });
 }
 
 // ─── MODAL NOVA SENHA ─────────────────────────────────────────────────────────
@@ -144,20 +163,22 @@ if (btnEnviarNovaSenha) {
       return;
     }
 
-    const { ok, dados } = await apiRequest("/resetPassword", "POST", {
-      email: pendingEmail,
-      code: recoveryCode,
-      senha: nova,
-      confirmar_senha: confirmar,
-    });
+        setLoading(btnEnviarNovaSenha, true, true);
 
-    if (ok) {
-      novaSenhaModal.style.display = "none";
-      senhaAtualModal.style.display = "flex";
-    } else {
-      showToast(dados?.message || "Erro ao atualizar a senha.");
-    }
-  });
+        const { ok, dados } = await apiRequest("/resetPassword", "POST", {
+            email:    pendingEmail,
+            password: nova,
+        });
+
+        setLoading(btnEnviarNovaSenha, false, true);
+
+        if (ok) {
+            novaSenhaModal.style.display   = "none";
+            senhaAtualModal.style.display  = "flex";
+        } else {
+            showToast(dados?.message || "Erro ao atualizar a senha.");
+        }
+    });
 }
 
 // ─── MODAL SENHA ATUALIZADA ───────────────────────────────────────────────────
@@ -182,7 +203,6 @@ window.addEventListener("click", (e) => {
 });
 
 // ─── LOGIN ────────────────────────────────────────────────────────────────────
-
 document.getElementById("loginForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -220,23 +240,36 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
     return;
   }
 
-  if (!dados.user) return showToast("Erro inesperado na resposta do servidor.");
-  if (dados.user.tipo_usuario !== "psicologo") {
-    return showToast("Login inválido: apenas psicólogos podem acessar.");
-  }
+    const btnEntrar = document.querySelector(".botaoE");
+    setLoading(btnEntrar, true);
 
-  const usuarioLogado = dados.user || {};
-  const psicologoId =
-    usuarioLogado.id_psicologo ||
-    usuarioLogado.psicologo?.id_psicologo ||
-    usuarioLogado.psicologo?.id ||
-    usuarioLogado.id ||
-    "";
+    const { ok, dados } = await apiRequest("/login", "POST", { login: email, senha: password });
+
+    setLoading(btnEntrar, false);
+
+    if (!ok) {
+        if (dados?.error === "Aguarde a verificação da conta") {
+            showToast("Sua conta está em análise pelo administrador, aguarde.");
+        } else if (dados?.error === "Email não verificado") {
+            openVerifyModal(email, false);
+        } else {
+            showToast("Login inválido: verifique suas credenciais.");
+        }
+        return;
+    }
 
   localStorage.setItem("id_usuario",     dados.user.id_usuario);
   localStorage.setItem("token",          dados.access_token);
   localStorage.setItem("usuarioLogado",  JSON.stringify(usuarioLogado));
   localStorage.setItem("psicologoId",    String(psicologoId));
 
-  window.location.href = "homeScreen.html";
+    const usuarioLogado = dados.user || {};
+    const psicologoId   = usuarioLogado.id_psicologo || usuarioLogado.psicologo?.id_psicologo
+                        || usuarioLogado.psicologo?.id || usuarioLogado.id || "";
+
+    localStorage.setItem("token",         dados.access_token);
+    localStorage.setItem("usuarioLogado", JSON.stringify(usuarioLogado));
+    localStorage.setItem("psicologoId",   String(psicologoId));
+
+    window.location.href = "homeScreen.html";
 });

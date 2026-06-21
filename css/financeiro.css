@@ -456,6 +456,7 @@ button:focus, .btn-acao:focus, .modal-close:focus { outline: 3px solid rgba(41,0
   background: var(--bg-card);
   border-radius: 12px;
   padding: 24px;
+  padding-bottom: 160px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.06);
 }
 
@@ -884,4 +885,30 @@ tbody tr:hover {
     border-radius: 10px;
     font-family: 'Poppins', sans-serif;
     font-size: 0.95rem;
+}
+
+/* AVATAR PACIENTE NA TABELA */
+.avatar-paciente-tabela {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+.avatar-paciente-tabela.avatarRoxo    { background: #e8ddff; color: #5b3cc4; }
+.avatar-paciente-tabela.avatarAmarelo { background: #fff0c7; color: #c8890a; }
+.avatar-paciente-tabela.avatarRosa    { background: #ffe4f0; color: #c0185a; }
+.avatar-paciente-tabela.avatarVerde   { background: #d9f5e5; color: #1a8a50; }
+.avatar-paciente-tabela.avatarAzul    { background: #dceeff; color: #1565c0; }
+
+.nome-paciente-tabela {
+    display: inline-flex;
+    align-items: center;
 }

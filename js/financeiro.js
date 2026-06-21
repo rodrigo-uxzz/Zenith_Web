@@ -5,6 +5,29 @@ let modoFiltro = "diario"; // "diario" | "semanal"
 let dataAtual = new Date();
 dataAtual.setHours(12, 0, 0, 0);
 
+// ===== AVATAR =====
+
+function obterIniciais(nome) {
+  if (!nome) return "??";
+  const partes = nome.trim().split(" ");
+  if (partes.length === 1) return partes[0].substring(0, 2).toUpperCase();
+  return (partes[0][0] + partes[partes.length - 1][0]).toUpperCase();
+}
+
+function obterCorAvatar(nome) {
+  const cores = [
+    "avatarRoxo",
+    "avatarAmarelo",
+    "avatarRosa",
+    "avatarVerde",
+    "avatarAzul",
+  ];
+  if (!nome) return cores[0];
+  let soma = 0;
+  for (let i = 0; i < nome.length; i++) soma += nome.charCodeAt(i);
+  return cores[soma % cores.length];
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   // ===== LOGOUT =====
   const modalLogout = document.getElementById("modal-logout");
@@ -102,7 +125,6 @@ function fecharModalFinanceiro() {
   if (!modalFinanceiro) return;
   modalFinanceiro.style.display = "none";
   modalFinanceiro.dataset.id = "";
-  // reseta botão marcar pago
   const btnMarcar = document.getElementById("btnMarcarPago");
   if (btnMarcar) btnMarcar.style.display = "inline-block";
 }
@@ -253,27 +275,31 @@ function calcularResumoFinanceiro(pagamentos, dataSelecionada) {
 
 // ===== DASHBOARD =====
 async function carregarDashboard(data) {
-  const { ok, dados } = await apiRequest(`/dashboardFinanceiro?data=${data}`);
+    const endpoint = modoFiltro === "semanal"
+        ? `/dashboardFinanceiroSemanal?data=${data}`
+        : `/dashboardFinanceiro?data=${data}`;
 
-  console.log(dados);
+    const { ok, dados } = await apiRequest(endpoint);
+    if (!ok) return;
 
-  if (!ok) return;
+    document.getElementById("cardFaturamentoDiaValor").innerText =
+        `R$ ${formatarMoeda(dados.faturamento)}`;
 
-  document.getElementById("cardFaturamentoDiaValor").innerText =
-    `R$ ${formatarMoeda(dados.faturamento)}`;
+    document.getElementById("cardFaturamentoMensalValor").innerText =
+        `R$ ${formatarMoeda(dados.faturamento_mensal)}`;
 
-  document.getElementById("cardFaturamentoMensalValor").innerText =
-    `R$ ${formatarMoeda(dados.faturamento_mensal)}`;
+    document.getElementById("cardConsultasPagasValor").innerText = dados.pagas;
 
-  document.getElementById("cardConsultasPagasValor").innerText = dados.pagas;
-
-  document.getElementById("cardConsultasPendentesValor").innerText =
-    dados.pendentes;
+    document.getElementById("cardConsultasPendentesValor").innerText = dados.pendentes;
 }
-
 // ===== LISTAGEM =====
 async function listarPagamentos(data) {
-  const { ok, dados } = await apiRequest(`/listarPagamentos?data=${data}`);
+  const endpoint =
+    modoFiltro === "semanal"
+      ? `/listarPagamentosSemanal?data=${data}`
+      : `/listarPagamentos?data=${data}`;
+
+  const { ok, dados } = await apiRequest(endpoint);
   const container = document.getElementById("listaPagamentos");
   container.innerHTML = "";
 
@@ -295,12 +321,31 @@ async function listarPagamentos(data) {
     );
     const labelStatus = statusNorm === "pago" ? "Pago" : "Pendente";
 
+    // Por isso:
+    const nomePaciente = pagamento.paciente?.usuario?.nome ?? "—";
+    const iniciais = obterIniciais(nomePaciente);
+    const corAvatar = obterCorAvatar(nomePaciente);
+
+    // Formata data corretamente
+    const dataSessao = pagamento.sessao?.data_sessao
+      ? new Date(pagamento.sessao.data_sessao + "T00:00:00").toLocaleDateString(
+          "pt-BR",
+        )
+      : "—";
+
+    // Formata hora corretamente (vem como "08:00:00")
+    const horaInicio = pagamento.sessao?.hora_inicio
+      ? pagamento.sessao.hora_inicio.substring(0, 5)
+      : "—";
+
     linha.innerHTML = `
-      <td>${pagamento.paciente?.usuario?.nome ?? "—"}</td>
       <td>
-        ${new Date(pagamento.created_at).toLocaleDateString("pt-BR")}
-        ${new Date(pagamento.created_at).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}
+        <span class="nome-paciente-tabela">
+          <span class="avatar-paciente-tabela ${corAvatar}">${iniciais}</span>
+          ${nomePaciente}
+        </span>
       </td>
+      <td>${dataSessao} ${horaInicio}</td>
       <td>R$ ${valorFormatado}</td>
       <td><span class="badge ${statusNorm}">${labelStatus}</span></td>
       <td><button class="btn-acao">Ver</button></td>

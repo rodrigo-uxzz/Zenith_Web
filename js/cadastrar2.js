@@ -105,19 +105,31 @@ function getErrorMessage(dados) {
   return "Erro ao cadastrar. Tente novamente.";
 }
 
+function setLoading(botao, carregando) {
+    if (!botao) return;
+    if (carregando) {
+        botao.disabled = true;
+        botao.dataset.textoOriginal = botao.innerHTML;
+        botao.innerHTML = `<span class="spinner"></span>`;
+    } else {
+        botao.disabled = false;
+        botao.innerHTML = botao.dataset.textoOriginal || botao.innerHTML;
+    }
+}
+
 // ─── PASSO 1: VALIDAR E ENVIAR E-MAIL ────────────────────────────────────────
 // Chamado ao clicar em "Criar conta". Não cria a conta ainda —
 // apenas valida os campos e dispara o código de verificação.
 
 async function criarConta() {
-  const username      = document.getElementById("username").value.trim();
-  const email         = document.getElementById("email").value.trim();
-  const senha         = document.getElementById("senha").value;
+  const username       = document.getElementById("username").value.trim();
+  const email          = document.getElementById("email").value.trim();
+  const senha          = document.getElementById("senha").value;
   const confirmarSenha = document.getElementById("confirmarSenha").value;
-  const cadastroEpsi  = document.querySelector('input[name="cadastroEpsi"]:checked');
-  const formacao      = document.getElementById("formacao").value;
-  const termos        = document.getElementById("termos").checked;
-  const emailRegex    = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const cadastroEpsi   = document.querySelector('input[name="cadastroEpsi"]:checked');
+  const formacao       = document.getElementById("formacao").value;
+  const termos         = document.getElementById("termos").checked;
+  const emailRegex     = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   // Marca erros visuais
   setInputError(fields.username, !username);
@@ -144,7 +156,12 @@ async function criarConta() {
   localStorage.setItem("termos", String(termos));
 
   // Dispara o envio do código de verificação
+  const criarContaBtn = document.getElementById("criarConta");
+  setLoading(criarContaBtn, true);
+
   const { ok, dados } = await apiRequest("/sendVerificationEmail", "POST", { email });
+
+  setLoading(criarContaBtn, false);
 
   if (!ok) {
     showToast(dados?.message || "Erro ao enviar o código. Tente novamente.");
@@ -165,7 +182,6 @@ async function confirmarCodigo() {
     return;
   }
 
-  // Recupera dados salvos
   const nome           = localStorage.getItem("nome")     || "";
   const telefone       = localStorage.getItem("telefone") || "";
   const dataNascimento = localStorage.getItem("data")     || "";
@@ -199,7 +215,7 @@ async function confirmarCodigo() {
   formData.append("formacaoProfissional", formacao);
   formData.append("termos_aceitos", termos ? 1 : 0);
   formData.append("termosAceitos", termos ? 1 : 0);
-  formData.append("code", code); // ← campo que o backend exige
+  formData.append("code", code);
 
   const fotoBase64 = localStorage.getItem("foto");
   if (fotoBase64) {
@@ -207,12 +223,15 @@ async function confirmarCodigo() {
     formData.append("foto", blob, "foto.png");
   }
 
+  setLoading(confirmCodeBtn, true);
+
   const { ok, dados } = await apiRequest("/registerPsicologo", "POST", formData);
+
+  setLoading(confirmCodeBtn, false);
 
   if (ok) {
     verifyModal.style.display = "none";
     showToast("Conta criada com sucesso! Aguarde a análise do administrador.");
-    // Limpa localStorage para não reutilizar dados antigos
     ["nome","telefone","data","genero","cpf","crp","username","email",
      "senha","confirmarSenha","cadastroEpsi","formacao","termos","foto"]
       .forEach((k) => localStorage.removeItem(k));
