@@ -414,7 +414,6 @@ label {
 
 .link-reenviar:hover {
     text-decoration: underline;
-}
     letter-spacing: 0.3rem;
     font-size: 1rem;
 }
@@ -482,4 +481,24 @@ label {
     .right-side {
         flex: 1;
     }
+}
+
+/* SPINNER DE CARREGAMENTO */
+.spinner {
+    width: 15px;
+    height: 15px;
+    border: 3px solid rgba(255, 255, 255, 0.4);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    display: inline-block;
+}
+
+.spinner.spinner-dark {
+    border: 3px solid rgba(91, 60, 196, 0.2);
+    border-top-color: var(--primary-light, #7a5cff);
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
 }

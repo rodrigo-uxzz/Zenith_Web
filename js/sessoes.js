@@ -6,6 +6,26 @@ let buscaPaciente = "";
 let filtroData = "";
 let sessaoAberta = null;
 
+function obterIniciais(nome) {
+  if (!nome) return "??";
+  const partes = nome.trim().split(" ");
+  if (partes.length === 1) return partes[0].substring(0, 2).toUpperCase();
+  return (partes[0][0] + partes[partes.length - 1][0]).toUpperCase();
+}
+
+function obterCorAvatar(nome) {
+  const cores = ["", "avatarAmarelo", "avatarRosa", "avatarVerde"];
+  if (!nome) return cores[0];
+
+  // soma os códigos das letras do nome pra gerar um índice fixo
+  let soma = 0;
+  for (let i = 0; i < nome.length; i++) {
+    soma += nome.charCodeAt(i);
+  }
+
+  return cores[soma % cores.length];
+}
+
 /* =========================
    INICIALIZAÇÃO
 ========================= */
@@ -175,12 +195,6 @@ async function carregarHistoricoSessoes() {
         dados?.error || "Erro ao buscar histórico"
       );
     }
-
-    // seu Laravel retorna:
-    // {
-    //   realizadas: [],
-    //   cancelamentos: []
-    // }
 
     todasSessoes = [
       ...(dados.realizadas || []),
@@ -371,8 +385,8 @@ function criarCardSessao(sessao) {
 
   card.innerHTML = `
     <div class="card-sessao-icone">
-      <div class="iconConsulta">
-          <span class="icone"><ion-icon name="person-outline"></ion-icon></span>
+      <div class="card-sessao-icone ${obterCorAvatar(nome)}">
+        ${obterIniciais(nome)}
       </div>
     </div>
 

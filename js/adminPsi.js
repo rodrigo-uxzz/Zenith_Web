@@ -650,7 +650,6 @@ function renderizarLista() {
     elementos.listContainer.innerHTML = `
       <div class="person">
         <div class="info">
-
           <div>
             <h3>Nenhum psicólogo encontrado</h3>
             <p>Verifique o filtro ou a busca.</p>

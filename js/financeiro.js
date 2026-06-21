@@ -5,27 +5,44 @@ let modoFiltro = "diario"; // "diario" | "semanal"
 let dataAtual = new Date();
 dataAtual.setHours(12, 0, 0, 0);
 
-document.addEventListener("DOMContentLoaded", () => {
+// ===== AVATAR =====
 
+function obterIniciais(nome) {
+  if (!nome) return "??";
+  const partes = nome.trim().split(" ");
+  if (partes.length === 1) return partes[0].substring(0, 2).toUpperCase();
+  return (partes[0][0] + partes[partes.length - 1][0]).toUpperCase();
+}
+
+function obterCorAvatar(nome) {
+  const cores = ["avatarRoxo", "avatarAmarelo", "avatarRosa", "avatarVerde", "avatarAzul"];
+  if (!nome) return cores[0];
+  let soma = 0;
+  for (let i = 0; i < nome.length; i++) soma += nome.charCodeAt(i);
+  return cores[soma % cores.length];
+}
+
+document.addEventListener("DOMContentLoaded", () => {
   // ===== LOGOUT =====
-  const modalLogout  = document.getElementById("modal-logout");
+  const modalLogout = document.getElementById("modal-logout");
   const openModalBtn = document.getElementById("open-Modal-logout");
-  const cancelBtn    = document.getElementById("btn-cancel-logout");
-  const confirmBtn   = document.getElementById("btn-confirm-logout");
+  const cancelBtn = document.getElementById("btn-cancel-logout");
+  const confirmBtn = document.getElementById("btn-confirm-logout");
 
   modalFinanceiro = document.getElementById("modalFinanceiro");
 
-  // fechar modal financeiro
   document.getElementById("btnFecharFinanceiro")?.addEventListener("click", fecharModalFinanceiro);
   document.getElementById("btnCloseModalFinanceiro")?.addEventListener("click", fecharModalFinanceiro);
 
-  // marcar como pago
   document.getElementById("btnMarcarPago")?.addEventListener("click", async () => {
     const id = modalFinanceiro?.dataset.id;
     if (!id) return;
 
     const { ok, dados } = await apiRequest(`/marcarComoPago/${id}`, "POST");
-    if (!ok) { console.error(dados); return; }
+    if (!ok) {
+      console.error(dados);
+      return;
+    }
 
     fecharModalFinanceiro();
     await atualizarFinanceiro();
@@ -34,7 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // ===== FILTROS DIÁRIO / SEMANAL =====
   document.querySelectorAll(".btn-filtro").forEach((btn) => {
     btn.addEventListener("click", () => {
-      document.querySelectorAll(".btn-filtro").forEach(b => b.classList.remove("active"));
+      document.querySelectorAll(".btn-filtro").forEach((b) => b.classList.remove("active"));
       btn.classList.add("active");
       modoFiltro = btn.textContent.trim().toLowerCase() === "semanal" ? "semanal" : "diario";
       atualizarFinanceiro();
@@ -45,7 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.querySelector(".search-box input")?.addEventListener("input", (e) => {
     const termo = e.target.value.toLowerCase().trim();
     document.querySelectorAll("#listaPagamentos tr.cardPagamento").forEach((tr) => {
-      const nome = tr.querySelector("td")?.textContent?.toLowerCase() || "";
+      const nome = tr.querySelector(".nome-paciente-tabela")?.textContent?.toLowerCase() || "";
       tr.style.display = nome.includes(termo) ? "" : "none";
     });
   });
@@ -56,10 +73,14 @@ document.addEventListener("DOMContentLoaded", () => {
     modalLogout.style.display = "flex";
   });
 
-  cancelBtn?.addEventListener("click", () => modalLogout.style.display = "none");
+  cancelBtn?.addEventListener("click", () => (modalLogout.style.display = "none"));
 
   confirmBtn?.addEventListener("click", async () => {
-    try { await apiRequest("/logout", "POST"); } catch (err) { console.error(err); }
+    try {
+      await apiRequest("/logout", "POST");
+    } catch (err) {
+      console.error(err);
+    }
     localStorage.removeItem("token");
     window.location.href = "./../pages/loginScreen.html";
   });
@@ -77,7 +98,6 @@ function fecharModalFinanceiro() {
   if (!modalFinanceiro) return;
   modalFinanceiro.style.display = "none";
   modalFinanceiro.dataset.id = "";
-  // reseta botão marcar pago
   const btnMarcar = document.getElementById("btnMarcarPago");
   if (btnMarcar) btnMarcar.style.display = "inline-block";
 }
@@ -130,7 +150,9 @@ function atualizarTextoData() {
   }
 
   span.innerText = dataAtual.toLocaleDateString("pt-BR", {
-    day: "2-digit", month: "long", year: "numeric",
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
   });
 }
 
@@ -142,8 +164,7 @@ function parsearValor(valor) {
   if (texto.includes(",") || texto.includes(".")) {
     if (texto.includes(",") && texto.includes("."))
       return Number(texto.replace(/\./g, "").replace(",", "."));
-    if (texto.includes(","))
-      return Number(texto.replace(",", "."));
+    if (texto.includes(",")) return Number(texto.replace(",", "."));
     const partes = texto.split(".");
     if (partes.length === 2 && partes[1].length <= 2) return Number(texto);
     return Number(texto.replace(/\./g, ""));
@@ -153,7 +174,8 @@ function parsearValor(valor) {
 
 function formatarMoeda(valor) {
   return parsearValor(valor).toLocaleString("pt-BR", {
-    minimumFractionDigits: 2, maximumFractionDigits: 2,
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
   });
 }
 
@@ -164,88 +186,28 @@ function normalizarStatus(status) {
   return s;
 }
 
-// ===== CALCULAR RESUMO =====
-function calcularResumoFinanceiro(pagamentos, dataSelecionada) {
-  const dataRef   = new Date(`${dataSelecionada}T12:00:00`);
-  const inicioMes = new Date(dataRef.getFullYear(), dataRef.getMonth(), 1);
-  const fimMes    = new Date(dataRef.getFullYear(), dataRef.getMonth() + 1, 1);
-
-  // para semanal
-  const inicioSemana = new Date(dataRef);
-  inicioSemana.setDate(dataRef.getDate() - dataRef.getDay());
-  const fimSemana = new Date(inicioSemana);
-  fimSemana.setDate(inicioSemana.getDate() + 7);
-
-  let faturamentoDia = 0, faturamentoMes = 0, pagas = 0, pendentes = 0;
-
-  const psicologoId = String(localStorage.getItem("psicologoId") || "").trim();
-
-  (pagamentos || []).forEach((p) => {
-    const idP = String(
-      p.id_psicologo || p.psicologo_id || p.psicologo?.id ||
-      p.sessao?.id_psicologo || ""
-    ).trim();
-    if (psicologoId && idP && idP !== psicologoId) return;
-
-    const dataP = new Date(p.created_at || p.data || p.data_pagamento || dataSelecionada);
-    const valor = parsearValor(p.valor_total ?? p.valor ?? p.valor_pago ?? 0);
-    const status = normalizarStatus(p.status_pagamento || p.status || "");
-    const estaPago = status === "pago";
-    const estaPendente = status === "pendente";
-
-    const estaNoDia     = dataP.toDateString() === dataRef.toDateString();
-    const estaNoMes     = dataP >= inicioMes && dataP < fimMes;
-    const estaNaSemana  = dataP >= inicioSemana && dataP < fimSemana;
-
-    if (estaPago) {
-      if (modoFiltro === "semanal") {
-        if (estaNaSemana) faturamentoDia += valor; // "dia" vira "semana" no card
-      } else {
-        if (estaNoDia) faturamentoDia += valor;
-      }
-      if (estaNoMes) faturamentoMes += valor;
-      pagas += 1;
-    } else if (estaPendente) {
-      pendentes += 1;
-    }
-  });
-
-  return { faturamentoDia, faturamentoMes, pagas, pendentes };
-}
-
 // ===== DASHBOARD =====
 async function carregarDashboard(data) {
-    const [
-        { ok: pagDiaOk,  dados: pagDia  },
-        { ok: pagMesOk,  dados: pagMes  },
-    ] = await Promise.all([
-        apiRequest(`/listarPagamentos?data=${data}&tipo=diario`),
-        apiRequest(`/listarPagamentos?data=${data}&tipo=mensal`),
-    ]);
+  const endpoint = modoFiltro === "semanal"
+    ? `/dashboardFinanceiroSemanal?data=${data}`
+    : `/dashboardFinanceiro?data=${data}`;
 
-    let faturamentoDia = 0, faturamentoMes = 0, pagas = 0, pendentes = 0;
+  const { ok, dados } = await apiRequest(endpoint);
+  if (!ok) return;
 
-    if (pagDiaOk && Array.isArray(pagDia?.pagamentos)) {
-        const resumoDia = calcularResumoFinanceiro(pagDia.pagamentos, data, "diario");
-        faturamentoDia = resumoDia.faturamentoDia;
-        pagas          = resumoDia.pagas;
-        pendentes      = resumoDia.pendentes;
-    }
-
-    if (pagMesOk && Array.isArray(pagMes?.pagamentos)) {
-        const resumoMes = calcularResumoFinanceiro(pagMes.pagamentos, data, "mensal");
-        faturamentoMes  = resumoMes.faturamentoMes;
-    }
-
-    document.getElementById("cardFaturamentoDiaValor").innerText    = `R$ ${formatarMoeda(faturamentoDia)}`;
-    document.getElementById("cardFaturamentoMensalValor").innerText = `R$ ${formatarMoeda(faturamentoMes)}`;
-    document.getElementById("cardConsultasPagasValor").innerText    = pagas;
-    document.getElementById("cardConsultasPendentesValor").innerText = pendentes;
+  document.getElementById("cardFaturamentoDiaValor").innerText = `R$ ${formatarMoeda(dados.faturamento)}`;
+  document.getElementById("cardFaturamentoMensalValor").innerText = `R$ ${formatarMoeda(dados.faturamento_mensal)}`;
+  document.getElementById("cardConsultasPagasValor").innerText = dados.pagas;
+  document.getElementById("cardConsultasPendentesValor").innerText = dados.pendentes;
 }
 
 // ===== LISTAGEM =====
 async function listarPagamentos(data) {
-  const { ok, dados } = await apiRequest(`/listarPagamentos?data=${data}`);
+  const endpoint = modoFiltro === "semanal"
+    ? `/listarPagamentosSemanal?data=${data}`
+    : `/listarPagamentos?data=${data}`;
+
+  const { ok, dados } = await apiRequest(endpoint);
   const container = document.getElementById("listaPagamentos");
   container.innerHTML = "";
 
@@ -260,11 +222,20 @@ async function listarPagamentos(data) {
     linha.dataset.id = pagamento.id_pagamento;
 
     const valorFormatado = formatarMoeda(pagamento.valor_total ?? pagamento.valor ?? pagamento.valor_pago ?? 0);
-    const statusNorm     = normalizarStatus(pagamento.status_pagamento || pagamento.status || "");
-    const labelStatus    = statusNorm === "pago" ? "Pago" : "Pendente";
+    const statusNorm = normalizarStatus(pagamento.status_pagamento || pagamento.status || "");
+    const labelStatus = statusNorm === "pago" ? "Pago" : "Pendente";
+
+    const nomePaciente = pagamento.paciente?.usuario?.nome ?? "—";
+    const iniciais = obterIniciais(nomePaciente);
+    const corAvatar = obterCorAvatar(nomePaciente);
 
     linha.innerHTML = `
-      <td>${pagamento.paciente?.usuario?.nome ?? "—"}</td>
+      <td>
+        <span class="nome-paciente-tabela">
+          <span class="avatar-paciente-tabela ${corAvatar}">${iniciais}</span>
+          ${nomePaciente}
+        </span>
+      </td>
       <td>
         ${new Date(pagamento.created_at).toLocaleDateString("pt-BR")}
         ${new Date(pagamento.created_at).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })}
@@ -277,60 +248,69 @@ async function listarPagamentos(data) {
     container.appendChild(linha);
   });
 }
-document.getElementById("listaPagamentos")?.addEventListener("click", async (event) => {
-    const card = event.target.closest(".cardPagamento");
-    if (!card) return;
 
+document.getElementById("listaPagamentos")?.addEventListener("click", async (event) => {
+  const card = event.target.closest(".cardPagamento");
+  if (!card) return;
+
+  try {
     const id = card.dataset.id;
     const { ok, dados } = await apiRequest(`/detalhesPagamento/${id}`);
     if (!ok) return;
 
-    const pagamento  = dados.pagamento;
+    const pagamento = dados.pagamento;
     const statusNorm = normalizarStatus(pagamento.status_pagamento || pagamento.status || "");
 
-    // header
     document.getElementById("modalPaciente").textContent = pagamento.paciente?.usuario?.nome ?? "—";
-    document.getElementById("modalData").textContent = new Date(pagamento.created_at)
-        .toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit" });
+    document.getElementById("modalData").textContent = new Date(pagamento.created_at).toLocaleDateString("pt-BR", {
+      day: "2-digit", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit",
+    });
 
-    // detalhes
-    document.getElementById("modalValor").textContent  = `R$ ${formatarMoeda(pagamento.valor_total ?? pagamento.valor ?? 0)}`;
+    document.getElementById("modalValor").textContent = `R$ ${formatarMoeda(pagamento.valor_total ?? pagamento.valor ?? 0)}`;
     document.getElementById("modalStatus").textContent = statusNorm === "pago" ? "Pago" : "Pendente";
 
-    // comprovante
-    const urlComprovante = pagamento.comprovante || pagamento.arquivo || pagamento.url_comprovante || null;
-    const comprovanteArea   = document.getElementById("comprovanteArea");
-    const comprovanteBotoes = document.getElementById("comprovanteBotoes");
-    const comprovanteTexto  = document.getElementById("comprovanteTexto");
+    // COMPROVANTE
+    const respostaComprovante = await apiRequest(`/verComprovante/${id}`);
+    let urlComprovante = null;
 
-    if (urlComprovante) {
-        const nomeArquivo = urlComprovante.split("/").pop();
-        comprovanteArea.innerHTML = `
-            <ion-icon name="document-attach-outline"></ion-icon>
-            <p class="nome-arquivo">${nomeArquivo}</p>
-            <p>Comprovante disponível</p>
-        `;
-        comprovanteBotoes.style.display = "flex";
-
-        document.getElementById("btnVisualizarComprovante").onclick = () => window.open(urlComprovante, "_blank");
-        document.getElementById("btnBaixarComprovante").onclick = () => {
-            const a = document.createElement("a");
-            a.href = urlComprovante;
-            a.download = nomeArquivo;
-            a.click();
-        };
-    } else {
-        comprovanteArea.innerHTML = `
-            <ion-icon name="document-outline"></ion-icon>
-            <p>Nenhum comprovante anexado</p>
-        `;
-        comprovanteBotoes.style.display = "none";
+    if (respostaComprovante.ok) {
+      urlComprovante = respostaComprovante.dados.comprovante;
     }
 
-    // botão marcar pago
+    const comprovanteArea = document.getElementById("comprovanteArea");
+    const comprovanteBotoes = document.getElementById("comprovanteBotoes");
+
+    if (urlComprovante) {
+      const nomeArquivo = urlComprovante.split("/").pop();
+
+      comprovanteArea.innerHTML = `
+        <ion-icon name="document-attach-outline"></ion-icon>
+        <p class="nome-arquivo">${nomeArquivo}</p>
+        <p>Comprovante disponível</p>
+      `;
+      comprovanteBotoes.style.display = "flex";
+
+      document.getElementById("btnVisualizarComprovante").onclick = () => window.open(urlComprovante, "_blank");
+      document.getElementById("btnBaixarComprovante").onclick = () => {
+        const a = document.createElement("a");
+        a.href = urlComprovante;
+        a.download = nomeArquivo;
+        a.click();
+      };
+    } else {
+      comprovanteArea.innerHTML = `
+        <ion-icon name="document-outline"></ion-icon>
+        <p>Nenhum comprovante enviado pelo paciente</p>
+      `;
+      comprovanteBotoes.style.display = "none";
+    }
+
     const btnMarcar = document.getElementById("btnMarcarPago");
     if (btnMarcar) btnMarcar.style.display = statusNorm === "pago" ? "none" : "inline-block";
 
-    modalFinanceiro.dataset.id    = pagamento.id_pagamento;
+    modalFinanceiro.dataset.id = pagamento.id_pagamento;
     modalFinanceiro.style.display = "flex";
+  } catch (err) {
+    console.error("Erro ao abrir modal:", err);
+  }
 });

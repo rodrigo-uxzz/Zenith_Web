@@ -7,13 +7,6 @@
 
     <link rel="stylesheet" href="../css/agendaScreen.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <!-- <script>
-      const token = localStorage.getItem("token");
-
-      if(!token){
-        window.location.href = "loginScreen.html";
-      }
-    </script> -->
 </head>
 
 <body>
@@ -57,28 +50,12 @@
                 </a>
             </li>
             <li>
-                <a href="./perfilEditar.html">
-                    <span class="icone"><ion-icon name="settings-outline"></ion-icon></span>
-                    <span class="titulo">Configurações</span>
-                </a>
-            </li>
-            <li>
                 <a href="./perfilScreen.html">
                     <span class="icone"><ion-icon name="person-outline"></ion-icon></span>
                     <span class="titulo">Perfil</span>
                 </a>
             </li>
-            <li class="conta">
-                <!--<a href="#">
-                    <span class="icone">
-                        <div class="imgCaixa">
-                             <img src="img/user.svg"> 
-                             A parte q o Roberto já fez
-                        </div>
-                    </span>
-                    <span class="titulo">Moana Dark</span>
-                </a>-->
-            </li>
+            <li class="conta"></li>
             <li>
                 <a href="#" id="open-Modal-logout">
                     <span class="icone"><ion-icon name="log-out-outline"></ion-icon></span>
@@ -111,17 +88,19 @@
             </div>
 
             <div class="acoesAgenda">
-                <button class="btnNavegacao" id="voltarDia" >
-                    <span class="icone">
-                        <ion-icon name="chevron-back-outline"></ion-icon>
-                    </span>
-                </button>
-                <span class="hojeTexto" id="dia"></span>
-                <button class="btnNavegacao" id="avancarDia" >
-                    <span class="icone">
-                        <ion-icon name="chevron-forward-outline"></ion-icon>
-                    </span>
-                </button>
+                <div class="navWrapper">
+                    <button class="btnNavegacao" id="voltarDia">
+                        <span class="icone">
+                            <ion-icon name="chevron-back-outline"></ion-icon>
+                        </span>
+                    </button>
+                    <span class="hojeTexto" id="dia"></span>
+                    <button class="btnNavegacao" id="avancarDia">
+                        <span class="icone">
+                            <ion-icon name="chevron-forward-outline"></ion-icon>
+                        </span>
+                    </button>
+                </div>
                 <button class="btnConfigHorario" id="btn-config-horario">
                     <ion-icon name="settings-outline" class="iconConfig"></ion-icon>
                     Configurar horários
@@ -136,27 +115,24 @@
 
         <!-- FILTROS -->
         <section class="filtrosAgenda">
-
             <div class="filtros-bar">
-          <div class="filtros-left">
-            <button class="btn-filtro active">Diário</button>
-            <button class="btn-filtro">Semanal</button>
-          </div>
-
-          <div class="filtros-right">
-            <div class="search-box">
-              <ion-icon name="search-outline"></ion-icon>
-              <input type="text" placeholder="Buscar paciente" />
+                <div class="filtros-left">
+                    <button class="btn-filtro active">Diário</button>
+                    <button class="btn-filtro">Semanal</button>
+                </div>
+                <div class="filtros-right">
+                    <div class="search-box">
+                        <ion-icon name="search-outline"></ion-icon>
+                        <input type="text" placeholder="Buscar paciente" />
+                    </div>
+                </div>
             </div>
-
-          </div>
-        </div>
-
         </section>
 
         <section class="listaHorarios" id="listaHorarios"></section>
- 
-
+        <section class="gradeSemanalWrapper" id="gradeSemanalWrapper" style="display:none;">
+            <div class="gradeSemanal" id="gradeSemanal"></div>
+        </section>
 
     </main>
 
@@ -168,7 +144,6 @@
 
             <div class="consulta-modal-header">
                 <span id="consulta-modal-nome"></span>
-                        
                 <button class="btnEditar" title="Editar">
                     <ion-icon name="pencil-outline"></ion-icon>
                 </button>
@@ -215,14 +190,11 @@
             </div>
 
             <div class="consulta-modal-actions">
-                <!-- Botões para status pendente -->
                 <div class="acao-pendente" style="display: none;">
                     <button class="btnAcao btn-aceitar-modal" id="btn-aceitar-consulta">Aceitar</button>
                     <button class="btnAcao btn-recusar-modal" id="btn-recusar-consulta">Recusar</button>
                 </div>
-                <!-- Botões para status agendada -->
                 <div class="acao-agendada" style="display: none;">
-                    
                     <button class="btnAcao btnReagendar" style="display:none;">Reagendar</button>
                     <button class="btnAcao btnRealizada">Realizada</button>
                     <button class="btnAcao btnCancelada">Cancelar</button>
@@ -236,14 +208,10 @@
             <span class="close" id="close-reagendar-modal">&times;</span>
             <h2>Reagendar Consulta</h2>
             <hr>
-
-
             <label class="reagendar-label" for="reagendar-date">Nova Data *</label>
             <input id="reagendar-date" type="date" class="reagendar-input" />
-
             <label class="reagendar-label" for="reagendar-time">Novo Horário *</label>
             <input id="reagendar-time" type="time" class="reagendar-input" />
-
             <div class="reagendar-buttons">
                 <button class="btnVoltar" id="btn-voltar-reagendar" type="button">Voltar</button>
                 <button class="btnSalvar" id="btn-salvar-reagendar" type="button">Salvar</button>
@@ -256,37 +224,26 @@
            <span class="close" id="close-editar-modal">&times;</span>
            <h2>Editar Agenda</h2>
            <hr>
-
            <label class="editar-label" for="editar-link">Link da Consulta</label>
            <input id="editar-link" type="text" class="editar-input" />
-
            <label class="editar-label" for="editar-observacoes">Observações (opcional)</label>
            <textarea id="editar-observacoes" class="editar-textarea"></textarea>
-
            <div class="editar-buttons">
-               <button class="btnCancelEdit" id="btn-cancelar-editar" type="button">
-                   Cancelar
-               </button>
-               <button class="btnSalvar" id="btn-salvar-editar" type="button">
-                   Salvar
-               </button>
+               <button class="btnCancelEdit" id="btn-cancelar-editar" type="button">Cancelar</button>
+               <button class="btnSalvar" id="btn-salvar-editar" type="button">Salvar</button>
            </div>
        </div>
     </div>
 
-
     <div id="cancelar-modal" class="modal">
         <div class="modal-content">
             <span class="close" id="close-cancelar-modal">&times;</span>
-
             <h2>Cancelar Consulta</h2>
             <p>Informe o motivo do cancelamento:</p>
-
             <textarea id="motivo-cancelamento" class="editar-textarea" placeholder="Digite o motivo..."></textarea>
-
             <div class="editar-buttons">
-            <button id="btn-voltar-cancelar" class="btnVoltar">Voltar</button>
-            <button id="btn-confirmar-cancelamento" class="btnCancelEdit">Confirmar</button>
+                <button id="btn-voltar-cancelar" class="btnVoltar">Voltar</button>
+                <button id="btn-confirmar-cancelamento" class="btnCancelEdit">Confirmar</button>
             </div>
         </div>
     </div>
@@ -310,22 +267,11 @@
             <hr>
 
             <div class="valor-sessao-box">
-
-                <label class="editar-label" for="preco_sessao">
-                    Valor da Sessão
-                </label>
-
+                <label class="editar-label" for="preco_sessao">Valor da Sessão</label>
                 <div class="input-money">
                     <span>R$</span>
-
-                    <input
-                        id="preco_sessao"
-                        type="text"
-                        inputmode="numeric"
-                        autocomplete="off"
-                    />
+                    <input id="preco_sessao" type="text" inputmode="numeric" autocomplete="off" />
                 </div>
-
             </div>
 
             <div class="horario-semana">
@@ -338,7 +284,6 @@
                         <input type="time" value="18:00" />
                     </div>
                 </label>
-
                 <label class="horario-row">
                     <span class="diaLabel"><input type="checkbox" class="dot"> Terça</span>
                     <div class="horario-row-inputs">
@@ -347,7 +292,6 @@
                         <input type="time" value="18:00" />
                     </div>
                 </label>
-
                 <label class="horario-row horario-row-disabled">
                     <span class="diaLabel"><input type="checkbox" class="dot"> Quarta</span>
                     <div class="horario-row-inputs">
@@ -356,7 +300,6 @@
                         <input type="time" value="18:00" />
                     </div>
                 </label>
-
                 <label class="horario-row">
                     <span class="diaLabel"><input type="checkbox" class="dot"> Quinta</span>
                     <div class="horario-row-inputs">
@@ -365,7 +308,6 @@
                         <input type="time" value="18:00" />
                     </div>
                 </label>
-
                 <label class="horario-row">
                     <span class="diaLabel"><input type="checkbox" class="dot"> Sexta</span>
                     <div class="horario-row-inputs">
@@ -382,7 +324,6 @@
                         <input type="time" value="18:00" />
                     </div>
                 </label>
-
                 <label class="horario-row">
                     <span class="diaLabel"><input type="checkbox" class="dot"> Domingo</span>
                     <div class="horario-row-inputs">
@@ -391,7 +332,6 @@
                         <input type="time" value="18:00" />
                     </div>
                 </label>
-
             </div>
 
             <div class="horario-almoco">
@@ -429,7 +369,6 @@
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     <script type="module" src="../js/agenda.js"></script>
 
-    <!-- Toast de Alerta -->
     <div id="toast" class="toast">
         <span id="toast-message"></span>
     </div>

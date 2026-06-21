@@ -222,6 +222,8 @@ main.agendaContainer {
 
 .tituloAgenda {
     color: #5b3cc4;
+    font-size: 32px;
+    font-weight: 700;
 }
 
 .dataAgenda {
@@ -259,18 +261,50 @@ main.agendaContainer {
 }
 
 .btnNavegacao {
-    border: none;
+    width: 36px;
+    height: 36px;
+    border: 2px solid #5b3cc4;
     background: transparent;
-    font-size: 25px;
-    margin-inline: 10px;
+    border-radius: 8px;
+    font-size: 18px;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #5b3cc4;
+    transition: all 0.2s;
+    flex-shrink: 0;
+    padding-top: 0;
+}
+
+.btnNavegacao:hover {
+    background: #5b3cc4;
+    color: white;
+    box-shadow: 0 4px 12px rgba(91, 60, 196, 0.3);
+}
+
+.btnNavegacao:active {
+    transform: scale(0.95);
 }
 
 .hojeTexto {
-    font-weight: 500;
-    font-size: 20px;
-    width: 200px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: #5b3cc4;
+    min-width: 80px;
     text-align: center;
+    white-space: nowrap;
+}
+
+.navWrapper {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #ffffff;
+    padding: 10px 16px;
+    border-radius: 12px;
+    border: 1px solid #e5e2f0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
 }
 
 /* FILTROS */
@@ -383,6 +417,12 @@ main.agendaContainer {
     justify-content: center;
 }
 
+/* Badge amarelo com texto legível */
+.consultaPendente {
+    background: #f4b30054 !important;
+    color: #946d00 !important;
+
+}
 .consultaCard strong {
     display: block;
     font-size: 18px;
@@ -1435,4 +1475,170 @@ span.consulta-modal-item-label {
   min-width: 80px;
   text-align: center;
   font-size: 0.95rem;
+}
+
+/* ═══════════════════════════════════════════
+   GRADE SEMANAL
+═══════════════════════════════════════════ */
+
+.gradeSemanalWrapper {
+    background: white;
+    border-radius: 0 0 12px 12px;
+    overflow-x: auto;
+    overflow-y: auto;
+    max-height: calc(100vh - 200px);
+}
+
+.gradeSemanalWrapper::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.gradeSemanalWrapper::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.gradeSemanalWrapper::-webkit-scrollbar-thumb {
+    background: rgba(95, 63, 209, 0.3);
+    border-radius: 999px;
+}
+
+.gradeSemanal {
+    display: grid;
+    grid-template-columns: 80px repeat(7, minmax(140px, 1fr));
+    min-width: 1100px;
+}
+
+/* Cabeçalho dos dias */
+.gradeSemanal .gradeCabecalho {
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 5;
+    padding: 14px 8px;
+    text-align: center;
+    border-bottom: 2px solid #eee;
+    font-weight: 600;
+}
+
+.gradeSemanal .gradeCabecalho.gradeCabecalhoHora {
+    background: white;
+}
+
+.gradeCabecalho .diaNome {
+    display: block;
+    font-size: 0.85rem;
+    color: #5b3cc4;
+    text-transform: capitalize;
+}
+
+.gradeCabecalho .diaData {
+    display: block;
+    font-size: 0.78rem;
+    color: #999;
+    margin-top: 2px;
+}
+
+.gradeCabecalho.diaHoje .diaNome,
+.gradeCabecalho.diaHoje .diaData {
+    color: #7b5cff;
+    font-weight: 700;
+}
+
+.gradeHoraLabel {
+    padding: 10px 8px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #5b3cc4;
+    text-align: right;
+    border-bottom: 1px solid #f0edf8;
+    border-right: 1px solid #f0edf8;
+}
+
+.gradeCelula {
+    border-bottom: 1px solid #f0edf8;
+    border-right: 1px solid #f0edf8;
+    padding: 4px;
+    min-height: 56px;
+    position: relative;
+}
+
+.gradeCelula:last-child {
+    border-right: none;
+}
+
+.gradeCard {
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 8px;
+    padding: 6px 10px;
+    text-align: left;
+    cursor: pointer;
+    font-family: inherit;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2px;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.gradeCard:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+}
+
+.gradeCard strong {
+    font-size: 0.78rem;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.gradeCard span {
+    font-size: 0.72rem;
+    opacity: 0.85;
+}
+
+.gradeCard.grade-agendada     { background: #dcd2ff; color: #3f2fa3; }
+.gradeCard.grade-realizada    { background: #d4edda; color: #1e7a34; }
+.gradeCard.grade-pendente     { background: #fff3cd; color: #856404; }
+.gradeCard.grade-cancelada    { background: #f5f5f5; color: #888; }
+.gradeCard.grade-cancelamento_solicitado { background: #ffeaea; color: #c0392b; }
+.gradeCard.grade-reagendamento_solicitado { background: #e8f0ff; color: #2563eb; }
+.gradeCard.grade-cancelamentopsicologo    { background: #fff3cd; color: #856404; }
+.gradeCard.grade-reagendamentopsicologo   { background: #fff3cd; color: #856404; }
+
+.gradeBloqueado {
+    width: 100%;
+    height: 100%;
+    background: #f4f0ff;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.72rem;
+    color: #9d88c9;
+    text-align: center;
+    padding: 4px;
+}
+
+.gradeBloqueado.gradeBloqueadoAlmoco {
+    background: #fff3cd;
+    color: #856404;
+    border-left: 3px solid #f4b400;
+}
+
+.gradeDisponivel {
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+    background: transparent;
+}
+
+@media (max-width: 1200px) {
+    .gradeSemanal {
+        grid-template-columns: 70px repeat(7, minmax(120px, 1fr));
+    }
 }

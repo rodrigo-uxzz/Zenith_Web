@@ -11,7 +11,7 @@
     --primary-light: #7a5cff;
     --bg-main: #f3f0fa;
     --bg-card: #ffffff;
-    --text-dark: #290041;
+    --text-dark:  #5b3cc4;
     --text-muted: #888;
     --border: #e5e2f0;
 }
@@ -81,7 +81,7 @@ body {
 }
 
 .logo {
-    width: 32px;
+    width: 80px;
     height: auto;
 }
 
@@ -230,20 +230,33 @@ body {
 .listaPacientes {
     display: flex;
     flex-direction: column;
+    margin-right: -4px;
 }
 
 .linhaPaciente {
-    display: grid;
-    grid-template-columns: 2.5fr 1.4fr auto;
+    display: flex;
     align-items: center;
-    padding: 18px 0;
-    border-bottom: 1px solid #f0edf8;
-    gap: 16px;
-    transition: background .15s;
+    justify-content: space-between;
+    gap: 14px;
+    background: #fff;
+    border: 1px solid #e8e4f3;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    transition: all 0.2s ease;
+    cursor: pointer;
 }
 
-.linhaPaciente:last-child { border-bottom: none; }
-.linhaPaciente:hover { background: #faf8ff; }
+.linhaPaciente:last-child {
+    margin-bottom: 0;
+}
+
+.linhaPaciente:hover {
+    box-shadow: 0 4px 12px rgba(123, 92, 255, 0.15);
+    transform: translateY(-2px);
+    background: #fff;
+}
 
 .infoPaciente {
     display: flex;
