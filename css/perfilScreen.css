@@ -421,3 +421,20 @@ a {
   font-weight: 500;
   color: #333;
 }
+
+.avaliacao-estrelas {
+  color: #a383fb;
+  font-size: 1.6rem;        /* era 1.2rem */
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+  letter-spacing: 2px;      /* dá um respiro entre as estrelas */
+}
+
+.avaliacao-estrelas span {
+  font-size: 0.9rem;
+  color: #666;
+  letter-spacing: normal;
+  font-weight: 500;
+}

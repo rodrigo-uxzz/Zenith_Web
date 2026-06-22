@@ -186,7 +186,9 @@ btnEnviarNovaSenha?.addEventListener("click", async () => {
 
   const { ok, dados } = await apiRequest("/resetPassword", "POST", {
     email: pendingEmail,
-    password: nova,
+    code: recoveryCode,
+    senha: nova,
+    confirmar_senha: confirmar,
   });
 
   setLoading(btnEnviarNovaSenha, false, true);

@@ -188,7 +188,8 @@ input::placeholder {
   color: #666;
 }
 
-label {
+.input-container label,
+.password-container label {
   position: absolute;
   top: -10px;
   left: 10px;
@@ -283,6 +284,7 @@ label {
 }
 
 .senha-field label {
+  position: static;
   font-size: 0.95rem;
   font-weight: 500;
   color: #1a1a2e;

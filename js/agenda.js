@@ -594,6 +594,7 @@ if (btnConfigHorario) {
   btnConfigHorario.addEventListener("click", function () {
     closeAllModalsExcept(horarioModal);
     horarioModal.style.display = "flex";
+    carregarConfigAgenda();
   });
 }
 
@@ -1610,5 +1611,49 @@ document
       showStatusModal("Erro", "Erro ao comunicar com o servidor.");
     }
   });
+
+  async function carregarConfigAgenda() {
+  try {
+    const { ok, dados } = await apiRequest("/minhaAgenda");
+    if (!ok || !dados) return;
+
+    // Preenche o preço
+    if (dados.preco_sessao) {
+      const valor = Number(dados.preco_sessao).toFixed(2).replace(".", ",");
+      document.getElementById("preco_sessao").value = valor;
+    }
+
+    // Desmarca todos os dias primeiro
+    document.querySelectorAll(".horario-row input[type='checkbox']").forEach(cb => {
+      cb.checked = false;
+    });
+
+    // Marca os dias configurados
+    if (Array.isArray(dados.agendas)) {
+      dados.agendas.forEach(agenda => {
+        // dia_semana: 1=Seg, 2=Ter... 0=Dom
+        // As rows estão na ordem: Seg(0), Ter(1), Qua(2), Qui(3), Sex(4), Sab(5), Dom(6)
+        const indexRow = agenda.dia_semana === 0 ? 6 : agenda.dia_semana - 1;
+        const rows = document.querySelectorAll(".horario-row");
+        const row = rows[indexRow];
+        if (!row) return;
+
+        const checkbox = row.querySelector("input[type='checkbox']");
+        const inputs = row.querySelectorAll("input[type='time']");
+        if (checkbox) checkbox.checked = true;
+        if (inputs[0]) inputs[0].value = agenda.hora_inicio.slice(0, 5);
+        if (inputs[1]) inputs[1].value = agenda.hora_fim.slice(0, 5);
+      });
+    }
+
+    if (dados.almoco) {
+      document.getElementById("almoco-inicio").value = dados.almoco.hora_inicio?.slice(0, 5) || "";
+      document.getElementById("almoco-fim").value = dados.almoco.hora_fim?.slice(0, 5) || "";
+    }
+
+  } catch (error) {
+    console.error("Erro ao carregar config da agenda:", error);
+  }
+}
 
 configurarFiltrosVisualizacao();

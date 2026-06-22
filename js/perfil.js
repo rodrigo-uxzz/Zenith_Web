@@ -80,7 +80,14 @@ async function carregarPerfil() {
       document.getElementById("biografia").textContent =
         dados.psicologo.biografia;
     }
-
+    
+    if (dados.avaliacao) {
+      const media = dados.avaliacao.media ?? 0;
+      const total = dados.avaliacao.total ?? 0;
+      const estrelas = renderEstrelas(media); // função abaixo
+      document.getElementById("avaliacao").innerHTML =
+        `${estrelas} <span>${media} (${total} avaliações)</span>`;
+    }
     renderEspecialidades(dados);
   } catch (error) {
     console.error("Erro ao carregar perfil:", error);
@@ -141,4 +148,12 @@ function renderEspecialidades(dados) {
     .filter(Boolean)
     .map((name) => `<span class="especialidade-card">${name}</span>`)
     .join("");
+}
+
+function renderEstrelas(media) {
+  return Array.from({ length: 5 }, (_, i) => {
+    if (i < Math.floor(media)) return "★";
+    if (i < media) return "✭"; // meia estrela
+    return "☆";
+  }).join("");
 }
