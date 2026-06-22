@@ -29,15 +29,7 @@ function setInputError(input, hasError) {
 }
 
 function restoreFormValues() {
-  const fields = [
-    "nome",
-    "telefone",
-    "data",
-    "genero",
-    "cpf",
-    "crp",
-    "foto",
-  ];
+  const fields = ["nome", "telefone", "data", "genero", "cpf", "crp", "foto"];
 
   fields.forEach((key) => {
     const value = localStorage.getItem(key);
@@ -209,7 +201,20 @@ async function verificarCPF(cpf) {
   }
 }
 
+function setLoading(botao, carregando) {
+  if (!botao) return;
+  if (carregando) {
+    botao.disabled = true;
+    botao.dataset.textoOriginal = botao.innerHTML;
+    botao.innerHTML = `<span class="spinner"></span>`;
+  } else {
+    botao.disabled = false;
+    botao.innerHTML = botao.dataset.textoOriginal || botao.innerHTML;
+  }
+}
+
 // Função para validar e ir pra próxima tela
+
 async function validarProximo() {
   const nome = document.getElementById("fullName").value.trim();
   const telefone = document.getElementById("telefone").value.trim();
@@ -248,11 +253,17 @@ async function validarProximo() {
     showToast("Selecione um gênero.");
     temErro = true;
   }
+
+  const botaoProximo = document.getElementById("proximaTela");
+
   if (!cpfLocalValido) {
     showToast("CPF inválido.");
     temErro = true;
   } else {
+    setLoading(botaoProximo, true);
     const cpfServidorValido = await validarCpf(cpfLimpo);
+    setLoading(botaoProximo, false);
+
     if (!cpfServidorValido) {
       setInputError(inputs.cpf, true);
       showToast("CPF não pôde ser validado.");
@@ -317,13 +328,15 @@ if (inputFoto) {
 restoreFormValues();
 
 document.getElementById("fullName").addEventListener("input", function () {
-    localStorage.setItem("nome", this.value);
+  localStorage.setItem("nome", this.value);
 });
 
-document.getElementById("dataNascimento").addEventListener("change", function () {
+document
+  .getElementById("dataNascimento")
+  .addEventListener("change", function () {
     localStorage.setItem("data", this.value);
-});
+  });
 
 document.getElementById("genero").addEventListener("change", function () {
-    localStorage.setItem("genero", this.value);
+  localStorage.setItem("genero", this.value);
 });

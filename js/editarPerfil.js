@@ -145,16 +145,12 @@ async function carregarPerfil() {
 
     dadosOriginais = dados;
 
-    console.log(dados);
-
-    //mostra dados no topo como titulos do perfil
     document.getElementById("mostrarNome").textContent = dados.user.nome;
 
     if (dados.psicologo) {
       document.getElementById("mostrarCrp").textContent = dados.psicologo.crp;
     }
 
-    //mostra os dados que podem ser atualizados
     document.getElementById("nome").value = dados.user.nome;
     document.getElementById("email").value = dados.user.email;
     document.getElementById("telefone").value = dados.user.telefone;
@@ -201,6 +197,10 @@ async function carregarPerfil() {
     }
 
     setupEspecialidades();
+
+    // Carrega Pix depois do perfil — assim tem o nome do usuário disponível
+    await carregarPix(dados.user.nome);
+    await carregarLink();
   } catch (error) {
     console.error("Erro ao carregar perfil:", error);
   }
@@ -208,6 +208,8 @@ async function carregarPerfil() {
 
 //função de atualizar os dados do usuario
 async function atualizarPerfil() {
+  await salvarPix();
+  await salvarLink();
   const dados = {
     nome: document.getElementById("nome").value,
     email: document.getElementById("email").value,
@@ -398,3 +400,77 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 });
+
+async function carregarPix() {
+  try {
+    const { ok, dados } = await apiRequest("/pix");
+
+    if (ok && dados.pix_chave) {
+      document.getElementById("pix_tipo").value = dados.pix_tipo || "";
+      document.getElementById("pix_chave").value = dados.pix_chave || "";
+      document.getElementById("pix_nome_recebedor").value =
+        dados.pix_nome_recebedor || "";
+      document.getElementById("pix_cidade").value = dados.pix_cidade || "";
+
+      document.getElementById("pix-status").style.display = "block";
+    }
+  } catch (error) {
+    console.error("Erro ao carregar Pix:", error);
+  }
+}
+
+async function salvarPix() {
+  const tipo = document.getElementById("pix_tipo").value;
+  const chave = document.getElementById("pix_chave").value.trim();
+  const nome = document.getElementById("pix_nome_recebedor").value.trim();
+  const cidade = document.getElementById("pix_cidade").value.trim();
+
+  // Só envia se pelo menos tipo e chave estiverem preenchidos
+  if (!tipo || !chave) return;
+
+  try {
+    const { ok } = await apiRequest("/pix", "PUT", {
+      pix_tipo: tipo,
+      pix_chave: chave,
+      pix_nome_recebedor: nome,
+      pix_cidade: cidade || "SAO PAULO",
+    });
+
+    if (ok) {
+      document.getElementById("pix-status").style.display = "block";
+    }
+  } catch (error) {
+    console.error("Erro ao salvar Pix:", error);
+  }
+}
+
+async function carregarLink() {
+  try {
+    const { ok, dados } = await apiRequest("/link");
+
+    if (ok && dados.link_consulta) {
+      document.getElementById("link_consulta").value = dados.link_consulta;
+      document.getElementById("link-status").style.display = "block";
+    }
+  } catch (error) {
+    console.error("Erro ao carregar link:", error);
+  }
+}
+
+async function salvarLink() {
+  const link = document.getElementById("link_consulta").value.trim();
+
+  if (!link) return;
+
+  try {
+    const { ok } = await apiRequest("/link", "PUT", {
+      link_consulta: link,
+    });
+
+    if (ok) {
+      document.getElementById("link-status").style.display = "block";
+    }
+  } catch (error) {
+    console.error("Erro ao salvar link:", error);
+  }
+}

@@ -167,7 +167,8 @@ async function carregarDashboard() {
   const sessoesRealizadas = cards.sessoes_realizadas ?? cards.realizadas ?? 0;
 
   document.getElementById("totalPatientsCount").textContent = totalPacientes;
-  document.getElementById("totalPsychologistsCount").textContent = totalPsicologos;
+  document.getElementById("totalPsychologistsCount").textContent =
+    totalPsicologos;
   document.getElementById("sessionsDoneCount").textContent = sessoesRealizadas;
   document.getElementById("revenueCount").textContent = `R$${receitaTotal}`;
 

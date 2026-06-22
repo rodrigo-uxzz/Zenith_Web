@@ -458,14 +458,12 @@ async function carregarDashboard() {
 
 async function carregarProximasConsultas() {
   const container = document.getElementById("container-proximas-consultas");
-
   if (!container) return;
 
   try {
     const todasConsultas = [];
     const hoje = new Date();
 
-    // Buscar consultas dos próximos 7 dias
     for (let i = 0; i < 7; i++) {
       const data = new Date(hoje);
       data.setDate(data.getDate() + i);
@@ -476,9 +474,12 @@ async function carregarProximasConsultas() {
       );
 
       if (ok && dados.sessoes && Array.isArray(dados.sessoes)) {
-        todasConsultas.push(
-          ...dados.sessoes.filter((s) => s.sessao && !s.tipo),
-        );
+        // Guarda a data junto com cada item
+        const sessoesDoDia = dados.sessoes
+          .filter((s) => s.sessao && !s.tipo && s.status_sessao === 'agendada')
+          .map((s) => ({ ...s, data_sessao: dataFormatada }));
+
+        todasConsultas.push(...sessoesDoDia);
       }
 
       if (todasConsultas.length >= 4) break;
@@ -501,42 +502,49 @@ async function carregarProximasConsultas() {
       const sessao = item.sessao || {};
       const nome = sessao.paciente?.usuario?.nome || "Paciente";
       const hora = item.hora_inicio || "--:--";
-      const link = sessao.link_conferencia || "#";
+      const link = item.link || null; // 👈 vem do consultasDoDia resolvido
       const dataSessao = item.data_sessao || "";
 
-      // Verificar se a consulta é hoje ou em outro dia
       const hoje = new Date();
       const hojeFormatada = hoje.toLocaleDateString("en-CA");
       const ehHoje = dataSessao === hojeFormatada;
 
-      let infoHora = `<span class="hora">${hora.slice(0, 5)}</span>`;
+      // Verifica se já chegou a hora
+      let podeEntrar = false;
+      if (ehHoje && link) {
+        const [h, m] = hora.split(":");
+        const horaConsulta = new Date();
+        horaConsulta.setHours(Number(h), Number(m), 0, 0);
+        podeEntrar = new Date() >= horaConsulta;
+      }
 
+      let infoHora;
       if (!ehHoje && dataSessao) {
-        // Formatar a data para exibir (ex: "28 Mai")
         const partes = dataSessao.split("-");
-        const data = new Date(partes[0], partes[1] - 1, partes[2]);
-        const diaFormatado = data.toLocaleDateString("pt-BR", {
+        const dataObj = new Date(partes[0], partes[1] - 1, partes[2]);
+        const diaFormatado = dataObj.toLocaleDateString("pt-BR", {
           day: "2-digit",
           month: "short",
         });
-
-        infoHora = `
-          <span class="hora">${diaFormatado} ${hora.slice(0, 5)}</span>
-        `;
+        infoHora = `<span class="hora">${diaFormatado} ${hora.slice(0, 5)}</span>`;
+      } else {
+        infoHora = `<span class="hora">${hora.slice(0, 5)}</span>`;
       }
 
       const div = document.createElement("div");
       div.classList.add("consulta");
 
-      let botaoHTML = `<button class="btn secundario">Aguarde</button>`;
-
-      if (link && link !== "#" && link !== "") {
+      // Botão entrar ou aguarde
+      let botaoHTML;
+      if (podeEntrar && link) {
         botaoHTML = `
           <button class="btn" onclick="window.open('${link}', '_blank')">
             Entrar
             <img src="../img/open.svg" alt="Ícone Entrar" class="iconeC">
           </button>
         `;
+      } else {
+        botaoHTML = `<button class="btn secundario" disabled>Aguarde</button>`;
       }
 
       div.innerHTML = `

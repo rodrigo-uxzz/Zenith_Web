@@ -13,9 +13,9 @@ const fields = {
 
 // ─── MODAL DE VERIFICAÇÃO ─────────────────────────────────────────────────────
 
-const verifyModal    = document.getElementById("modalVerificacao");
+const verifyModal = document.getElementById("modalVerificacao");
 const verifyCodeInput = document.getElementById("verification-code");
-const confirmCodeBtn  = document.getElementById("confirm-code-btn");
+const confirmCodeBtn = document.getElementById("confirm-code-btn");
 const closeVerifyModal = document.getElementById("close-verify-modal");
 
 function openVerifyModal() {
@@ -73,7 +73,8 @@ function restoreFormValues() {
   if (saved.username && fields.username) fields.username.value = saved.username;
   if (saved.email && fields.email) fields.email.value = saved.email;
   if (saved.senha && fields.senha) fields.senha.value = saved.senha;
-  if (saved.confirmarSenha && fields.confirmarSenha) fields.confirmarSenha.value = saved.confirmarSenha;
+  if (saved.confirmarSenha && fields.confirmarSenha)
+    fields.confirmarSenha.value = saved.confirmarSenha;
   if (saved.formacao && fields.formacao) fields.formacao.value = saved.formacao;
   if (saved.termos === "true" && fields.termos) fields.termos.checked = true;
   if (saved.cadastroEpsi === "1") {
@@ -105,31 +106,51 @@ function getErrorMessage(dados) {
   return "Erro ao cadastrar. Tente novamente.";
 }
 
+function setLoading(botao, carregando) {
+  if (!botao) return;
+  if (carregando) {
+    botao.disabled = true;
+    botao.dataset.textoOriginal = botao.innerHTML;
+    botao.innerHTML = `<span class="spinner"></span>`;
+  } else {
+    botao.disabled = false;
+    botao.innerHTML = botao.dataset.textoOriginal || botao.innerHTML;
+  }
+}
+
 // ─── PASSO 1: VALIDAR E ENVIAR E-MAIL ────────────────────────────────────────
 // Chamado ao clicar em "Criar conta". Não cria a conta ainda —
 // apenas valida os campos e dispara o código de verificação.
 
 async function criarConta() {
-  const username      = document.getElementById("username").value.trim();
-  const email         = document.getElementById("email").value.trim();
-  const senha         = document.getElementById("senha").value;
+  const username = document.getElementById("username").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const senha = document.getElementById("senha").value;
   const confirmarSenha = document.getElementById("confirmarSenha").value;
-  const cadastroEpsi  = document.querySelector('input[name="cadastroEpsi"]:checked');
-  const formacao      = document.getElementById("formacao").value;
-  const termos        = document.getElementById("termos").checked;
-  const emailRegex    = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const cadastroEpsi = document.querySelector(
+    'input[name="cadastroEpsi"]:checked',
+  );
+  const formacao = document.getElementById("formacao").value;
+  const termos = document.getElementById("termos").checked;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   // Marca erros visuais
   setInputError(fields.username, !username);
   setInputError(fields.email, !email || !emailRegex.test(email));
   setInputError(fields.senha, !senha || senha.length < 6);
-  setInputError(fields.confirmarSenha, !confirmarSenha || confirmarSenha !== senha);
+  setInputError(
+    fields.confirmarSenha,
+    !confirmarSenha || confirmarSenha !== senha,
+  );
   setInputError(fields.formacao, !formacao);
 
   if (!username) return showToast("Digite um nome de usuário.");
-  if (!email || !emailRegex.test(email)) return showToast("Digite um e-mail válido.");
-  if (!senha || senha.length < 6) return showToast("A senha deve ter pelo menos 6 caracteres.");
-  if (!confirmarSenha || confirmarSenha !== senha) return showToast("As senhas não conferem.");
+  if (!email || !emailRegex.test(email))
+    return showToast("Digite um e-mail válido.");
+  if (!senha || senha.length < 6)
+    return showToast("A senha deve ter pelo menos 6 caracteres.");
+  if (!confirmarSenha || confirmarSenha !== senha)
+    return showToast("As senhas não conferem.");
   if (!cadastroEpsi) return showToast("Selecione se possui cadastro no e-psi.");
   if (!formacao) return showToast("Selecione seu grau de formação.");
   if (!termos) return showToast("Aceite os termos para continuar.");
@@ -144,7 +165,14 @@ async function criarConta() {
   localStorage.setItem("termos", String(termos));
 
   // Dispara o envio do código de verificação
-  const { ok, dados } = await apiRequest("/sendVerificationEmail", "POST", { email });
+  const criarContaBtn = document.getElementById("criarConta");
+  setLoading(criarContaBtn, true);
+
+  const { ok, dados } = await apiRequest("/sendVerificationEmail", "POST", {
+    email,
+  });
+
+  setLoading(criarContaBtn, false);
 
   if (!ok) {
     showToast(dados?.message || "Erro ao enviar o código. Tente novamente.");
@@ -165,20 +193,19 @@ async function confirmarCodigo() {
     return;
   }
 
-  // Recupera dados salvos
-  const nome           = localStorage.getItem("nome")     || "";
-  const telefone       = localStorage.getItem("telefone") || "";
-  const dataNascimento = localStorage.getItem("data")     || "";
-  const genero         = localStorage.getItem("genero")   || "";
-  const cpf            = localStorage.getItem("cpf")      || "";
-  const crp            = localStorage.getItem("crp")      || "";
-  const username       = localStorage.getItem("username") || "";
-  const email          = localStorage.getItem("email")    || "";
-  const senha          = localStorage.getItem("senha")    || "";
+  const nome = localStorage.getItem("nome") || "";
+  const telefone = localStorage.getItem("telefone") || "";
+  const dataNascimento = localStorage.getItem("data") || "";
+  const genero = localStorage.getItem("genero") || "";
+  const cpf = localStorage.getItem("cpf") || "";
+  const crp = localStorage.getItem("crp") || "";
+  const username = localStorage.getItem("username") || "";
+  const email = localStorage.getItem("email") || "";
+  const senha = localStorage.getItem("senha") || "";
   const confirmarSenha = localStorage.getItem("confirmarSenha") || "";
-  const cadastroEpsi   = localStorage.getItem("cadastroEpsi") === "1" ? 1 : 0;
-  const formacao       = (localStorage.getItem("formacao") || "").toUpperCase();
-  const termos         = localStorage.getItem("termos") === "true";
+  const cadastroEpsi = localStorage.getItem("cadastroEpsi") === "1" ? 1 : 0;
+  const formacao = (localStorage.getItem("formacao") || "").toUpperCase();
+  const termos = localStorage.getItem("termos") === "true";
 
   const formData = new FormData();
   formData.append("nome", nome);
@@ -199,7 +226,7 @@ async function confirmarCodigo() {
   formData.append("formacaoProfissional", formacao);
   formData.append("termos_aceitos", termos ? 1 : 0);
   formData.append("termosAceitos", termos ? 1 : 0);
-  formData.append("code", code); // ← campo que o backend exige
+  formData.append("code", code);
 
   const fotoBase64 = localStorage.getItem("foto");
   if (fotoBase64) {
@@ -207,16 +234,38 @@ async function confirmarCodigo() {
     formData.append("foto", blob, "foto.png");
   }
 
-  const { ok, dados } = await apiRequest("/registerPsicologo", "POST", formData);
+  setLoading(confirmCodeBtn, true);
+
+  const { ok, dados } = await apiRequest(
+    "/registerPsicologo",
+    "POST",
+    formData,
+  );
+
+  setLoading(confirmCodeBtn, false);
 
   if (ok) {
     verifyModal.style.display = "none";
     showToast("Conta criada com sucesso! Aguarde a análise do administrador.");
-    // Limpa localStorage para não reutilizar dados antigos
-    ["nome","telefone","data","genero","cpf","crp","username","email",
-     "senha","confirmarSenha","cadastroEpsi","formacao","termos","foto"]
-      .forEach((k) => localStorage.removeItem(k));
-    setTimeout(() => { window.location.href = "loginScreen.html"; }, 1500);
+    [
+      "nome",
+      "telefone",
+      "data",
+      "genero",
+      "cpf",
+      "crp",
+      "username",
+      "email",
+      "senha",
+      "confirmarSenha",
+      "cadastroEpsi",
+      "formacao",
+      "termos",
+      "foto",
+    ].forEach((k) => localStorage.removeItem(k));
+    setTimeout(() => {
+      window.location.href = "loginScreen.html";
+    }, 1500);
   } else {
     showToast(getErrorMessage(dados));
   }
@@ -229,7 +278,7 @@ if (confirmCodeBtn) confirmCodeBtn.addEventListener("click", confirmarCodigo);
 // ─── BOTÕES VOLTAR / CRIAR CONTA ─────────────────────────────────────────────
 
 function setupButtonHandlers() {
-  const botaoVoltar  = document.getElementById("botaoVoltar");
+  const botaoVoltar = document.getElementById("botaoVoltar");
   const criarContaBtn = document.getElementById("criarConta");
   if (botaoVoltar) {
     botaoVoltar.addEventListener("click", (e) => {

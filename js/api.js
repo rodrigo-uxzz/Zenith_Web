@@ -28,7 +28,8 @@ export async function apiRequest(endPoint, method = "GET", dados = null) {
 
   const text = await response.text();
   const contentType = response.headers.get("content-type") || "";
-  const isJson = contentType.includes("application/json") || contentType.includes("+json");
+  const isJson =
+    contentType.includes("application/json") || contentType.includes("+json");
 
   let result;
 
@@ -44,13 +45,15 @@ export async function apiRequest(endPoint, method = "GET", dados = null) {
     result = { error: "Resposta inválida do servidor", raw: text };
   }
 
-  const payloadOk = result && typeof result === "object" && "ok" in result ? result.ok : true;
-  const payloadSuccess = result && typeof result === "object" && "success" in result ? result.success : true;
+  const payloadOk =
+    result && typeof result === "object" && "ok" in result ? result.ok : true;
+  const payloadSuccess =
+    result && typeof result === "object" && "success" in result
+      ? result.success
+      : true;
   const payloadHasError =
-    Boolean(result?.error) ||
-    result?.success === false ||
-    result?.ok === false;
-    
+    Boolean(result?.error) || result?.success === false || result?.ok === false;
+
   return {
     ok:
       response.ok &&

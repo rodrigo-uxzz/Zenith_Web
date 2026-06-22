@@ -90,7 +90,11 @@ function extrairValor(obj, chaves, fallback = "") {
   for (const chave of chaves) {
     if (!chave) continue;
 
-    if (obj?.[chave] !== undefined && obj?.[chave] !== null && obj?.[chave] !== "") {
+    if (
+      obj?.[chave] !== undefined &&
+      obj?.[chave] !== null &&
+      obj?.[chave] !== ""
+    ) {
       return obj[chave];
     }
 
@@ -308,24 +312,14 @@ async function carregarEspecialidades() {
 
 function mapearPsicologo(item) {
   const usuario =
-    item?.usuario ||
-    item?.user ||
-    item?.user_data ||
-    item?.dadosUsuario ||
-    {};
+    item?.usuario || item?.user || item?.user_data || item?.dadosUsuario || {};
 
   const perfil = item?.psicologo || item?.psychologist || item || {};
 
   const statusBruto = extrairValor(
     item,
-    [
-      "status",
-      "status_psicologo",
-      "statusCadastro",
-      "aprovacao",
-      "situacao",
-    ],
-    ""
+    ["status", "status_psicologo", "statusCadastro", "aprovacao", "situacao"],
+    "",
   )
     .toString()
     .toLowerCase();
@@ -345,7 +339,7 @@ function mapearPsicologo(item) {
       "usuario.email_address",
       "emailAddress",
     ],
-    usuario.email || perfil.email || "Não informado"
+    usuario.email || perfil.email || "Não informado",
   );
 
   const telefone = extrairValor(
@@ -358,7 +352,7 @@ function mapearPsicologo(item) {
       "usuario.telefone",
       "user.telefone",
     ],
-    usuario.telefone || perfil.telefone || "Não informado"
+    usuario.telefone || perfil.telefone || "Não informado",
   );
 
   return {
@@ -377,30 +371,21 @@ function mapearPsicologo(item) {
           "user.name",
           "usuario.full_name",
         ],
-        usuario.nome || usuario.name || "Sem nome"
+        usuario.nome || usuario.name || "Sem nome",
       ) || "Sem nome",
 
-    crp:
-      extrairValor(item, ["crp", "crp_numero", "registro_crp"], "") ||
-      "--",
+    crp: extrairValor(item, ["crp", "crp_numero", "registro_crp"], "") || "--",
 
     cpf:
       extrairValor(
         item,
-        [
-          "cpf",
-          "CPF",
-          "documento",
-          "usuario.cpf",
-          "user.cpf",
-          "cpf_formatado",
-        ],
-        usuario.cpf || "--"
+        ["cpf", "CPF", "documento", "usuario.cpf", "user.cpf", "cpf_formatado"],
+        usuario.cpf || "--",
       ) || "--",
 
     status,
     online: Boolean(
-      extrairValor(item, ["online", "is_online", "conectado"], false)
+      extrairValor(item, ["online", "is_online", "conectado"], false),
     ),
 
     formacao:
@@ -413,20 +398,15 @@ function mapearPsicologo(item) {
           "titulo",
           "degree",
         ],
-        perfil.grau_formacao || perfil.formacao || "Não informado"
+        perfil.grau_formacao || perfil.formacao || "Não informado",
       ) || "Não informado",
 
     especialidade: formatarEspecialidades(
       extrairValor(
         item,
-        [
-          "especialidades",
-          "especialidade",
-          "areas_atuacao",
-          "profissoes",
-        ],
-        perfil.especialidades || perfil.especialidade || []
-      )
+        ["especialidades", "especialidade", "areas_atuacao", "profissoes"],
+        perfil.especialidades || perfil.especialidade || [],
+      ),
     ),
 
     email,
@@ -441,14 +421,14 @@ function mapearPsicologo(item) {
           "experiencia_profissional",
           "tempo_experiencia",
         ],
-        perfil.experiencia || "Não informado"
+        perfil.experiencia || "Não informado",
       ) || "Não informado",
 
     sobre:
       extrairValor(
         item,
         ["biografia", "sobre", "descricao", "bio"],
-        perfil.biografia || perfil.sobre || "Sem descrição adicional."
+        perfil.biografia || perfil.sobre || "Sem descrição adicional.",
       ) || "Sem descrição adicional.",
   };
 }
@@ -466,7 +446,11 @@ function formatarEspecialidades(especialidades) {
       especialidades = JSON.parse(texto);
     } catch {
       if (texto.includes(",")) {
-        return texto.split(",").map((v) => v.trim()).filter(Boolean).join(", ");
+        return texto
+          .split(",")
+          .map((v) => v.trim())
+          .filter(Boolean)
+          .join(", ");
       }
       return texto;
     }
@@ -476,7 +460,9 @@ function formatarEspecialidades(especialidades) {
     if (
       especialidades &&
       typeof especialidades === "object" &&
-      (especialidades.nome || especialidades.especialidade || especialidades.titulo)
+      (especialidades.nome ||
+        especialidades.especialidade ||
+        especialidades.titulo)
     ) {
       const nome =
         especialidades.nome ||
@@ -688,7 +674,8 @@ function criarCardPsicologo(psicologo) {
   specialidadeElement.style.fontSize = "0.85rem";
   specialidadeElement.style.color = "#7b6f97";
   specialidadeElement.style.marginTop = "6px";
-  specialidadeElement.textContent = psicologo.especialidade || "Sem especialidade";
+  specialidadeElement.textContent =
+    psicologo.especialidade || "Sem especialidade";
 
   details.appendChild(nameElement);
   details.appendChild(crpCpfElement);

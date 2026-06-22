@@ -297,14 +297,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function somarFaturamento(item) {
     const sessoes = item?.paciente?.sessoes || item?.sessoes || [];
-
     let total = 0;
 
     sessoes.forEach((sessao) => {
-      const valor = Number(sessao.valor || 0);
-
-      if (!Number.isNaN(valor)) {
-        total += valor;
+      const pagamento = sessao.pagamento;
+      if (pagamento && pagamento.status_pagamento === "pago") {
+        total += Number(pagamento.valor_total || 0);
       }
     });
 

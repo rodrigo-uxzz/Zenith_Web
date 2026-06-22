@@ -1,167 +1,226 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Zenith</title>
-
-    <link rel="icon" type="image/x-icon" href="../img/logo z.PNG">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-
-    <link rel="stylesheet" href="../css/loginScreen.css">
-    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-</head>
-
-<body>
-
-<div class="split-container">
-
-    <!-- LADO ESQUERDO -->
-    <div class="left-side">
+    <link rel="icon" type="image/png" sizes="64x64" href="../img/logoZ.png" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../css/loginScreen.css" />
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
+    ></script>
+  </head>
+  <body>
+    <div class="split-container">
+      <!-- LADO ESQUERDO -->
+      <div class="left-side">
         <a href="../index.html" class="btn-voltar" title="Voltar">
-            <span class="icone">
-                <ion-icon name="arrow-back-outline"></ion-icon>
-            </span>
+          <span class="icone">
+            <ion-icon name="arrow-back-outline"></ion-icon>
+          </span>
         </a>
         <div class="left-content">
-            <img src="../img/logo.png" alt="Logo Zenith">
-            <h1>Bem-vindo ao Zenith</h1>
-            <p>Gerencie seus atendimentos de forma simples e eficiente.</p>
+          <img src="../img/logo.png" alt="Logo Zenith" />
+          <h1>Bem-vindo ao Zenith</h1>
+          <p>Gerencie seus atendimentos de forma simples e eficiente.</p>
         </div>
-    </div>
+      </div>
 
-    <!-- LADO DIREITO (SEU FORM ORIGINAL) -->
-    <div class="right-side">
+      <!-- LADO DIREITO (SEU FORM ORIGINAL) -->
+      <div class="right-side">
         <main>
-            <section>
+          <section>
+            <article>
+              <figure>
+                <img src="../img/logo.png" alt="Logo Zenith" />
+              </figure>
+              <p>
+                Utilize seu e-mail ou CRP e sua senha cadastrada para entrar
+              </p>
+            </article>
 
-                <article>
-                    <figure>
-                        <img src="../img/logo.png" alt="Logo Zenith">
-                    </figure>
-                    <p>Utilize seu e-mail ou CRP e sua senha cadastrada para entrar</p>
-                </article>
+            <form id="loginForm" action="#" method="post">
+              <div class="input-container">
+                <label for="email">E-mail ou CRP:</label>
+                <input
+                  type="text"
+                  id="email"
+                  name="email"
+                  placeholder="Seu@gmail.com"
+                  required
+                />
+              </div>
 
-                <form id="loginForm" action="#" method="post">
+              <div class="input-container password-container">
+                <label for="password">Senha:</label>
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  placeholder="******"
+                  required
+                />
+                <button
+                  type="button"
+                  class="toggle-password"
+                  data-target="password"
+                >
+                  Mostrar
+                </button>
+              </div>
 
-                    <div class="input-container">
-                        <label for="email">E-mail ou CRP:</label>
-                        <input type="text" id="email" name="email" placeholder="Seu@gmail.com" required>
-                    </div>
-
-                    <div class="input-container password-container">
-                        <label for="password">Senha:</label>
-                        <input type="password" id="password" name="password" placeholder="******" required>
-                        <button type="button" class="toggle-password" data-target="password">Mostrar</button>
-                    </div>
-
-                    <button type="submit" class="botaoE">Entrar</button>
-                    <a href="./criarScreen.html" class="botaoC">Criar conta</a>
-                    <a href="#" class="esqueci">Esqueci minha senha</a>
-
-                </form>
-
-            </section>
+              <button type="submit" class="botaoE">Entrar</button>
+              <a href="./criarScreen.html" class="botaoC">Criar conta</a>
+              <a href="#" class="esqueci">Esqueci minha senha</a>
+            </form>
+          </section>
         </main>
         <footer class="footer-right">
-            &copy; 2026 Zenith. Todos os direitos reservados.
+          &copy; 2026 Zenith. Todos os direitos reservados.
         </footer>
+      </div>
     </div>
 
-</div>
+    <script type="module" src="../js/login.js"></script>
 
-<script type="module" src="../js/login.js"></script>
-
-<!-- MODAL (MANTIDO) -->
-<div id="modal" class="modal">
-    <div class="modal-content">
+    <!-- MODAL (MANTIDO) -->
+    <div id="modal" class="modal">
+      <div class="modal-content">
         <span class="close">&times;</span>
         <p id="modal-message"></p>
+      </div>
     </div>
-</div>
 
-<!-- MODAL VERIFICAÇÃO -->
-<div class="modal" id="modalVerificacao" style="display:none;">
-    <div class="verificacao-modal-content">
+    <!-- MODAL VERIFICAÇÃO -->
+    <div class="modal" id="modalVerificacao" style="display: none">
+      <div class="verificacao-modal-content">
         <span class="close" id="close-verify-modal">&times;</span>
 
         <h2>Verifique sua conta</h2>
-        <p>Enviamos um código de verificação para seu e-mail. Verifique seu Gmail ou caixa de entrada e digite o código abaixo.</p>
+        <p>
+          Enviamos um código de verificação para seu e-mail. Verifique seu Gmail
+          ou caixa de entrada e digite o código abaixo.
+        </p>
 
-        <input type="text" id="verification-code" maxlength="6" placeholder="Digite o código" class="verificacao-input" />
+        <input
+          type="text"
+          id="verification-code"
+          maxlength="6"
+          placeholder="Digite o código"
+          class="verificacao-input"
+        />
 
-        <button type="button" id="confirm-code-btn" class="btn-confirmar">Confirmar</button>
+        <button type="button" id="confirm-code-btn" class="btn-confirmar">
+          Confirmar
+        </button>
 
         <p class="reenviar-texto">
-            Não recebeu o código? <a href="#" class="link-reenviar">Reenviar código</a>
+          Não recebeu o código?
+          <a href="#" class="link-reenviar">Reenviar código</a>
         </p>
+      </div>
     </div>
-</div>
 
-<!-- MODAL ESQUECI SENHA -->
-<div class="modal" id="modalEsqueciSenha" style="display:none;">
-    <div class="verificacao-modal-content">
+    <!-- MODAL ESQUECI SENHA -->
+    <div class="modal" id="modalEsqueciSenha" style="display: none">
+      <div class="verificacao-modal-content">
         <span class="close" id="close-esqueci-senha">&times;</span>
 
         <h2>Recuperar senha</h2>
         <p>Digite o e-mail cadastrado e enviaremos um código de verificação.</p>
 
-        <input type="email" id="emailRecuperacao" placeholder="seu@email.com" class="verificacao-input" />
+        <input
+          type="email"
+          id="emailRecuperacao"
+          placeholder="seu@email.com"
+          class="verificacao-input"
+        />
 
-        <button class="btn-confirmar" id="btnEnviarRecuperacao">Enviar código</button>
+        <button class="btn-confirmar" id="btnEnviarRecuperacao">
+          Enviar código
+        </button>
+      </div>
     </div>
-</div>
 
-<!-- MODAL NOVA SENHA -->
-<div class="modal" id="modalNovaSenha" style="display:none;">
-    <div class="verificacao-modal-content">
+    <!-- MODAL NOVA SENHA -->
+    <div class="modal" id="modalNovaSenha" style="display: none">
+      <div class="verificacao-modal-content">
         <span class="close" id="close-nova-senha">&times;</span>
 
         <h2>Nova senha</h2>
         <p>Digite sua nova senha abaixo.</p>
 
         <div class="senha-field">
-            <label>Nova senha</label>
-            <div class="input-senha-wrapper">
-                <input type="password" id="novaSenha" placeholder="••••••••" class="verificacao-input" />
-                <ion-icon name="eye-outline" class="toggle-senha" data-target="novaSenha"></ion-icon>
-            </div>
+          <label>Nova senha</label>
+          <div class="input-senha-wrapper">
+            <input
+              type="password"
+              id="novaSenha"
+              placeholder="••••••••"
+              class="verificacao-input"
+            />
+            <ion-icon
+              name="eye-outline"
+              class="toggle-senha"
+              data-target="novaSenha"
+            ></ion-icon>
+          </div>
         </div>
 
         <div class="senha-field">
-            <label>Confirmar nova senha</label>
-            <div class="input-senha-wrapper">
-                <input type="password" id="confirmarSenha" placeholder="••••••••" class="verificacao-input" />
-                <ion-icon name="eye-outline" class="toggle-senha" data-target="confirmarSenha"></ion-icon>
-            </div>
+          <label>Confirmar nova senha</label>
+          <div class="input-senha-wrapper">
+            <input
+              type="password"
+              id="confirmarSenha"
+              placeholder="••••••••"
+              class="verificacao-input"
+            />
+            <ion-icon
+              name="eye-outline"
+              class="toggle-senha"
+              data-target="confirmarSenha"
+            ></ion-icon>
+          </div>
         </div>
 
         <button class="btn-confirmar" id="btnEnviarNovaSenha">Enviar</button>
+      </div>
     </div>
-</div>
 
-<!-- MODAL SENHA ATUALIZADA -->
-<div class="modal" id="modalSenhaAtualizada" style="display:none;">
-    <div class="verificacao-modal-content">
+    <!-- MODAL SENHA ATUALIZADA -->
+    <div class="modal" id="modalSenhaAtualizada" style="display: none">
+      <div class="verificacao-modal-content">
         <span class="close" id="close-senha-atualizada">&times;</span>
 
         <div class="sucesso-icon">
-            <ion-icon name="checkmark-outline"></ion-icon>
+          <ion-icon name="checkmark-outline"></ion-icon>
         </div>
 
         <h2>Senha atualizada!</h2>
-        <p>Sua senha foi alterada com sucesso.<br>Você já pode fazer login com a nova senha.</p>
+        <p>
+          Sua senha foi alterada com sucesso.<br />Você já pode fazer login com
+          a nova senha.
+        </p>
 
-        <button class="btn-confirmar" id="btnFecharSenhaAtualizada">Fechar</button>
+        <button class="btn-confirmar" id="btnFecharSenhaAtualizada">
+          Fechar
+        </button>
+      </div>
     </div>
-</div>
 
-<!-- TOAST (MANTIDO) -->
-<div id="toast" class="toast">
-    <span id="toast-message"></span>
-</div>
-
-
-</body>
+    <!-- TOAST (MANTIDO) -->
+    <div id="toast" class="toast">
+      <span id="toast-message"></span>
+    </div>
+  </body>
 </html>
