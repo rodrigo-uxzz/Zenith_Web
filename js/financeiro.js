@@ -28,6 +28,12 @@ function obterCorAvatar(nome) {
   return cores[soma % cores.length];
 }
 
+// Monta a URL da foto de perfil a partir do caminho retornado pela API
+function obterUrlFotoPerfil(fotoPerfil) {
+  if (!fotoPerfil) return null;
+  return `http://127.0.0.1:8000/Storage/${fotoPerfil}`;
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   // ===== LOGOUT =====
   const modalLogout = document.getElementById("modal-logout");
@@ -330,6 +336,8 @@ async function listarPagamentos(data) {
     const nomePaciente = pagamento.paciente?.usuario?.nome ?? "—";
     const iniciais = obterIniciais(nomePaciente);
     const corAvatar = obterCorAvatar(nomePaciente);
+    const fotoPerfil = pagamento.paciente?.usuario?.foto_perfil ?? null;
+    const urlFoto = obterUrlFotoPerfil(fotoPerfil);
 
     // Formata data corretamente
     const dataSessao = pagamento.sessao?.data_sessao
@@ -343,10 +351,15 @@ async function listarPagamentos(data) {
       ? pagamento.sessao.hora_inicio.substring(0, 5)
       : "—";
 
+    // Avatar: foto do paciente se existir, senão iniciais
+    const avatarHTML = urlFoto
+      ? `<span class="avatar-paciente-tabela avatar-paciente-foto"></span>`
+      : `<span class="avatar-paciente-tabela ${corAvatar}">${iniciais}</span>`;
+
     linha.innerHTML = `
       <td>
         <span class="nome-paciente-tabela">
-          <span class="avatar-paciente-tabela ${corAvatar}">${iniciais}</span>
+          ${avatarHTML}
           ${nomePaciente}
         </span>
       </td>
@@ -357,6 +370,22 @@ async function listarPagamentos(data) {
     `;
 
     container.appendChild(linha);
+
+    // Se houver foto, insere o <img> via DOM (com fallback para iniciais em caso de erro)
+    if (urlFoto) {
+      const avatarSpan = linha.querySelector(".avatar-paciente-foto");
+      if (avatarSpan) {
+        const img = document.createElement("img");
+        img.src = urlFoto;
+        img.alt = `Foto de ${nomePaciente}`;
+        img.onerror = function () {
+          avatarSpan.classList.remove("avatar-paciente-foto");
+          avatarSpan.classList.add(corAvatar);
+          avatarSpan.textContent = iniciais;
+        };
+        avatarSpan.appendChild(img);
+      }
+    }
   });
 }
 document
@@ -378,8 +407,9 @@ document
       );
 
       // HEADER
-      document.getElementById("modalPaciente").textContent =
-        pagamento.paciente?.usuario?.nome ?? "—";
+      const nomePacienteModal = pagamento.paciente?.usuario?.nome ?? "—";
+
+      document.getElementById("modalPaciente").textContent = nomePacienteModal;
 
       document.getElementById("modalData").textContent = new Date(
         pagamento.created_at,
@@ -390,6 +420,30 @@ document
         hour: "2-digit",
         minute: "2-digit",
       });
+
+      // AVATAR DO MODAL
+      const avatarModal = document.querySelector(".modal-financeiro-avatar");
+      if (avatarModal) {
+        const fotoPerfilModal = pagamento.paciente?.usuario?.foto_perfil ?? null;
+        const urlFotoModal = obterUrlFotoPerfil(fotoPerfilModal);
+
+        if (urlFotoModal) {
+          avatarModal.innerHTML = "";
+          avatarModal.classList.add("modal-financeiro-avatar-foto");
+          const imgModal = document.createElement("img");
+          imgModal.src = urlFotoModal;
+          imgModal.alt = `Foto de ${nomePacienteModal}`;
+          imgModal.onerror = function () {
+            avatarModal.classList.remove("modal-financeiro-avatar-foto");
+            avatarModal.innerHTML =
+              '<ion-icon name="person-outline"></ion-icon>';
+          };
+          avatarModal.appendChild(imgModal);
+        } else {
+          avatarModal.classList.remove("modal-financeiro-avatar-foto");
+          avatarModal.innerHTML = '<ion-icon name="person-outline"></ion-icon>';
+        }
+      }
 
       // DETALHES
       document.getElementById("modalValor").textContent =
@@ -410,9 +464,9 @@ document
       const comprovanteArea = document.getElementById("comprovanteArea");
       const comprovanteBotoes = document.getElementById("comprovanteBotoes");
       if (respostaComprovante.ok) {
-  urlComprovante = respostaComprovante.dados.comprovante;
-  console.log("URL comprovante:", urlComprovante);
-}
+    urlComprovante = respostaComprovante.dados.comprovante;
+    console.log("URL comprovante:", urlComprovante);
+  }
       if (urlComprovante) {
         const nomeArquivo = urlComprovante.split("/").pop();
         comprovanteArea.innerHTML = `

@@ -121,14 +121,6 @@ document.addEventListener("DOMContentLoaded", function () {
   carregarProximasConsultas();
 });
 
-// Botão ver agenda (removido após remover atalhos rápidos)
-// const verAgenda = document.getElementById("verAgenda");
-// if (verAgenda) {
-//   verAgenda.addEventListener("click", function () {
-//     window.location.href = "./../pages/agendaScreen.html";
-//   });
-// }
-
 // ===============================
 // NOTIFICAÇÕES
 // ===============================
@@ -453,7 +445,7 @@ async function carregarDashboard() {
 }
 
 // ===============================
-// PRÓXIMAS CONSULTAS
+// PRÓXIMAS CONSULTAS (apenas do dia atual)
 // ===============================
 
 async function carregarProximasConsultas() {
@@ -461,36 +453,27 @@ async function carregarProximasConsultas() {
   if (!container) return;
 
   try {
-    const todasConsultas = [];
     const hoje = new Date();
+    const dataFormatada = hoje.toLocaleDateString("en-CA");
 
-    for (let i = 0; i < 7; i++) {
-      const data = new Date(hoje);
-      data.setDate(data.getDate() + i);
-      const dataFormatada = data.toLocaleDateString("en-CA");
+    const { ok, dados } = await apiRequest(
+      `/consultasDoDia?data=${dataFormatada}&t=${Date.now()}`,
+    );
 
-      const { ok, dados } = await apiRequest(
-        `/consultasDoDia?data=${dataFormatada}&t=${Date.now()}`,
-      );
+    let todasConsultas = [];
 
-      if (ok && dados.sessoes && Array.isArray(dados.sessoes)) {
-        // Guarda a data junto com cada item
-        const sessoesDoDia = dados.sessoes
-          .filter((s) => s.sessao && !s.tipo && s.status_sessao === 'agendada')
-          .map((s) => ({ ...s, data_sessao: dataFormatada }));
-
-        todasConsultas.push(...sessoesDoDia);
-      }
-
-      if (todasConsultas.length >= 4) break;
+    if (ok && dados.sessoes && Array.isArray(dados.sessoes)) {
+      todasConsultas = dados.sessoes
+        .filter((s) => s.sessao && !s.tipo && s.status_sessao === 'agendada')
+        .map((s) => ({ ...s, data_sessao: dataFormatada }));
     }
 
-    const sessoes = todasConsultas.slice(0, 4);
+    const sessoes = todasConsultas;
 
     if (sessoes.length === 0) {
       container.innerHTML = `
         <div style="padding: 20px; text-align: center; color: #999;">
-          Nenhuma consulta agendada
+          Nenhuma consulta agendada para hoje
         </div>
       `;
       return;
@@ -501,12 +484,14 @@ async function carregarProximasConsultas() {
     sessoes.forEach((item) => {
       const sessao = item.sessao || {};
       const nome = sessao.paciente?.usuario?.nome || "Paciente";
+      const fotoPerfil = sessao.paciente?.usuario?.foto_perfil
+        ? `http://127.0.0.1:8000/Storage/${sessao.paciente?.usuario?.foto_perfil}`
+        : null;
       const hora = item.hora_inicio || "--:--";
-      const link = item.link || null; // 👈 vem do consultasDoDia resolvido
+      const link = item.link || null;
       const dataSessao = item.data_sessao || "";
 
-      const hoje = new Date();
-      const hojeFormatada = hoje.toLocaleDateString("en-CA");
+      const hojeFormatada = dataFormatada;
       const ehHoje = dataSessao === hojeFormatada;
 
       // Verifica se já chegou a hora
@@ -518,18 +503,7 @@ async function carregarProximasConsultas() {
         podeEntrar = new Date() >= horaConsulta;
       }
 
-      let infoHora;
-      if (!ehHoje && dataSessao) {
-        const partes = dataSessao.split("-");
-        const dataObj = new Date(partes[0], partes[1] - 1, partes[2]);
-        const diaFormatado = dataObj.toLocaleDateString("pt-BR", {
-          day: "2-digit",
-          month: "short",
-        });
-        infoHora = `<span class="hora">${diaFormatado} ${hora.slice(0, 5)}</span>`;
-      } else {
-        infoHora = `<span class="hora">${hora.slice(0, 5)}</span>`;
-      }
+      const infoHora = `<span class="hora">${hora.slice(0, 5)}</span>`;
 
       const div = document.createElement("div");
       div.classList.add("consulta");
@@ -549,7 +523,7 @@ async function carregarProximasConsultas() {
 
       div.innerHTML = `
         <div class="iconConsulta">
-          <span class="icone"><ion-icon name="person-outline"></ion-icon></span>
+          <span class="icone"></span>
         </div>
         <div>
           <strong>${nome}</strong>
@@ -559,6 +533,23 @@ async function carregarProximasConsultas() {
       `;
 
       container.appendChild(div);
+
+      // Insere a foto (ou ícone padrão) via DOM, evitando problemas de escape de aspas no innerHTML
+      const iconeSpan = div.querySelector(".iconConsulta .icone");
+      if (iconeSpan) {
+        if (fotoPerfil) {
+          const img = document.createElement("img");
+          img.src = fotoPerfil;
+          img.alt = `Foto de ${nome}`;
+          img.className = "fotoPaciente";
+          img.onerror = function () {
+            iconeSpan.innerHTML = '<ion-icon name="person-outline"></ion-icon>';
+          };
+          iconeSpan.appendChild(img);
+        } else {
+          iconeSpan.innerHTML = '<ion-icon name="person-outline"></ion-icon>';
+        }
+      }
     });
   } catch (error) {
     console.error("Erro ao carregar próximas consultas:", error);
