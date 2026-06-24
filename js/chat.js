@@ -79,7 +79,9 @@ function renderizarLista(pacientes) {
 
   pacientes.forEach((user) => {
     const nome = user.nome ?? "Paciente";
-    const inic = iniciais2(nome);
+    const foto = user.foto_perfil
+    ? `${API_URL}/storage/${user.foto_perfil}`
+    : null;
     const idPac = user.paciente?.id_paciente;
 
     const li = document.createElement("li");
@@ -87,14 +89,27 @@ function renderizarLista(pacientes) {
     li.dataset.usuario = user.id_usuario;
     li.dataset.paciente = idPac;
     li.innerHTML = `
-            <div class="avatar">${inic}</div>
+            <div class="avatar">
+              ${
+              foto
+              ? `<img src="${foto}" alt="${nome}">`
+              : iniciais2(nome)
+              }
+              </div>
             <div class="conv-info">
                 <div class="conv-name">${nome}</div>
                 <div class="conv-preview" id="preview-${idPac}">...</div>
             </div>
             <span class="conv-time" id="time-${idPac}"></span>
         `;
-    li.addEventListener("click", () => abrirChat(idPac, nome, inic));
+    li.addEventListener("click", () =>
+      abrirChat(
+      idPac,
+      nome,
+      iniciais2(nome),
+      foto
+      )
+      );
     listaConvEl.appendChild(li);
   });
 }
@@ -113,7 +128,7 @@ function configurarPesquisa() {
 
 // ─── Abrir chat ───────────────────────────────────────────────────────────────
 
-async function abrirChat(idPaciente, nomePaciente, iniciais) {
+async function abrirChat(idPaciente, nomePaciente, iniciais, foto) {
   // Desconecta canal anterior
   if (canalAtivo && idChatAtivo) {
     echo.leave(`chat.${idChatAtivo}`);
@@ -122,7 +137,9 @@ async function abrirChat(idPaciente, nomePaciente, iniciais) {
 
   // Atualiza header
   headerNome.textContent = nomePaciente;
-  headerAvatar.textContent = iniciais;
+  headerAvatar.innerHTML = foto
+  ? `<img src="${foto}" alt="${nomePaciente}">`
+  : iniciais;;
   headerStatus.textContent = "carregando...";
 
   // Destaca item na lista
