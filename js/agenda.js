@@ -103,7 +103,7 @@ document.addEventListener("DOMContentLoaded", function () {
       } catch (error) {
         console.error("Erro ao fazer logout:", error);
       }
-      localStorage.removeItem("token");
+      localStorage.clear();
       window.location.href = "./../pages/loginScreen.html";
     });
   }
@@ -328,8 +328,10 @@ async function atualizarData() {
           conteudo.classList.add("consultaRealizada");
         } else if (isPendente) {
           conteudo.classList.add("consultaPendente");
-        } else if (isCancelamentoPsicologo || isReagendadaPsicologo) {
-          conteudo.classList.add("consultaPendente"); // amarelo
+        } else if (isCancelamentoPsicologo) {
+          conteudo.classList.add("consultaCancelamentoPsicologo"); // vermelho
+        } else if (isReagendadaPsicologo) {
+          conteudo.classList.add("consultaReagendamentoPsicologo"); // azul
         } else if (isCancelamentoSolicitado) {
           conteudo.classList.add("consultaCancelamentoSolicitado"); // vermelho
         } else if (isReagendadaPaciente) {
@@ -480,39 +482,14 @@ function showConsultaModal(button) {
     "Carregando...";
 
   const status = (button.dataset.status || "agendada").toLowerCase();
+  
+  // Chama a função para aplicar os botões
   aplicarBotoesStatus(status);
 
-  if (actionsContainer && modalHeader) {
-    const acaoPendente = actionsContainer.querySelector(".acao-pendente");
-    const acaoAgendada = actionsContainer.querySelector(".acao-agendada");
-    const btnEditar = modalHeader.querySelector(".btnEditar");
-    const btnReagendar = actionsContainer.querySelector(".btnReagendar");
-    const btnRealizada = actionsContainer.querySelector(".btnRealizada");
-    const btnCancelada = actionsContainer.querySelector(".btnCancelada");
+  // Remove o bloco de código que estava tentando usar actionsContainer e modalHeader
+  // que não estão definidos neste escopo
 
-    if (acaoPendente) acaoPendente.style.display = "none";
-    if (acaoAgendada) acaoAgendada.style.display = "none";
-    if (btnEditar) btnEditar.style.display = "none";
-    if (btnReagendar) btnReagendar.style.display = "none";
-    if (btnRealizada) btnRealizada.style.display = "none";
-    if (btnCancelada) btnCancelada.style.display = "none";
-
-    if (
-      status.includes("pendente") ||
-      status.includes("cancelamento_solicitado") ||
-      status.includes("reagendamento_solicitado")
-    ) {
-      if (acaoPendente) acaoPendente.style.display = "flex";
-    } else if (status === "agendada") {
-      if (acaoAgendada) acaoAgendada.style.display = "flex";
-      if (btnReagendar) btnReagendar.style.display = "block";
-      if (btnRealizada) btnRealizada.style.display = "block";
-      if (btnCancelada) btnCancelada.style.display = "block";
-      if (btnEditar) btnEditar.style.display = "block";
-    }
-
-    consultaModal.style.display = "flex";
-  }
+  consultaModal.style.display = "flex";
 }
 
 function showEditarModal() {
@@ -750,22 +727,54 @@ async function carregarHorariosReagendar() {
 
   const idPsicologo = reagendarState.idPsicologo;
 
+  console.log("📅 Data selecionada:", data);
+  console.log("🆔 ID Psicólogo:", idPsicologo);
+  console.log("🆔 ID Sessão:", idSessao);
+
   if (!idPsicologo) {
     grid.innerHTML = `<div class="reagendar-sem-horarios">Não foi possível identificar o psicólogo.</div>`;
     return;
   }
 
   try {
-    const url = `/horariosDisponiveis/${idPsicologo}?data=${data}${idSessao ? `&id_sessao=${idSessao}` : ""}`;
-    const { ok, dados } = await apiRequest(url);
+    // Construir URL com os parâmetros
+    let url = `/horariosDisponiveis/${idPsicologo}?data=${data}`;
+    if (idSessao) {
+      url += `&id_sessao=${idSessao}`;
+    }
+    
+    console.log("🔗 URL da requisição:", url);
+    
+    const response = await apiRequest(url);
+    console.log("📦 Resposta completa:", response);
 
-    if (!ok || !Array.isArray(dados) || dados.length === 0) {
+    // A API retorna um array diretamente ou um objeto com a chave 'horarios'
+    let horarios = [];
+    if (Array.isArray(response)) {
+      horarios = response;
+    } else if (response.dados && Array.isArray(response.dados)) {
+      horarios = response.dados;
+    } else if (response.horarios && Array.isArray(response.horarios)) {
+      horarios = response.horarios;
+    } else {
+      // Se não for array, verifica se é um objeto com mensagem
+      if (response.message) {
+        grid.innerHTML = `<div class="reagendar-sem-horarios">${response.message}</div>`;
+        return;
+      }
+      grid.innerHTML = `<div class="reagendar-sem-horarios">Formato de resposta inesperado</div>`;
+      return;
+    }
+
+    console.log("🕐 Horários encontrados:", horarios);
+
+    if (horarios.length === 0) {
       grid.innerHTML = `<div class="reagendar-sem-horarios">Nenhum horário disponível neste dia.</div>`;
       return;
     }
 
     grid.innerHTML = "";
-    dados.forEach((hora) => {
+    horarios.forEach((hora) => {
       const btn = document.createElement("button");
       btn.className = "reagendar-slot";
       btn.textContent = hora;
@@ -775,8 +784,8 @@ async function carregarHorariosReagendar() {
       grid.appendChild(btn);
     });
   } catch (err) {
-    console.error("Erro ao carregar horários:", err);
-    grid.innerHTML = `<div class="reagendar-sem-horarios">Erro ao carregar horários.</div>`;
+    console.error("❌ Erro ao carregar horários:", err);
+    grid.innerHTML = `<div class="reagendar-sem-horarios">Erro ao carregar horários: ${err.message || "Erro desconhecido"}</div>`;
   }
 }
 

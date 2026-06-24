@@ -385,7 +385,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
 
       // Limpar token e redirecionar
-      localStorage.removeItem("token");
+      localStorage.clear();
       window.location.href = "./../pages/loginScreen.html";
     });
   }
