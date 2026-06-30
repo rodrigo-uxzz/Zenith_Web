@@ -161,8 +161,13 @@ async function carregarPacientes() {
 
   try {
     const resposta = await apiRequest("/pacientes", "GET");
+    console.log("Resposta bruta da API:", resposta);
 
     const payload =
+      (resposta?.dados?.dados?.pacientes &&
+      Array.isArray(resposta.dados.dados.pacientes)
+        ? resposta.dados.dados.pacientes
+        : null) ||
       (resposta?.dados?.pacientes?.data &&
       Array.isArray(resposta.dados.pacientes.data)
         ? resposta.dados.pacientes.data
@@ -180,14 +185,21 @@ async function carregarPacientes() {
       (Array.isArray(resposta?.dados) ? resposta.dados : null) ||
       (Array.isArray(resposta) ? resposta : null);
 
-    if (Array.isArray(payload) && payload.length) {
-      dados = payload;
+    if (Array.isArray(payload)) {
+      dados = payload; // aceita até array vazio real, sem cair em mock
+    } else {
+      console.error("API não retornou um array reconhecível:", resposta);
     }
-  } catch {
-    dados = [];
+  } catch (erro) {
+    console.error("Erro ao buscar /pacientes:", erro); // <- isso estava sendo engolido
   }
 
-  const lista = dados.length ? dados : dadosMock;
+  const usandoMock = !dados.length;
+  if (usandoMock) {
+    console.warn("Usando dadosMock — API não retornou pacientes.");
+  }
+
+  const lista = usandoMock ? dadosMock : dados;
   state.pacientes = lista.map(mapearPaciente);
 
   atualizarContadores();
@@ -196,16 +208,16 @@ async function carregarPacientes() {
 
 function mapearPaciente(item) {
   return {
-    id: item.id_paciente || item.id || Math.random().toString(36).slice(2),
-    nome: item.usuario?.nome || item.nome || "Sem nome",
-    cpf: item.usuario?.cpf || item.cpf || "--",
-    email: item.usuario?.email || item.email || "Não informado",
-    telefone: item.usuario?.telefone || item.telefone || "Não informado",
-    nascimento: item.data_nascimento || item.nascimento || "--",
-    psicologo: item.psicologo?.nome || item.psicologo || "Não vinculado",
-    ultimaSessao: item.ultima_sessao || item.ultimaSessao || "--",
+    id: item.id_paciente || Math.random().toString(36).slice(2),
+    nome: item.nome || "Sem nome",
+    cpf: item.cpf || "--",
+    email: item.email || "Não informado",
+    telefone: item.telefone || "Não informado",
+    nascimento: item.nascimento || "--",
+    psicologo: item.psicologo?.nome || "Não vinculado",
+    ultimaSessao: item.ultima_sessao || "--",
     comPsicologo: Boolean(item.psicologo),
-    novoEsteMes: Boolean(item.novo_este_mes || item.novoEsteMes),
+    novoEsteMes: Boolean(item.novo_este_mes),
   };
 }
 
