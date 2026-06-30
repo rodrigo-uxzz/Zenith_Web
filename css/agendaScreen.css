@@ -424,6 +424,36 @@ main.agendaContainer {
   background: #f4b30054 !important;
   color: #946d00 !important;
 }
+
+/* cancelamento solicitado PELO PSICÓLOGO (aguardando paciente) */
+.consultaCancelamentoPsicologo {
+  background: #ffeaea;
+  margin: 10px;
+  padding: 30px 16px;
+  border-radius: 8px;
+  position: relative;
+  min-height: 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-left: 5px solid #ff0c0c;
+}
+
+/* reagendamento solicitado PELO PSICÓLOGO (aguardando paciente) */
+.consultaReagendamentoPsicologo {
+  background: #dde4ff;
+  margin: 10px;
+  padding: 30px 16px;
+  border-radius: 8px;
+  position: relative;
+  min-height: 80px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-left: 5px solid #092595;
+}
+
+
 .consultaCard strong {
   display: block;
   font-size: 18px;
@@ -1621,12 +1651,12 @@ btnCancelEdit:hover {
   color: #2563eb;
 }
 .gradeCard.grade-cancelamentopsicologo {
-  background: #fff3cd;
-  color: #856404;
+  background: #ffeaea;
+  color: #c0392b;
 }
 .gradeCard.grade-reagendamentopsicologo {
-  background: #fff3cd;
-  color: #856404;
+  background: #c7d2fe;
+  color: #092595;
 }
 
 .gradeBloqueado {
@@ -1833,4 +1863,21 @@ btnCancelEdit:hover {
 .reagendar-selecionado ion-icon {
     font-size: 20px;
     color: #28a745;
+}
+
+/* Remarcada */
+.status-remarcada {
+  background: #2ad4b0;
+}
+
+/* Aguardando Cancelamento (solicitado pelo psicólogo) */
+.status-aguardando-cancelamento {
+  background: #ff0c0c;
+  color: #fff !important;
+}
+
+/* Aguardando Reagendamento (solicitado pelo psicólogo) */
+.status-aguardando-reagendamento {
+  background: #092595;
+  color: #fff !important;
 }

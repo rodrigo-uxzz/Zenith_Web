@@ -426,7 +426,7 @@ document.addEventListener("DOMContentLoaded", function () {
         console.error("Erro ao fazer logout:", error);
       }
 
-      localStorage.removeItem("token");
+      localStorage.clear();
       window.location.href = "./../pages/adminLogin.html";
     });
   }

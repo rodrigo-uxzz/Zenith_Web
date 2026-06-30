@@ -64,8 +64,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function abrirDetalhe(paciente) {
     const avatarEl = document.getElementById("detalheAvatar");
+    const fotoEl = document.getElementById("foto_perfil");
     const avatar = montarIniciais(paciente.nome);
-    avatarEl.textContent = avatar;
+
+    const foto = paciente.foto_perfil;
+
+    if (foto) {
+      fotoEl.src = `http://127.0.0.1:8000/Storage/${foto}`;
+      fotoEl.style.display = "block";
+      avatarEl.textContent = "";
+      avatarEl.appendChild(fotoEl);
+    } else {
+      fotoEl.style.display = "none";
+      avatarEl.textContent = avatar;
+    }
     avatarEl.className = "avatarDetalhe";
 
     document.getElementById("detalheNome").textContent =
@@ -231,38 +243,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function contarConsultasHoje(item) {
     const consultas = encontrarArray(item, [
-      "consultas",
-      "sessoes",
-      "atendimentos",
-      "historico",
+      "consultas", "sessoes", "atendimentos", "historico",
     ]);
     if (!consultas || !consultas.length) return 0;
 
     const hoje = new Date();
-    const inicioHoje = new Date(
-      hoje.getFullYear(),
-      hoje.getMonth(),
-      hoje.getDate(),
-    );
-    const fimHoje = new Date(
-      hoje.getFullYear(),
-      hoje.getMonth(),
-      hoje.getDate() + 1,
-    );
+    const inicioHoje = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
+    const fimHoje = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate() + 1);
 
     return consultas.reduce((total, consulta) => {
+      // ⬅️ filtro de status que faltava
+      const status = normalizarTexto(
+        extrairValor(consulta, ["status_sessao", "status", "situacao"])
+      );
+      if (status !== "agendada") return total;
+
       const dataTexto = extrairValor(consulta, [
-        "data",
-        "data_consulta",
-        "dataConsulta",
-        "date",
-        "created_at",
-        "updated_at",
-        "dt_consulta",
-        "data_sessao",
-        "dataSessao",
-        "data_agendada",
-        "data_realizada",
+        "data", "data_consulta", "dataConsulta", "date",
+        "dt_consulta", "data_sessao", "dataSessao", "data_agendada",
       ]);
       if (!dataTexto) return total;
 
@@ -272,7 +270,6 @@ document.addEventListener("DOMContentLoaded", () => {
       if (data >= inicioHoje && data < fimHoje) {
         return total + 1;
       }
-
       return total;
     }, 0);
   }
@@ -397,6 +394,22 @@ document.addEventListener("DOMContentLoaded", () => {
       0;
     const faturamento = somarFaturamento(item);
 
+    const foto_perfil =
+      extrairValor(item, [
+        "foto_perfil",
+        "fotoPerfil",
+        "foto",
+        "avatar",
+        "usuario.foto_perfil",
+        "user.foto_perfil",
+        "paciente.usuario.foto_perfil",
+        "paciente.user.foto_perfil",
+        "paciente.foto_perfil",
+      ]) ||
+      usuario.foto_perfil ||
+      pacienteRelacionado.foto_perfil ||
+      "";
+
     return {
       id: item.id || item.id_paciente || item.paciente?.id_paciente,
 
@@ -411,6 +424,8 @@ document.addEventListener("DOMContentLoaded", () => {
       totalSessoes,
 
       faturamento,
+
+      foto_perfil,
 
       status:
         item.status ||
@@ -487,13 +502,22 @@ document.addEventListener("DOMContentLoaded", () => {
     return [];
   }
 
+  function montarAvatarHtml(paciente) {
+    if (paciente.foto_perfil) {
+      const url = `http://127.0.0.1:8000/Storage/${paciente.foto_perfil}`;
+      const iniciais = montarIniciais(paciente.nome);
+      return `<img src="${url}" alt="${paciente.nome}" onerror="this.parentElement.textContent='${iniciais}'" />`;
+    }
+    return montarIniciais(paciente.nome);
+  }
+
   function criarLinha(paciente) {
     const div = document.createElement("div");
     div.className = "linhaPaciente";
     div.dataset.status = paciente.status;
     div.innerHTML = `
             <div class="infoPaciente">
-                <div class="avatarPaciente">${montarIniciais(paciente.nome)}</div>
+                <div class="avatarPaciente">${montarAvatarHtml(paciente)}</div>
                 <div>
                     <strong>${paciente.nome}</strong>
                     <div class="cpf-email">

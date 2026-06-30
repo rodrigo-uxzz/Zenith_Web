@@ -450,6 +450,18 @@ main.sessoesContainer {
   font-weight: 700;
   font-size: 0.9rem;
   flex-shrink: 0;
+  overflow: hidden;
+}
+
+.card-sessao-icone.card-sessao-icone-foto {
+  background: #ece6ff;
+}
+
+.card-sessao-icone img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
 }
 
 .card-sessao-icone.avatarAmarelo {

@@ -26,6 +26,12 @@ function obterCorAvatar(nome) {
   return cores[soma % cores.length];
 }
 
+// Monta a URL da foto de perfil a partir do caminho retornado pela API
+function obterUrlFotoPerfil(fotoPerfil) {
+  if (!fotoPerfil) return null;
+  return `http://127.0.0.1:8000/Storage/${fotoPerfil}`;
+}
+
 /* =========================
    INICIALIZAÇÃO
 ========================= */
@@ -325,6 +331,9 @@ function criarCardSessao(sessao) {
     sessao.paciente?.usuario?.nome ||
     "Paciente";
 
+  const fotoPerfil = sessao.paciente?.usuario?.foto_perfil ?? null;
+  const urlFoto = obterUrlFotoPerfil(fotoPerfil);
+
   const dataObj = new Date(`${sessao.data_sessao} ${sessao.hora_inicio}`);
 
   const dataFormatada = dataObj.toLocaleDateString("pt-BR");
@@ -354,11 +363,14 @@ function criarCardSessao(sessao) {
     statusClasse = "status-reagendada";
   }
 
+  // Avatar: foto do paciente se existir, senão iniciais
+  const avatarHTML = urlFoto
+    ? `<div class="card-sessao-icone card-sessao-icone-foto"></div>`
+    : `<div class="card-sessao-icone ${obterCorAvatar(nome)}">${obterIniciais(nome)}</div>`;
+
   card.innerHTML = `
-    <div class="card-sessao-icone">
-      <div class="card-sessao-icone ${obterCorAvatar(nome)}">
-        ${obterIniciais(nome)}
-      </div>
+    <div class="card-sessao-icone-wrapper">
+      ${avatarHTML}
     </div>
 
     <div class="card-sessao-info">
@@ -386,6 +398,22 @@ function criarCardSessao(sessao) {
       <span>${statusTexto}</span>
     </div>
   `;
+
+  // Insere a foto via DOM, com fallback para iniciais caso a imagem falhe
+  if (urlFoto) {
+    const iconeFoto = card.querySelector(".card-sessao-icone-foto");
+    if (iconeFoto) {
+      const img = document.createElement("img");
+      img.src = urlFoto;
+      img.alt = `Foto de ${nome}`;
+      img.onerror = function () {
+        iconeFoto.classList.remove("card-sessao-icone-foto");
+        iconeFoto.classList.add(obterCorAvatar(nome));
+        iconeFoto.textContent = obterIniciais(nome);
+      };
+      iconeFoto.appendChild(img);
+    }
+  }
 
   card.addEventListener("click", function () {
     abrirModalSessao(sessao);
